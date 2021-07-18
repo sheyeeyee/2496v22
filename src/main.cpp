@@ -113,7 +113,9 @@ void opcontrol() {
 							joystick is for going left and right.**/
 			int left = power + turn;
 			int right = power - turn;
-				//put the left and right integers here
+				//tbh still tryna figure out how this sum difference thing works
+
+				//put the left and right integers down here
 				front_left.move(left);
 				back_left.move(left);
 				front_right.move(right);
