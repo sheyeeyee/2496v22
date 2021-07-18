@@ -2,15 +2,17 @@
 
 //chassis
 pros::Motor front_left (1,pros::E_MOTOR_GEARSET_18);
-pros::Motor front_right (3,pros::E_MOTOR_GEARSET_18);
 pros::Motor back_left (5,pros::E_MOTOR_GEARSET_18);
+pros::Motor front_right (3,pros::E_MOTOR_GEARSET_18);
 pros::Motor back_right (7,pros::E_MOTOR_GEARSET_18);
-	//inertial sensor
+	//inertial sensor for auton PID
 	pros::Imu imu (10);
 
 //lift
 pros::Motor lift_left (4,pros::E_MOTOR_GEARSET_06);
 pros::Motor lift_right (6,pros::E_MOTOR_GEARSET_06,true);
+	//potentiometer for PID
+	pros::ADIAnalogIn lift_pot('A');
 
 //controller
 pros::Controller con (CONTROLLER_MASTER);
@@ -95,12 +97,27 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	pros::Controller master(pros::E_CONTROLLER_MASTER);
 
 	while (true) {
 
-		//chassis
-
+		//chassis (arcade drive)
+			/**Set the integers for moving right and left so you can place them in the
+					function.**/
+			int power = con.get_analog(ANALOG_LEFT_Y);
+				/**The power integer is set on the left joystick, ANALOG_LEFT, and has a
+							Y at the end bc that is the vertical axis and the left joystick is
+							for going forwards and backwards.**/
+		 	int turn = con.get_analog(ANALOG_RIGHT_X);
+				/**The turn integer is set to the right joystick, ANALOG_RIGHT, and has
+							an X at the end bc that is the horizontal axis and the right
+							joystick is for going left and right.**/
+			int left = power + turn;
+			int right = power - turn;
+				//put the left and right integers here
+				front_left.move(left);
+				back_left.move(left);
+				front_right.move(right);
+				back_right.move(right);
 
 		//lift
 		if(con.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)){
