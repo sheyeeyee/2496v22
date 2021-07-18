@@ -124,7 +124,6 @@ void opcontrol() {
 			lift_left.move(127);
 			lift_right.move(127);
 
-
 		}
 	}
 }
