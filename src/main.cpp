@@ -122,10 +122,22 @@ void opcontrol() {
 				back_right.move(right);
 
 		//lift
-		if(con.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)){
-			lift_left.move(127);
-			lift_right.move(127);
+			//lift go up
+			if (con.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+				lift_left.move(127);
+				lift_right.move(127);
+			}
+				//lift go down
+				else if (con.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+					lift_left.move(-127);
+					lift_right.move(-127);
+				}
+					//lift go no
+					else {
+						lift_left.move(0);
+						lift_right.move(0);
+					}
 
-		}
 	}
+
 }
