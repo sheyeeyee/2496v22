@@ -5,15 +5,16 @@ using namespace pros;
 
 //CONSTRUCTORS
 	//chassis
-	Motor front_left (1, E_MOTOR_GEARSET_18, true);
-	Motor middle_left (2, E_MOTOR_GEARSET_18, true);
-	Motor back_left (5, E_MOTOR_GEARSET_18, true);
-
-	Motor front_right (3, E_MOTOR_GEARSET_18);
-	Motor middle_right (6, E_MOTOR_GEARSET_18);
-	Motor back_right (7, E_MOTOR_GEARSET_18);
-		//inertial sensor for auton PID
-		Imu imu (10);
+		//left drive
+		Motor LF (1, E_MOTOR_GEARSET_18, true);
+		Motor LM (2, E_MOTOR_GEARSET_18, true);
+		Motor LB (5, E_MOTOR_GEARSET_18, true);
+		//right drive
+		Motor RF (3, E_MOTOR_GEARSET_18);
+		Motor RM (6, E_MOTOR_GEARSET_18);
+		Motor RB (7, E_MOTOR_GEARSET_18);
+			//inertial sensor for auton PID
+			Imu imu (10);
 
 	//lift
 	Motor lift_left (4, E_MOTOR_GEARSET_06);
@@ -123,10 +124,12 @@ void opcontrol() {
 				//tbh still tryna figure out how this sum difference thing works
 
 				//put the left and right integers down here
-				front_left.move(left);
-				back_left.move(left);
-				front_right.move(right);
-				back_right.move(right);
+				LF.move(left);
+				LM.move(left);
+				LB.move(left);
+				RF.move(right);
+				RM.move(right);
+				RB.move(right);
 
 		//lift
 			//lift go up
