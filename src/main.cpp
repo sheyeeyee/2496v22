@@ -2,26 +2,27 @@
 #include "PID.h"
 // #include "cmaths" //for maths in case we need it?
 
+using namespace pros;
 //CONSTRUCTORS
 	//chassis
-	pros::Motor front_left (1,pros::E_MOTOR_GEARSET_18, true);
-	pros::Motor middle_left (2,pros::E_MOTOR_GEARSET_18, true);
-	pros::Motor back_left (5,pros::E_MOTOR_GEARSET_18, true);
+	Motor LF (1,pros::E_MOTOR_GEARSET_18, true);
+	Motor LM (2,pros::E_MOTOR_GEARSET_18, true);
+	Motor LB (5,pros::E_MOTOR_GEARSET_18, true);
 
-	pros::Motor front_right (3,pros::E_MOTOR_GEARSET_18);
-	pros::Motor middle_right (6,pros::E_MOTOR_GEARSET_18);
-	pros::Motor back_right (7,pros::E_MOTOR_GEARSET_18);
+	Motor RF (3,pros::E_MOTOR_GEARSET_18);
+	Motor RM (6,pros::E_MOTOR_GEARSET_18);
+	Motor RB (7,pros::E_MOTOR_GEARSET_18);
 		//inertial sensor for auton PID
 		pros::Imu imu (10);
 
 	//lift
-	pros::Motor lift_left (4,pros::E_MOTOR_GEARSET_06);
-	pros::Motor lift_right (6,pros::E_MOTOR_GEARSET_06,true);
+	Motor lift_left (4,pros::E_MOTOR_GEARSET_06);
+	Motor lift_right (6,pros::E_MOTOR_GEARSET_06,true);
 		//potentiometer for PID
-		pros::ADIAnalogIn lift_pot('A');
+	ADIAnalogIn lift_pot('A');
 
 	//controller
-	pros::Controller con (CONTROLLER_MASTER);
+	Controller con (CONTROLLER_MASTER);
 
 /**
  * A callback function for LLEMU's center button.
@@ -122,10 +123,12 @@ void opcontrol() {
 				//tbh still tryna figure out how this sum difference thing works
 
 				//put the left and right integers down here
-				front_left.move(left);
-				back_left.move(left);
-				front_right.move(right);
-				back_right.move(right);
+				LF.move(left);
+				LM.move(left);
+				LB.move(left);
+				RF.move(right);
+				RM.move(right);
+				RB.move(right);
 
 		//lift
 			//lift go up
