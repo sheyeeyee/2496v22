@@ -1,12 +1,13 @@
 #include "main.h"
 #include "PID.h"
-#include <cmath> //for maths in case we need it?
+// #include "cmaths" //for maths in case we need it?
 
 //CONSTRUCTORS
 	//chassis
-	pros::Motor front_left (1,pros::E_MOTOR_GEARSET_18);
-	pros::Motor middle_left (2,pros::E_MOTOR_GEARSET_18);
-	pros::Motor back_left (5,pros::E_MOTOR_GEARSET_18);
+	pros::Motor front_left (1,pros::E_MOTOR_GEARSET_18, true);
+	pros::Motor middle_left (2,pros::E_MOTOR_GEARSET_18, true);
+	pros::Motor back_left (5,pros::E_MOTOR_GEARSET_18, true);
+
 	pros::Motor front_right (3,pros::E_MOTOR_GEARSET_18);
 	pros::Motor middle_right (6,pros::E_MOTOR_GEARSET_18);
 	pros::Motor back_right (7,pros::E_MOTOR_GEARSET_18);
