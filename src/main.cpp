@@ -1,13 +1,17 @@
 #include "main.h"
 #include "PID.h"
 #include <cmath> //for maths in case we need it?
-#include "okapi/api.hpp" //for da motor group
 using namespace pros;
 
 //CONSTRUCTORS
 	//chassis
-	okapi::MotorGroup left_drive ({1,2,5}); //it's a group??? que??
-	okapi::MotorGroup right_drive ({3,6,7});
+	Motor front_left (1, E_MOTOR_GEARSET_18, true);
+	Motor middle_left (2, E_MOTOR_GEARSET_18, true);
+	Motor back_left (5, E_MOTOR_GEARSET_18, true);
+
+	Motor front_right (3, E_MOTOR_GEARSET_18);
+	Motor middle_right (6, E_MOTOR_GEARSET_18);
+	Motor back_right (7, E_MOTOR_GEARSET_18);
 		//inertial sensor for auton PID
 		Imu imu (10);
 
