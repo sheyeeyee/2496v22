@@ -1,21 +1,26 @@
 #include "main.h"
+#include "PID.h"
+#include <cmath> //for maths in case we need it?
 
-//chassis
-pros::Motor front_left (1,pros::E_MOTOR_GEARSET_18);
-pros::Motor back_left (5,pros::E_MOTOR_GEARSET_18);
-pros::Motor front_right (3,pros::E_MOTOR_GEARSET_18);
-pros::Motor back_right (7,pros::E_MOTOR_GEARSET_18);
-	//inertial sensor for auton PID
-	pros::Imu imu (10);
+//CONSTRUCTORS
+	//chassis
+	pros::Motor front_left (1,pros::E_MOTOR_GEARSET_18);
+	pros::Motor middle_left (2,pros::E_MOTOR_GEARSET_18);
+	pros::Motor back_left (5,pros::E_MOTOR_GEARSET_18);
+	pros::Motor front_right (3,pros::E_MOTOR_GEARSET_18);
+	pros::Motor middle_right (6,pros::E_MOTOR_GEARSET_18);
+	pros::Motor back_right (7,pros::E_MOTOR_GEARSET_18);
+		//inertial sensor for auton PID
+		pros::Imu imu (10);
 
-//lift
-pros::Motor lift_left (4,pros::E_MOTOR_GEARSET_06);
-pros::Motor lift_right (6,pros::E_MOTOR_GEARSET_06,true);
-	//potentiometer for PID
-	pros::ADIAnalogIn lift_pot('A');
+	//lift
+	pros::Motor lift_left (4,pros::E_MOTOR_GEARSET_06);
+	pros::Motor lift_right (6,pros::E_MOTOR_GEARSET_06,true);
+		//potentiometer for PID
+		pros::ADIAnalogIn lift_pot('A');
 
-//controller
-pros::Controller con (CONTROLLER_MASTER);
+	//controller
+	pros::Controller con (CONTROLLER_MASTER);
 
 /**
  * A callback function for LLEMU's center button.
@@ -124,13 +129,13 @@ void opcontrol() {
 		//lift
 			//lift go up
 			if (con.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-				lift_left.move(127);
-				lift_right.move(127);
+				lift_left.move(100);
+				lift_right.move(100);
 			}
 				//lift go down
 				else if (con.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-					lift_left.move(-127);
-					lift_right.move(-127);
+					lift_left.move(-100);
+					lift_right.move(-100);
 				}
 					//lift go no
 					else {
