@@ -1,26 +1,24 @@
 #include "main.h"
 #include "PID.h"
 #include <cmath> //for maths in case we need it?
+#include "okapi/api.hpp" //for da motor group
+using namespace pros;
 
 //CONSTRUCTORS
 	//chassis
-	pros::Motor front_left (1,pros::E_MOTOR_GEARSET_18);
-	pros::Motor middle_left (2,pros::E_MOTOR_GEARSET_18);
-	pros::Motor back_left (5,pros::E_MOTOR_GEARSET_18);
-	pros::Motor front_right (3,pros::E_MOTOR_GEARSET_18);
-	pros::Motor middle_right (6,pros::E_MOTOR_GEARSET_18);
-	pros::Motor back_right (7,pros::E_MOTOR_GEARSET_18);
+	okapi::MotorGroup left_drive ({1,2,5}); //it's a group??? que??
+	okapi::MotorGroup right_drive ({3,6,7});
 		//inertial sensor for auton PID
-		pros::Imu imu (10);
+		Imu imu (10);
 
 	//lift
-	pros::Motor lift_left (4,pros::E_MOTOR_GEARSET_06);
-	pros::Motor lift_right (6,pros::E_MOTOR_GEARSET_06,true);
+	Motor lift_left (4, E_MOTOR_GEARSET_06);
+	Motor lift_right (6, E_MOTOR_GEARSET_06, true);
 		//potentiometer for PID
-		pros::ADIAnalogIn lift_pot('A');
+		ADIAnalogIn lift_pot('A');
 
 	//controller
-	pros::Controller con (CONTROLLER_MASTER);
+	Controller con (CONTROLLER_MASTER);
 
 /**
  * A callback function for LLEMU's center button.
@@ -32,9 +30,9 @@ void on_center_button() {
 	static bool pressed = false;
 	pressed = !pressed;
 	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
+		lcd::set_text(2, "I was pressed!");
 	} else {
-		pros::lcd::clear_line(2);
+		lcd::clear_line(2);
 	}
 }
 
@@ -45,10 +43,10 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	pros::lcd::initialize();
-	pros::lcd::set_text(1, "sup gamer");
+	lcd::initialize();
+	lcd::set_text(1, "sup gamer");
 
-	pros::lcd::register_btn1_cb(on_center_button);
+	lcd::register_btn1_cb(on_center_button);
 }
 
 /**
@@ -81,7 +79,7 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	pros::lcd::initialize();
+	lcd::initialize();
 
 	con.set_text(1,1,"sup gamer");
 
@@ -128,12 +126,12 @@ void opcontrol() {
 
 		//lift
 			//lift go up
-			if (con.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+			if (con.get_digital(E_CONTROLLER_DIGITAL_R1)) {
 				lift_left.move(100);
 				lift_right.move(100);
 			}
 				//lift go down
-				else if (con.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+				else if (con.get_digital(E_CONTROLLER_DIGITAL_R2)) {
 					lift_left.move(-100);
 					lift_right.move(-100);
 				}
