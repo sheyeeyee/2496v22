@@ -6,19 +6,19 @@ using namespace pros;
 //CONSTRUCTORS
 	//chassis
 		//left drive
-		Motor LF (1, E_MOTOR_GEARSET_18, true);
-		Motor LM (2, E_MOTOR_GEARSET_18, true);
-		Motor LB (5, E_MOTOR_GEARSET_18, true);
+		Motor LF (8, E_MOTOR_GEARSET_18, true);
+		Motor LM (9, E_MOTOR_GEARSET_18, true);
+		Motor LB (10, E_MOTOR_GEARSET_18, true);
 		//right drive
-		Motor RF (3, E_MOTOR_GEARSET_18);
-		Motor RM (6, E_MOTOR_GEARSET_18);
-		Motor RB (7, E_MOTOR_GEARSET_18);
+		Motor RF (4, E_MOTOR_GEARSET_18);
+		Motor RM (3, E_MOTOR_GEARSET_18);
+		Motor RB (1, E_MOTOR_GEARSET_18);
 			//inertial sensor for auton PID
 			Imu imu (10);
 
 	//lift
-	Motor lift_left (4, E_MOTOR_GEARSET_06);
-	Motor lift_right (6, E_MOTOR_GEARSET_06, true);
+	Motor lift_left (11, E_MOTOR_GEARSET_06, true);
+	Motor lift_right (20, E_MOTOR_GEARSET_06);
 		//potentiometer for PID
 		ADIAnalogIn lift_pot('A');
 
@@ -134,18 +134,21 @@ void opcontrol() {
 		//lift
 			//lift go up
 			if (con.get_digital(E_CONTROLLER_DIGITAL_R1)) {
-				lift_left.move(100);
-				lift_right.move(100);
+				lift_left.move(69);
+				lift_right.move(69);
 			}
 				//lift go down
 				else if (con.get_digital(E_CONTROLLER_DIGITAL_R2)) {
-					lift_left.move(-100);
-					lift_right.move(-100);
+					lift_left.move(-69);
+					lift_right.move(-69);
 				}
 					//lift go no
 					else {
-						lift_left.move(0);
-						lift_right.move(0);
+						lift_left.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+							lift_left.move_velocity(0);
+						lift_right.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+							lift_right.move_velocity(0);
+
 					}
 
 	}
