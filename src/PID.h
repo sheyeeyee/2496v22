@@ -2,5 +2,7 @@
 
 class PID{
 public:
-
+  int target;
+  int current_error;
+  
 };

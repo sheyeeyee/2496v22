@@ -148,8 +148,7 @@ void opcontrol() {
 							lift_left.move_velocity(0);
 						lift_right.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 							lift_right.move_velocity(0);
-
-					}
+						}
 
 	}
 
