@@ -3,6 +3,7 @@
 // #include "cmaths" //for maths in case we need it?
 
 using namespace pros;
+using namespace std; 
 //CONSTRUCTORS
 	//chassis
 	Motor LF (1,pros::E_MOTOR_GEARSET_18, true);
