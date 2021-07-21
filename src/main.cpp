@@ -1,33 +1,34 @@
 #include "main.h"
 #include "PID.h"
-#include "cmaths" //for maths in case we need it?
-
+#include <cmath> //for maths in case we need it?
 using namespace pros;
 using namespace std;
+
 //CONSTRUCTORS
 	//chassis
-	Motor LF (1,pros::E_MOTOR_GEARSET_18, true);
-	Motor LM (2,pros::E_MOTOR_GEARSET_18, true);
-	Motor LB (5,pros::E_MOTOR_GEARSET_18, true);
-
-	Motor RF (3,pros::E_MOTOR_GEARSET_18);
-	Motor RM (6,pros::E_MOTOR_GEARSET_18);
-	Motor RB (7,pros::E_MOTOR_GEARSET_18);
-		//inertial sensor for auton PID
-		pros::Imu imu (10);
+		//left drive
+		Motor LF (8, E_MOTOR_GEARSET_18, true);
+		Motor LM (9, E_MOTOR_GEARSET_18, true);
+		Motor LB (10, E_MOTOR_GEARSET_18, true);
+		//right drive
+		Motor RF (4, E_MOTOR_GEARSET_18);
+		Motor RM (3, E_MOTOR_GEARSET_18);
+		Motor RB (1, E_MOTOR_GEARSET_18);
+			//inertial sensor for auton PID
+			Imu imu (10);
 
 	//lift
-	Motor lift_left (4,pros::E_MOTOR_GEARSET_06);
-	Motor lift_right (6,pros::E_MOTOR_GEARSET_06,true);
+	Motor lift_left (11, E_MOTOR_GEARSET_06, true);
+	Motor lift_right (20, E_MOTOR_GEARSET_06);
 		//potentiometer for PID
-	ADIAnalogIn lift_pot('A');
+		ADIAnalogIn lift_pot('A');
 
 	//controller
 	Controller con (CONTROLLER_MASTER);
 
 
-
-	void drive(int target){
+//chassis PID
+	void drive (int target){
 		double kP = 0.2;
 		double kI = 0.0;
 		double kD = 0.0;
@@ -48,7 +49,72 @@ using namespace std;
 			prev_error = error;
 			power = kP*error + integral*kI + derivative*kD;
 			LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
+			delay(15);
 		}
+	}
+
+	int iter_pos(Imu imu){
+		return -1;
+	}
+
+	void turn(int target){
+		double kP = 0.2;
+		double kI = 0;
+		double kD = 0;
+		int integral = 0;
+		int derivative = 0;
+		int error;
+		int prev_error;
+		int power;
+
+
+		int current_pos = (int)imu.get_yaw();
+		error = target - current_pos;
+
+		while(error > 2){
+			current_pos = (int)imu.get_yaw();
+			error = target - current_pos;
+			integral += error;
+			derivative = error - prev_error;
+			prev_error = error;
+			power = abs(error*kP + integral*kI + derivative*kD);
+			if(target < 0){
+				RB.move(power); RM.move(power); RF.move(power); LF.move(-power); LM.move(-power); LB.move(-power);
+			}
+			else{
+				RB.move(-power); RM.move(-power); RF.move(-power); LF.move(power); LM.move(power); LB.move(power);
+			}
+			delay(15);
+		}
+	}
+
+bool autobalance = false;
+	void autoBalance(){
+		int target = 0;
+		double kP = 0.2;
+		double kI = 0;
+		double kD = 0;
+		int integral = 0;
+		int derivative = 0;
+		int error;
+		int prev_error;
+		int power;
+
+		int current_pos = (int)imu.get_pitch();
+		error = target - current_pos;
+		while(abs(error) > 0){
+			if(autobalance == false){
+				break;
+			}
+			current_pos = (int)imu.get_pitch();
+			error = target - current_pos;
+			integral += error;
+			derivative = error - prev_error;
+			prev_error = error;
+			power = kP*error + integral*kI + derivative*kD;
+			LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
+			delay(15);
+			}
 	}
 
 /**
@@ -61,9 +127,9 @@ void on_center_button() {
 	static bool pressed = false;
 	pressed = !pressed;
 	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
+		lcd::set_text(2, "I was pressed!");
 	} else {
-		pros::lcd::clear_line(2);
+		lcd::clear_line(2);
 	}
 }
 
@@ -74,10 +140,10 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	pros::lcd::initialize();
-	pros::lcd::set_text(1, "sup gamer");
+	lcd::initialize();
+	lcd::set_text(1, "sup gamer");
 
-	pros::lcd::register_btn1_cb(on_center_button);
+	lcd::register_btn1_cb(on_center_button);
 }
 
 /**
@@ -110,11 +176,15 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	pros::lcd::initialize();
+	lcd::initialize();
 
 	con.set_text(1,1,"sup gamer");
-
 	imu.reset();
+
+
+	//tesssssssssssssssssssssst
+	drive(300);
+	turn(90);
 }
 
 
@@ -158,22 +228,36 @@ void opcontrol() {
 				RM.move(right);
 				RB.move(right);
 
+				con.set_text(1, 1, to_string(LF.get_position()));
+				con.set_text(2, 2, to_string(RF.get_position()));
+
 		//lift
 			//lift go up
-			if (con.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-				lift_left.move(100);
-				lift_right.move(100);
+			if(con.get_digital(E_CONTROLLER_DIGITAL_R1)){
+				lift_left.move(69);
+				lift_right.move(69);
 			}
 				//lift go down
-				else if (con.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-					lift_left.move(-100);
-					lift_right.move(-100);
+				else if(con.get_digital(E_CONTROLLER_DIGITAL_R2)){
+					lift_left.move(-69);
+					lift_right.move(-69);
 				}
 					//lift go no
-					else {
-						lift_left.move(0);
-						lift_right.move(0);
-					}
+					else{
+						lift_left.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+							lift_left.move_velocity(0);
+						lift_right.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+							lift_right.move_velocity(0);
+						}
+
+		//autobalance
+		if(con.get_digital(E_CONTROLLER_DIGITAL_A)){
+			autobalance = true;
+			autoBalance();
+				}
+				else{
+					autobalance = false;
+						}
 
 	}
 
