@@ -187,6 +187,7 @@ void autonomous() {
 	turn(90);
 }
 
+
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -226,8 +227,10 @@ void opcontrol() {
 				RF.move(right);
 				RM.move(right);
 				RB.move(right);
+
 				con.set_text(1, 1, to_string(LF.get_position()));
 				con.set_text(2, 2, to_string(RF.get_position()));
+
 		//lift
 			//lift go up
 			if(con.get_digital(E_CONTROLLER_DIGITAL_R1)){
