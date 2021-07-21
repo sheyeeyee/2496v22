@@ -1,9 +1,9 @@
 #include "main.h"
 #include "PID.h"
-// #include "cmaths" //for maths in case we need it?
+#include "cmaths" //for maths in case we need it?
 
 using namespace pros;
-using namespace std; 
+using namespace std;
 //CONSTRUCTORS
 	//chassis
 	Motor LF (1,pros::E_MOTOR_GEARSET_18, true);
@@ -24,6 +24,29 @@ using namespace std;
 
 	//controller
 	Controller con (CONTROLLER_MASTER);
+
+
+
+	void drive(int target){
+		double kP = 0.2;
+		double kI = 0.0;
+		double kD = 0.0;
+		int integral = 0;
+		int derivative = 0;
+		int error;
+		int prev_error;
+		int power;
+
+		int current_pos = (LF.get_position() + LM.get_position() + LB.get_position() + RF.get_position() + RM.get_position() + RB.get_position())/6;
+
+		error = target - current_pos;
+		while(target - current_pos >= 15){
+			integral += error;
+			derivative = error - prev_error;
+			prev_error = error;
+			power = kP*error + integral*kI + derivative*kD;
+		}
+	}
 
 /**
  * A callback function for LLEMU's center button.
@@ -90,6 +113,7 @@ void autonomous() {
 
 	imu.reset();
 }
+
 
 /**
  * Runs the operator control code. This function will be started in its own task
