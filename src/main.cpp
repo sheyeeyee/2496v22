@@ -41,10 +41,13 @@ using namespace std;
 
 		error = target - current_pos;
 		while(target - current_pos >= 15){
+			current_pos = (LF.get_position() + LM.get_position() + LB.get_position() + RF.get_position() + RM.get_position() + RB.get_position())/6;
+			error = target - current_pos;
 			integral += error;
 			derivative = error - prev_error;
 			prev_error = error;
 			power = kP*error + integral*kI + derivative*kD;
+			LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
 		}
 	}
 
