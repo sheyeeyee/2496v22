@@ -3,6 +3,7 @@
 #include <cmath> //for maths in case we need it?
 using namespace pros;
 using namespace std;
+
 //CONSTRUCTORS
 	//chassis
 		//left drive
@@ -24,6 +25,33 @@ using namespace std;
 
 	//controller
 	Controller con (CONTROLLER_MASTER);
+
+
+//chassis PID
+	void drive (int target){
+		double kP = 0.2;
+		double kI = 0.0;
+		double kD = 0.0;
+		int integral = 0;
+		int derivative = 0;
+		int error;
+		int prev_error;
+		int power;
+
+		int current_pos = (LF.get_position() + LM.get_position() + LB.get_position() + RF.get_position() + RM.get_position() + RB.get_position())/6;
+
+		error = target - current_pos;
+		while(target - current_pos >= 15){
+			current_pos = (LF.get_position() + LM.get_position() + LB.get_position() + RF.get_position() + RM.get_position() + RB.get_position())/6;
+			error = target - current_pos;
+			integral += error;
+			derivative = error - prev_error;
+			prev_error = error;
+			power = kP*error + integral*kI + derivative*kD;
+			LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
+
+		}
+	}
 
 /**
  * A callback function for LLEMU's center button.
