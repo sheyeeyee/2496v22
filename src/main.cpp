@@ -49,8 +49,72 @@ using namespace std;
 			prev_error = error;
 			power = kP*error + integral*kI + derivative*kD;
 			LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
-
+			delay(15);
 		}
+	}
+
+	int iter_pos(Imu imu){
+		return -1;
+	}
+
+	void turn(int target){
+		double kP = 0.2;
+		double kI = 0;
+		double kD = 0;
+		int integral = 0;
+		int derivative = 0;
+		int error;
+		int prev_error;
+		int power;
+
+
+		int current_pos = (int)imu.get_yaw();
+		error = target - current_pos;
+
+		while(error > 2){
+			current_pos = (int)imu.get_yaw();
+			error = target - current_pos;
+			integral += error;
+			derivative = error - prev_error;
+			prev_error = error;
+			power = abs(error*kP + integral*kI + derivative*kD);
+			if(target < 0){
+				RB.move(power); RM.move(power); RF.move(power); LF.move(-power); LM.move(-power); LB.move(-power);
+			}
+			else{
+				RB.move(-power); RM.move(-power); RF.move(-power); LF.move(power); LM.move(power); LB.move(power);
+			}
+			delay(15);
+		}
+	}
+
+bool autobalance = false;
+	void autoBalance(){
+		int target = 0;
+		double kP = 0.2;
+		double kI = 0;
+		double kD = 0;
+		int integral = 0;
+		int derivative = 0;
+		int error;
+		int prev_error;
+		int power;
+
+		int current_pos = (int)imu.get_pitch();
+		error = target - current_pos;
+		while(abs(error) > 0){
+			if(autobalance == false){
+				break;
+			}
+			current_pos = (int)imu.get_pitch();
+			error = target - current_pos;
+			integral += error;
+			derivative = error - prev_error;
+			prev_error = error;
+			power = kP*error + integral*kI + derivative*kD;
+			LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
+			delay(15);
+			}
 	}
 
 /**
@@ -115,8 +179,12 @@ void autonomous() {
 	lcd::initialize();
 
 	con.set_text(1,1,"sup gamer");
-
 	imu.reset();
+
+
+	//tesssssssssssssssssssssst
+	drive(300);
+	turn(90);
 }
 
 /**
@@ -159,24 +227,33 @@ void opcontrol() {
 				RM.move(right);
 				RB.move(right);
 				con.set_text(1, 1, to_string(LF.get_position()));
-				con.set_text(2,2, to_string(RF.get_position()));
+				con.set_text(2, 2, to_string(RF.get_position()));
 		//lift
 			//lift go up
-			if (con.get_digital(E_CONTROLLER_DIGITAL_R1)) {
+			if(con.get_digital(E_CONTROLLER_DIGITAL_R1)){
 				lift_left.move(69);
 				lift_right.move(69);
 			}
 				//lift go down
-				else if (con.get_digital(E_CONTROLLER_DIGITAL_R2)) {
+				else if(con.get_digital(E_CONTROLLER_DIGITAL_R2)){
 					lift_left.move(-69);
 					lift_right.move(-69);
 				}
 					//lift go no
-					else {
+					else{
 						lift_left.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 							lift_left.move_velocity(0);
 						lift_right.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 							lift_right.move_velocity(0);
+						}
+
+		//autobalance
+		if(con.get_digital(E_CONTROLLER_DIGITAL_A)){
+			autobalance = true;
+			autoBalance();
+				}
+				else{
+					autobalance = false;
 						}
 
 	}
