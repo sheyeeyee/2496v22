@@ -4,31 +4,30 @@
 using namespace pros;
 using namespace std;
 
-//CONSTRUCTORS
-	//chassis
-		//left drive
-		Motor LF (8, E_MOTOR_GEARSET_18, true);
-		Motor LM (9, E_MOTOR_GEARSET_18, true);
-		Motor LB (10, E_MOTOR_GEARSET_18, true);
-		//right drive
-		Motor RF (4, E_MOTOR_GEARSET_18);
-		Motor RM (3, E_MOTOR_GEARSET_18);
-		Motor RB (1, E_MOTOR_GEARSET_18);
-			//inertial sensor for auton PID
-			Imu imu (10);
+//chassis
+	//left drive
+	Motor LF (8, E_MOTOR_GEARSET_18, true);
+	Motor LM (9, E_MOTOR_GEARSET_18, true);
+	Motor LB (10, E_MOTOR_GEARSET_18, true);
+	//right drive
+	Motor RF (4, E_MOTOR_GEARSET_18);
+	Motor RM (3, E_MOTOR_GEARSET_18);
+	Motor RB (1, E_MOTOR_GEARSET_18);
+		//inertial sensor for auton PID
+		Imu imu (10);
 
-	//lift
-	Motor lift_left (11, E_MOTOR_GEARSET_06, true);
-	Motor lift_right (20, E_MOTOR_GEARSET_06);
-		//potentiometer for PID
-		ADIAnalogIn lift_pot('A');
+//lift
+Motor lift_left (20, E_MOTOR_GEARSET_06, true);
+Motor lift_right (11, E_MOTOR_GEARSET_06);
+	//potentiometer for PID
+	// ADIAnalogIn lift_pot('A');
 
-	//controller
-	Controller con (CONTROLLER_MASTER);
+//controller
+Controller con (CONTROLLER_MASTER);
 
 
 //chassis PID
-	void drive (int target){
+	void drive(int target){
 		double kP = 0.2;
 		double kI = 0.0;
 		double kD = 0.0;
@@ -57,6 +56,7 @@ using namespace std;
 		return -1;
 	}
 
+//turn PID
 	void turn(int target){
 		double kP = 0.2;
 		double kI = 0;
@@ -66,7 +66,6 @@ using namespace std;
 		int error;
 		int prev_error;
 		int power;
-
 
 		int current_pos = (int)imu.get_yaw();
 		error = target - current_pos;
@@ -88,6 +87,7 @@ using namespace std;
 		}
 	}
 
+//autobal on platform? PID
 bool autobalance = false;
 	void autoBalance(){
 		int target = 0;
@@ -117,34 +117,18 @@ bool autobalance = false;
 			}
 	}
 
-/**
- * A callback function for LLEMU's center button.
- *
- * When this callback is fired, it will toggle line 2 of the LCD text between
- * "I was pressed!" and nothing.
- */
-void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		lcd::set_text(2, "I was pressed!");
-	} else {
-		lcd::clear_line(2);
-	}
-}
-
-/**
- * Runs initialization code. This occurs as soon as the program is started.
- *
- * All other competition modes are blocked by initialize; it is recommended
- * to keep execution time for this mode under a few seconds.
- */
-void initialize() {
-	lcd::initialize();
-	lcd::set_text(1, "sup gamer");
-
-	lcd::register_btn1_cb(on_center_button);
-}
+//reset for PID
+	void reset(bool enable){
+		int target;
+	  int current_error;
+	  int i_value;
+	  bool is_enabled;
+	  double kP, kI, kD;
+	  int prev_error = 0;
+      prev_error = 0;
+      i_value = 0;
+      is_enabled = enable;
+  }
 
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -175,16 +159,29 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
+ void stop_motors(){
+ 	LF.move(0);
+ 	LM.move(0);
+ 	LB.move(0);
+ 	RF.move(0);
+	RM.move(0);
+	RB.move(0);
+ }
+
 void autonomous() {
 	lcd::initialize();
 
 	con.set_text(1,1,"sup gamer");
 	imu.reset();
-
+	delay(2000);
+	stop_motors();
 
 	//tesssssssssssssssssssssst
 	drive(300);
+	reset(true);
+	delay(300);
 	turn(90);
+	reset(true);
 }
 
 
@@ -228,36 +225,36 @@ void opcontrol() {
 				RM.move(right);
 				RB.move(right);
 
-				con.set_text(1, 1, to_string(LF.get_position()));
-				con.set_text(2, 2, to_string(RF.get_position()));
-
 		//lift
-			//lift go up
-			if(con.get_digital(E_CONTROLLER_DIGITAL_R1)){
-				lift_left.move(69);
-				lift_right.move(69);
-			}
-				//lift go down
-				else if(con.get_digital(E_CONTROLLER_DIGITAL_R2)){
-					lift_left.move(-69);
-					lift_right.move(-69);
+			//values for lift?
+			con.set_text(0, 0, to_string(lift_left.get_position()));
+			con.set_text(1, 0, to_string(lift_right.get_position()));
+				//lift go up
+				if(con.get_digital(E_CONTROLLER_DIGITAL_R1)){
+					lift_left.move(69);
+					lift_right.move(69);
 				}
-					//lift go no
-					else{
-						lift_left.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-							lift_left.move_velocity(0);
-						lift_right.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-							lift_right.move_velocity(0);
-						}
+					//lift go down
+					else if(con.get_digital(E_CONTROLLER_DIGITAL_R2)){
+						lift_left.move(-69);
+						lift_right.move(-69);
+					}
+						//lift go no
+						else{
+							lift_left.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+								lift_left.move_velocity(0);
+							lift_right.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+								lift_right.move_velocity(0);
+							}
 
 		//autobalance
 		if(con.get_digital(E_CONTROLLER_DIGITAL_A)){
 			autobalance = true;
 			autoBalance();
-				}
-				else{
-					autobalance = false;
-						}
+		}
+			else{
+				autobalance = false;
+			}
 
 	}
 
