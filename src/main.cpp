@@ -178,10 +178,8 @@ void autonomous() {
 
 	//tesssssssssssssssssssssst
 	drive(300);
-	reset(true);
 	delay(300);
 	turn(90);
-	reset(true);
 }
 
 
