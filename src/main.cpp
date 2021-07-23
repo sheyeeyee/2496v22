@@ -1,5 +1,6 @@
 #include "main.h"
 #include "PID.h"
+#include <stdlib.h>
 #include <cmath> //for maths in case we need it?
 using namespace pros;
 using namespace std;
@@ -14,20 +15,42 @@ using namespace std;
 	Motor RM (3, E_MOTOR_GEARSET_18);
 	Motor RB (1, E_MOTOR_GEARSET_18);
 		//inertial sensor for auton PID
-		Imu imu (10);
+		Imu imu (21);
 
 //lift
 Motor lift_left (20, E_MOTOR_GEARSET_06, true);
-Motor lift_right (11, E_MOTOR_GEARSET_06);
+Motor lift_right (13, E_MOTOR_GEARSET_06);
 	//potentiometer for PID
 	// ADIAnalogIn lift_pot('A');
 
 //controller
 Controller con (CONTROLLER_MASTER);
 
+//stop motors
+	void stop_motors(){
+	 LF.move(0);
+	 LM.move(0);
+	 LB.move(0);
+	 RF.move(0);
+	 RM.move(0);
+	 RB.move(0);
+	}
+
+//reset chassis motors
+	void reset_encoders(){
+		LF.set_zero_position(0);
+		LM.set_zero_position(0);
+		LB.set_zero_position(0);
+		RF.set_zero_position(0);
+		RM.set_zero_position(0);
+		RB.set_zero_position(0);
+	}
 
 //chassis PID
 	void drive(int target){
+		// reset_encoders();
+		reset_encoders();
+		// RF.set_zero_position(0);
 		double kP = 0.2;
 		double kI = 0.0;
 		double kD = 0.0;
@@ -36,25 +59,37 @@ Controller con (CONTROLLER_MASTER);
 		int error;
 		int prev_error;
 		int power;
-
-		int current_pos = (LF.get_position() + LM.get_position() + LB.get_position() + RF.get_position() + RM.get_position() + RB.get_position())/6;
-
+		// cout << "Hi" << endl;
+		// cout << "Left Motor: " << LF.get_position() << endl;
+		// cout << LM.get_position() << endl;
+		// cout << LB.get_position() << endl;
+		// cout << RF.get_position() << endl;
+		// cout << RM.get_position() << endl;
+		// cout << RB.get_position() << endl;
+		int current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
+		cout << "hit" << endl;
+		cout << "Current Pos: " << current_pos << endl;
 		error = target - current_pos;
-		while(target - current_pos >= 15){
-			current_pos = (LF.get_position() + LM.get_position() + LB.get_position() + RF.get_position() + RM.get_position() + RB.get_position())/6;
+		cout << "Target: " << target << endl;
+		cout << "Error: " << error << endl;
+		while(target - current_pos >= 25){
+			current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
+			cout << "Position: " << current_pos << endl;
 			error = target - current_pos;
+			cout << "Error: " << error << endl;
 			integral += error;
 			derivative = error - prev_error;
 			prev_error = error;
 			power = kP*error + integral*kI + derivative*kD;
+			// cout << "I_value : " << integral << endl;
+			// cout << "D_value: " << derivative << endl;
+			cout << "Power: " << power << endl;
 			LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
 			delay(15);
 		}
+		return;
 	}
 
-	int iter_pos(Imu imu){
-		return -1;
-	}
 
 //turn PID
 	void turn(int target){
@@ -91,31 +126,38 @@ Controller con (CONTROLLER_MASTER);
 bool autobalance = false;
 	void autoBalance(){
 		int target = 0;
-		double kP = 0.2;
-		double kI = 0;
-		double kD = 0;
+		double kP = 0.02;
+		double kI = 0.02;
+		double kD = 0.03;
 		int integral = 0;
 		int derivative = 0;
 		int error;
 		int prev_error;
 		int power;
 
-		int current_pos = (int)imu.get_pitch();
+		int current_pos = (int)imu.get_roll();
 		error = target - current_pos;
-		while(abs(error) > 0){
-			if(autobalance == false){
-				break;
+		cout << "Current Position: " << current_pos << endl;
+		while(autobalance == true){
+			while(abs(error) > 0){
+				current_pos = (int)imu.get_roll();
+				cout << "Current Pos: " << current_pos << endl;
+				error = target - current_pos;
+				integral += error;
+				derivative = error - prev_error;
+				prev_error = error;
+				power = kP*error + integral*kI + derivative*kD;
+				// con.set_text(0, 0, to_string(power));
+				cout << "A Power: " << power << endl;
+				LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
+				delay(15);
+				}
+				delay(5);
 			}
-			current_pos = (int)imu.get_pitch();
-			error = target - current_pos;
-			integral += error;
-			derivative = error - prev_error;
-			prev_error = error;
-			power = kP*error + integral*kI + derivative*kD;
-			LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
-			delay(15);
-			}
+			stop_motors();
+			return;
 	}
+
 
 //reset for PID
 	void reset(bool enable){
@@ -159,27 +201,20 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
- void stop_motors(){
- 	LF.move(0);
- 	LM.move(0);
- 	LB.move(0);
- 	RF.move(0);
-	RM.move(0);
-	RB.move(0);
- }
+
 
 void autonomous() {
 	lcd::initialize();
 
 	con.set_text(1,1,"sup gamer");
 	imu.reset();
-	delay(2000);
+	// delay(2000);
 	stop_motors();
 
-	//tesssssssssssssssssssssst
-	drive(300);
-	delay(300);
-	turn(90);
+//tesssssssssssssssssssssst
+	drive(10000);
+	// drive(300);
+	stop_motors();
 }
 
 
@@ -203,6 +238,7 @@ void opcontrol() {
 		//chassis (arcade drive)
 			/**Set the integers for moving right and left so you can place them in the
 					function.**/
+
 			int power = con.get_analog(ANALOG_LEFT_Y);
 				/**The power integer is set on the left joystick, ANALOG_LEFT, and has a
 							Y at the end bc that is the vertical axis and the left joystick is
@@ -211,10 +247,14 @@ void opcontrol() {
 				/**The turn integer is set to the right joystick, ANALOG_RIGHT, and has
 							an X at the end bc that is the horizontal axis and the right
 							joystick is for going left and right.**/
-			int left = power + turn;
+			int left = power + turn ;
 			int right = power - turn;
 				//tbh still tryna figure out how this sum difference thing works
-
+				// system("CLS");
+				cout << "LeftC: " << left << endl;
+				cout << "RightC: " << right << endl;
+				cout << "LeftLift: " << lift_left.get_position() << endl;
+				cout << "RightLift " << lift_right.get_position() << endl;
 				//put the left and right integers down here
 				LF.move(left);
 				LM.move(left);
@@ -222,20 +262,19 @@ void opcontrol() {
 				RF.move(right);
 				RM.move(right);
 				RB.move(right);
+				// con.set_text(1, 0, to_string(left));
+				// con.set_text(2, 1, to_string(right));
 
 		//lift
-			//values for lift?
-			con.set_text(0, 0, to_string(lift_left.get_position()));
-			con.set_text(1, 0, to_string(lift_right.get_position()));
 				//lift go up
 				if(con.get_digital(E_CONTROLLER_DIGITAL_R1)){
-					lift_left.move(69);
-					lift_right.move(69);
+					lift_left.move(69-19);
+					lift_right.move(69-19);
 				}
 					//lift go down
 					else if(con.get_digital(E_CONTROLLER_DIGITAL_R2)){
-						lift_left.move(-69);
-						lift_right.move(-69);
+						lift_left.move(-69+42);
+						lift_right.move(-69+42);
 					}
 						//lift go no
 						else{
@@ -250,9 +289,11 @@ void opcontrol() {
 			autobalance = true;
 			autoBalance();
 		}
-			else{
+		else{
 				autobalance = false;
-			}
+		}
+
+		delay(15);
 
 	}
 
