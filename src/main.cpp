@@ -1,50 +1,31 @@
 #include "main.h"
 #include "PID.h"
-#include <stdlib.h>
 #include <cmath> //for maths in case we need it?
 using namespace pros;
 using namespace std;
 
-//chassis
-	//left drive
-	Motor LF (8, E_MOTOR_GEARSET_18, true);
-	Motor LM (9, E_MOTOR_GEARSET_18, true);
-	Motor LB (10, E_MOTOR_GEARSET_18, true);
-	//right drive
-	Motor RF (4, E_MOTOR_GEARSET_18);
-	Motor RM (3, E_MOTOR_GEARSET_18);
-	Motor RB (1, E_MOTOR_GEARSET_18);
-		//inertial sensor for auton PID
-		Imu imu (21);
+//CONSTRUCTORS
+	//chassis
+		//left drive
+		Motor LF (8, E_MOTOR_GEARSET_18, true);
+		Motor LM (9, E_MOTOR_GEARSET_18, true);
+		Motor LB (10, E_MOTOR_GEARSET_18, true);
+		//right drive
+		Motor RF (4, E_MOTOR_GEARSET_18);
+		Motor RM (3, E_MOTOR_GEARSET_18);
+		Motor RB (1, E_MOTOR_GEARSET_18);
+			//inertial sensor for auton PID
+			Imu imu (10);
 
-//lift
-Motor lift_left (20, E_MOTOR_GEARSET_06, true);
-Motor lift_right (13, E_MOTOR_GEARSET_06);
-	//potentiometer for PID
-	// ADIAnalogIn lift_pot('A');
+	//lift
+	Motor lift_left (11, E_MOTOR_GEARSET_06, true);
+	Motor lift_right (20, E_MOTOR_GEARSET_06);
+		//potentiometer for PID
+		ADIAnalogIn lift_pot('A');
 
-//controller
-Controller con (CONTROLLER_MASTER);
+	//controller
+	Controller con (CONTROLLER_MASTER);
 
-//stop motors
-	void stop_motors(){
-	 LF.move(0);
-	 LM.move(0);
-	 LB.move(0);
-	 RF.move(0);
-	 RM.move(0);
-	 RB.move(0);
-	}
-
-//reset chassis motors
-	void reset_encoders(){
-		LF.set_zero_position(0);
-		LM.set_zero_position(0);
-		LB.set_zero_position(0);
-		RF.set_zero_position(0);
-		RM.set_zero_position(0);
-		RB.set_zero_position(0);
-	}
 
 //chassis PID
 	void driveForward(int target){
@@ -53,8 +34,8 @@ Controller con (CONTROLLER_MASTER);
 		//target is in inches
 		target*=28.65; // the conversion for 36:1 4 inch wheels
 		// RF.set_zero_position(0);
-		double kP = 0.2;
-		double kI = 0.0;
+		double kP = 0.4;
+		double kI = 0.1;
 		double kD = 0.0;
 		int integral = 0;
 		int derivative = 0;
@@ -69,7 +50,6 @@ Controller con (CONTROLLER_MASTER);
 		// cout << RM.get_position() << endl;
 		// RM.set_encoder_units(motor_encoder_units_e(100));
 		// cout << RM.get_position() << endl;
-
 		// cout << RB.get_position() << endl;
 		int current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
 		// cout << "hit" << endl;
@@ -77,24 +57,28 @@ Controller con (CONTROLLER_MASTER);
 		error = target - current_pos;
 		// cout << "Target: " << target << endl;
 		// cout << "Error: " << error << endl;
-		while(target - current_pos >= 25){
+		while(error >= 15){
 			current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
 			// cout << "Position: " << current_pos << endl;
 			error = target - current_pos;
-			// cout << "Error: " << error << endl;
 			integral += error;
+			if(error == 0){
+				integral = 0;
+			}
+			if(integral > 3000){
+				integral = 0;
+			}
 			derivative = error - prev_error;
 			prev_error = error;
 			power = kP*error + integral*kI + derivative*kD;
-			// cout << "I_value : " << integral << endl;
-			// cout << "D_value: " << derivative << endl;
-			// cout << "Power: " << power << endl;
-			RF.move(power); RM.move(power); RB.move(power); LF.move(power); LM.move(power); LB.move(power);
-			delay(10);
+			LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
+			delay(15);
 		}
-		return;
 	}
 
+	int iter_pos(Imu imu){
+		return -1;
+	}
 
 
 void driveReverse(int target){
@@ -103,75 +87,75 @@ void driveReverse(int target){
 		//target is in inches
 		target*=28.65; // the conversion for 36:1 4 inch wheels
 		// RF.set_zero_position(0);
-		double kP = 0.2;
-		double kI = 0.0;
+		double kP = 0.4;
+		double kI = 0.1;
 		double kD = 0.0;
 		int integral = 0;
 		int derivative = 0;
 		int error;
 		int prev_error;
 		int power;
-		int current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
-		// cout << "hit" << endl;
-		// cout << "Current Pos: " << current_pos << endl;
+
+
+		int current_pos = (int)imu.get_yaw();
 		error = target - current_pos;
 		// cout << "Target: " << target << endl;
 		// cout << "Error: " << error << endl;
-		while(target - current_pos >= 25){
+		while(error >= 15){
 			current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
 			// cout << "Position: " << current_pos << endl;
 			error = target - current_pos;
-			// cout << "Error: " << error << endl;
 			integral += error;
-			derivative = error - prev_error;
-			prev_error = error;
-			power = kP*error + integral*kI + derivative*kD;
-			// cout << "I_value : " << integral << endl;
-			// cout << "D_value: " << derivative << endl;
-			// cout << "Power: " << power << endl;
-			RF.move(-power); RM.move(-power); RB.move(-power); LF.move(-power); LM.move(-power); LB.move(-power);
-			delay(10);
-	}
-}
-
-
-//turn PID
-	void turn(int target){
-		// target*=28.65;
-		double kP = 0.2;
-		double kI = 0;
-		double kD = 0;
-		int integral = 0;
-		int derivative = 0;
-		int error;
-		int prev_error;
-		int power;
-
-		int current_pos = (int)imu.get_rotation();
-		cout << "Current pos: " << current_pos << endl;
-		error = target - current_pos;
-		cout << "Error: " << error << endl;
-
-		while(error > 2){
-			current_pos = (int)imu.get_rotation();
-			cout << "Current pos: " << current_pos << endl;
-			error = target - current_pos;
-			cout << "Error: " << error << endl;
-			integral += error;
+			if(error == 0){
+				integral = 0;
+			}
+			if(integral > 3000){
+				integral = 0;
+			}
 			derivative = error - prev_error;
 			prev_error = error;
 			power = abs(error*kP + integral*kI + derivative*kD);
-			cout << "Power: " << power << endl;
 			if(target < 0){
 				RB.move(power); RM.move(power); RF.move(power); LF.move(-power); LM.move(-power); LB.move(-power);
 			}
 			else{
 				RB.move(-power); RM.move(-power); RF.move(-power); LF.move(power); LM.move(power); LB.move(power);
 			}
-			delay(10);
+			delay(15);
 		}
 	}
 
+//this is just a brainstrom for turning
+void turn2(int degrees){
+	reset_encoders();
+	degrees *= 18.95; //this is honestly just some random number
+	double kP, kI, kD;
+	int integral;
+	int derivative;
+	int error;
+	int prev_error;
+	int power;
+	int current_pos;
+
+	current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
+	error = degrees - current_pos;
+	while(abs(error) >= 15){
+		current_pos = (LF.get_position() + LM.get_position() + LB.get_position()) / 3;
+		error = degrees - current_pos;
+		integral += error;
+		if(error == 0){
+			integral = 0;
+		}
+		if(integral >= 3000){
+			integral = 0;
+		}
+		derivative = error - prev_error;
+		prev_error = error;
+		power = kP*error + kI*integral + kD*derivative;
+
+		LF.move(power); LM.move(power); LB.move(power); RF.move(-power); RM.move(-power); RB.move(-power);
+	}
+}
 //reset for PID
 	void reset(bool enable){
 		int target;
@@ -214,14 +198,12 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-
-
 void autonomous() {
 	lcd::initialize();
 
 	con.set_text(1,1,"sup gamer");
 	imu.reset();
-	// delay(2000);
+	// delay(3000);
 	stop_motors();
 
 //tesssssssssssssssssssssst
@@ -234,6 +216,11 @@ void autonomous() {
 	stop_motors();
 }
 
+
+	//tesssssssssssssssssssssst
+	drive(300);
+	turn(90);
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -255,7 +242,6 @@ void opcontrol() {
 		//chassis (arcade drive)
 			/**Set the integers for moving right and left so you can place them in the
 					function.**/
-
 			int power = con.get_analog(ANALOG_LEFT_Y);
 				/**The power integer is set on the left joystick, ANALOG_LEFT, and has a
 							Y at the end bc that is the vertical axis and the left joystick is
@@ -264,14 +250,10 @@ void opcontrol() {
 				/**The turn integer is set to the right joystick, ANALOG_RIGHT, and has
 							an X at the end bc that is the horizontal axis and the right
 							joystick is for going left and right.**/
-			int left = power + turn ;
+			int left = power + turn;
 			int right = power - turn;
 				//tbh still tryna figure out how this sum difference thing works
-				// system("CLS");
-				cout << "LeftC: " << left << endl;
-				cout << "RightC: " << right << endl;
-				cout << "LeftLift: " << lift_left.get_position() << endl;
-				cout << "RightLift " << lift_right.get_position() << endl;
+
 				//put the left and right integers down here
 				LF.move(left);
 				LM.move(left);
@@ -279,29 +261,35 @@ void opcontrol() {
 				RF.move(right);
 				RM.move(right);
 				RB.move(right);
-				// con.set_text(1, 0, to_string(left));
-				// con.set_text(2, 1, to_string(right));
-
+				con.set_text(1, 1, to_string(LF.get_position()));
+				con.set_text(2, 2, to_string(RF.get_position()));
 		//lift
-				//lift go up
-				if(con.get_digital(E_CONTROLLER_DIGITAL_R1)){
-					lift_left.move(69-19);
-					lift_right.move(69-19);
+			//lift go up
+			if(con.get_digital(E_CONTROLLER_DIGITAL_R1)){
+				lift_left.move(69);
+				lift_right.move(69);
+			}
+				//lift go down
+				else if(con.get_digital(E_CONTROLLER_DIGITAL_R2)){
+					lift_left.move(-69);
+					lift_right.move(-69);
 				}
-					//lift go down
-					else if(con.get_digital(E_CONTROLLER_DIGITAL_R2)){
-						lift_left.move(-69+42);
-						lift_right.move(-69+42);
-					}
-						//lift go no
-						else{
-							lift_left.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-								lift_left.move_velocity(0);
-							lift_right.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-								lift_right.move_velocity(0);
-							}
+					//lift go no
+					else{
+						lift_left.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+							lift_left.move_velocity(0);
+						lift_right.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+							lift_right.move_velocity(0);
+						}
 
-		delay(15);
+		//autobalance
+		if(con.get_digital(E_CONTROLLER_DIGITAL_A)){
+			autobalance = true;
+			autoBalance();
+				}
+				else{
+					autobalance = false;
+						}
 
 	}
 
