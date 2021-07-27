@@ -47,9 +47,11 @@ Controller con (CONTROLLER_MASTER);
 	}
 
 //chassis PID
-	void drive(int target){
+	void driveForward(int target){
 		// reset_encoders();
 		reset_encoders();
+		//target is in inches
+		target*=28.65; // the conversion for 36:1 4 inch wheels
 		// RF.set_zero_position(0);
 		double kP = 0.2;
 		double kI = 0.0;
@@ -65,34 +67,77 @@ Controller con (CONTROLLER_MASTER);
 		// cout << LB.get_position() << endl;
 		// cout << RF.get_position() << endl;
 		// cout << RM.get_position() << endl;
+		// RM.set_encoder_units(motor_encoder_units_e(100));
+		// cout << RM.get_position() << endl;
+
 		// cout << RB.get_position() << endl;
 		int current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
-		cout << "hit" << endl;
-		cout << "Current Pos: " << current_pos << endl;
+		// cout << "hit" << endl;
+		// cout << "Current Pos: " << current_pos << endl;
 		error = target - current_pos;
-		cout << "Target: " << target << endl;
-		cout << "Error: " << error << endl;
+		// cout << "Target: " << target << endl;
+		// cout << "Error: " << error << endl;
 		while(target - current_pos >= 25){
 			current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
-			cout << "Position: " << current_pos << endl;
+			// cout << "Position: " << current_pos << endl;
 			error = target - current_pos;
-			cout << "Error: " << error << endl;
+			// cout << "Error: " << error << endl;
 			integral += error;
 			derivative = error - prev_error;
 			prev_error = error;
 			power = kP*error + integral*kI + derivative*kD;
 			// cout << "I_value : " << integral << endl;
 			// cout << "D_value: " << derivative << endl;
-			cout << "Power: " << power << endl;
-			LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
-			delay(15);
+			// cout << "Power: " << power << endl;
+			RF.move(power); RM.move(power); RB.move(power); LF.move(power); LM.move(power); LB.move(power);
+			delay(10);
 		}
 		return;
 	}
 
 
+
+void driveReverse(int target){
+		// reset_encoders();
+		reset_encoders();
+		//target is in inches
+		target*=28.65; // the conversion for 36:1 4 inch wheels
+		// RF.set_zero_position(0);
+		double kP = 0.2;
+		double kI = 0.0;
+		double kD = 0.0;
+		int integral = 0;
+		int derivative = 0;
+		int error;
+		int prev_error;
+		int power;
+		int current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
+		// cout << "hit" << endl;
+		// cout << "Current Pos: " << current_pos << endl;
+		error = target - current_pos;
+		// cout << "Target: " << target << endl;
+		// cout << "Error: " << error << endl;
+		while(target - current_pos >= 25){
+			current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
+			// cout << "Position: " << current_pos << endl;
+			error = target - current_pos;
+			// cout << "Error: " << error << endl;
+			integral += error;
+			derivative = error - prev_error;
+			prev_error = error;
+			power = kP*error + integral*kI + derivative*kD;
+			// cout << "I_value : " << integral << endl;
+			// cout << "D_value: " << derivative << endl;
+			// cout << "Power: " << power << endl;
+			RF.move(-power); RM.move(-power); RB.move(-power); LF.move(-power); LM.move(-power); LB.move(-power);
+			delay(10);
+	}
+}
+
+
 //turn PID
 	void turn(int target){
+		// target*=28.65;
 		double kP = 0.2;
 		double kI = 0;
 		double kD = 0;
@@ -102,62 +147,30 @@ Controller con (CONTROLLER_MASTER);
 		int prev_error;
 		int power;
 
-		int current_pos = (int)imu.get_yaw();
+		int current_pos = (int)imu.get_rotation();
+		cout << "Current pos: " << current_pos << endl;
 		error = target - current_pos;
+		cout << "Error: " << error << endl;
 
 		while(error > 2){
-			current_pos = (int)imu.get_yaw();
+			current_pos = (int)imu.get_rotation();
+			cout << "Current pos: " << current_pos << endl;
 			error = target - current_pos;
+			cout << "Error: " << error << endl;
 			integral += error;
 			derivative = error - prev_error;
 			prev_error = error;
 			power = abs(error*kP + integral*kI + derivative*kD);
+			cout << "Power: " << power << endl;
 			if(target < 0){
 				RB.move(power); RM.move(power); RF.move(power); LF.move(-power); LM.move(-power); LB.move(-power);
 			}
 			else{
 				RB.move(-power); RM.move(-power); RF.move(-power); LF.move(power); LM.move(power); LB.move(power);
 			}
-			delay(15);
+			delay(10);
 		}
 	}
-
-//autobal on platform? PID
-bool autobalance = false;
-	void autoBalance(){
-		int target = 0;
-		double kP = 0.02;
-		double kI = 0.02;
-		double kD = 0.03;
-		int integral = 0;
-		int derivative = 0;
-		int error;
-		int prev_error;
-		int power;
-
-		int current_pos = (int)imu.get_roll();
-		error = target - current_pos;
-		cout << "Current Position: " << current_pos << endl;
-		while(autobalance == true){
-			while(abs(error) > 0){
-				current_pos = (int)imu.get_roll();
-				cout << "Current Pos: " << current_pos << endl;
-				error = target - current_pos;
-				integral += error;
-				derivative = error - prev_error;
-				prev_error = error;
-				power = kP*error + integral*kI + derivative*kD;
-				// con.set_text(0, 0, to_string(power));
-				cout << "A Power: " << power << endl;
-				LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
-				delay(15);
-				}
-				delay(5);
-			}
-			stop_motors();
-			return;
-	}
-
 
 //reset for PID
 	void reset(bool enable){
@@ -212,8 +225,12 @@ void autonomous() {
 	stop_motors();
 
 //tesssssssssssssssssssssst
-	drive(10000);
-	// drive(300);
+	// drive(10000);
+	driveForward(100);
+	delay(15);
+	driveForward(50);
+	driveReverse(100);
+	// turn(90);
 	stop_motors();
 }
 
@@ -283,15 +300,6 @@ void opcontrol() {
 							lift_right.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 								lift_right.move_velocity(0);
 							}
-
-		//autobalance
-		if(con.get_digital(E_CONTROLLER_DIGITAL_A)){
-			autobalance = true;
-			autoBalance();
-		}
-		else{
-				autobalance = false;
-		}
 
 		delay(15);
 
