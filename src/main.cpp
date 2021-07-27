@@ -42,24 +42,10 @@ using namespace std;
 		int error;
 		int prev_error;
 		int power;
-		// cout << "Hi" << endl;
-		// cout << "Left Motor: " << LF.get_position() << endl;
-		// cout << LM.get_position() << endl;
-		// cout << LB.get_position() << endl;
-		// cout << RF.get_position() << endl;
-		// cout << RM.get_position() << endl;
-		// RM.set_encoder_units(motor_encoder_units_e(100));
-		// cout << RM.get_position() << endl;
-		// cout << RB.get_position() << endl;
 		int current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
-		// cout << "hit" << endl;
-		// cout << "Current Pos: " << current_pos << endl;
 		error = target - current_pos;
-		// cout << "Target: " << target << endl;
-		// cout << "Error: " << error << endl;
 		while(abs(error) >= 15){
 			current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
-			// cout << "Position: " << current_pos << endl;
 			error = target - current_pos;
 			integral += error;
 			if(error == 0){
@@ -80,49 +66,12 @@ using namespace std;
 		return -1;
 	}
 
-//
-// void driveReverse(int target){
-// 		reset_encoders();
-// 		//target is in inches
-// 		target*=28.65; // the conversion for 36:1 4 inch wheels
-// 		double kP = 0.4;
-// 		double kI = 0.1;
-// 		double kD = 0.0;
-// 		int integral = 0;
-// 		int derivative = 0;
-// 		int error;
-// 		int prev_error;
-// 		int power;
-//
-//
-// 		int current_pos = (int)imu.get_yaw();
-// 		error = target - current_pos;
-// 		// cout << "Target: " << target << endl;
-// 		// cout << "Error: " << error << endl;
-// 		while(error >= 15){
-// 			current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
-// 			// cout << "Position: " << current_pos << endl;
-// 			error = target - current_pos;
-// 			integral += error;
-// 			if(error == 0){
-// 				integral = 0;
-// 			}
-// 			if(integral > 3000){
-// 				integral = 0;
-// 			}
-// 			derivative = error - prev_error;
-// 			prev_error = error;
-// 			power = abs(error*kP + integral*kI + derivative*kD);
-// 			RB.move(-power); RM.move(-power); RF.move(-power); LF.move(-power); LM.move(-power); LB.move(-power);
-// 			delay(15);
-// 		}
-// 	}
 //this is just a brainstrom for turning
 void turn(int degrees){
 	reset_encoders();
 	degrees *= 20; //this is honestly just some random number
-	double kP = 0.2;
-	double kI = 0;
+	double kP = 0.4;
+	double kI = 0.1;
 	double kD = 0;
 	int integral;
 	int derivative;
