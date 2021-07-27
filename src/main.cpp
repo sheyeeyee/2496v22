@@ -28,7 +28,7 @@ using namespace std;
 
 
 //chassis PID
-	void driveForward(int target){
+	void drive(int target){
 		// reset_encoders();
 		reset_encoders();
 		//target is in inches
@@ -57,7 +57,7 @@ using namespace std;
 		error = target - current_pos;
 		// cout << "Target: " << target << endl;
 		// cout << "Error: " << error << endl;
-		while(error >= 15){
+		while(abs(error) >= 15){
 			current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
 			// cout << "Position: " << current_pos << endl;
 			error = target - current_pos;
@@ -80,50 +80,43 @@ using namespace std;
 		return -1;
 	}
 
-
-void driveReverse(int target){
-		// reset_encoders();
-		reset_encoders();
-		//target is in inches
-		target*=28.65; // the conversion for 36:1 4 inch wheels
-		// RF.set_zero_position(0);
-		double kP = 0.4;
-		double kI = 0.1;
-		double kD = 0.0;
-		int integral = 0;
-		int derivative = 0;
-		int error;
-		int prev_error;
-		int power;
-
-
-		int current_pos = (int)imu.get_yaw();
-		error = target - current_pos;
-		// cout << "Target: " << target << endl;
-		// cout << "Error: " << error << endl;
-		while(error >= 15){
-			current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
-			// cout << "Position: " << current_pos << endl;
-			error = target - current_pos;
-			integral += error;
-			if(error == 0){
-				integral = 0;
-			}
-			if(integral > 3000){
-				integral = 0;
-			}
-			derivative = error - prev_error;
-			prev_error = error;
-			power = abs(error*kP + integral*kI + derivative*kD);
-			if(target < 0){
-				RB.move(power); RM.move(power); RF.move(power); LF.move(-power); LM.move(-power); LB.move(-power);
-			}
-			else{
-				RB.move(-power); RM.move(-power); RF.move(-power); LF.move(power); LM.move(power); LB.move(power);
-			}
-			delay(15);
-		}
-	}
+//
+// void driveReverse(int target){
+// 		reset_encoders();
+// 		//target is in inches
+// 		target*=28.65; // the conversion for 36:1 4 inch wheels
+// 		double kP = 0.4;
+// 		double kI = 0.1;
+// 		double kD = 0.0;
+// 		int integral = 0;
+// 		int derivative = 0;
+// 		int error;
+// 		int prev_error;
+// 		int power;
+//
+//
+// 		int current_pos = (int)imu.get_yaw();
+// 		error = target - current_pos;
+// 		// cout << "Target: " << target << endl;
+// 		// cout << "Error: " << error << endl;
+// 		while(error >= 15){
+// 			current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
+// 			// cout << "Position: " << current_pos << endl;
+// 			error = target - current_pos;
+// 			integral += error;
+// 			if(error == 0){
+// 				integral = 0;
+// 			}
+// 			if(integral > 3000){
+// 				integral = 0;
+// 			}
+// 			derivative = error - prev_error;
+// 			prev_error = error;
+// 			power = abs(error*kP + integral*kI + derivative*kD);
+// 			RB.move(-power); RM.move(-power); RF.move(-power); LF.move(-power); LM.move(-power); LB.move(-power);
+// 			delay(15);
+// 		}
+// 	}
 
 bool autobalance = false;
 	void autoBalance(){
@@ -155,10 +148,12 @@ bool autobalance = false;
 	}
 
 //this is just a brainstrom for turning
-void turn2(int degrees){
+void turn(int degrees){
 	reset_encoders();
-	degrees *= 18.95; //this is honestly just some random number
-	double kP, kI, kD;
+	degrees *= 20; //this is honestly just some random number
+	double kP = 0.2;
+	double kI = 0;
+	double kD = 0;
 	int integral;
 	int derivative;
 	int error;
@@ -166,7 +161,7 @@ void turn2(int degrees){
 	int power;
 	int current_pos;
 
-	current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
+	current_pos = (LF.get_position() + LM.get_position() + LB.get_position()) / 3;
 	error = degrees - current_pos;
 	while(abs(error) >= 15){
 		current_pos = (LF.get_position() + LM.get_position() + LB.get_position()) / 3;
@@ -178,11 +173,13 @@ void turn2(int degrees){
 		if(integral >= 3000){
 			integral = 0;
 		}
+
 		derivative = error - prev_error;
 		prev_error = error;
 		power = kP*error + kI*integral + kD*derivative;
 
 		LF.move(power); LM.move(power); LB.move(power); RF.move(-power); RM.move(-power); RB.move(-power);
+		delay(15);
 	}
 }
 //reset for PID
@@ -237,10 +234,13 @@ void autonomous() {
 
 //tesssssssssssssssssssssst
 	// drive(10000);
-	driveForward(100);
+	drive(100);
 	delay(15);
-	driveForward(50);
-	driveReverse(100);
+	drive(50);
+	delay(15);
+	drive(-100);
+	delay(15);
+	turn(90);
 	// turn(90);
 	stop_motors();
 }
@@ -311,14 +311,7 @@ void opcontrol() {
 							lift_right.move_velocity(0);
 						}
 
-		//autobalance
-		if(con.get_digital(E_CONTROLLER_DIGITAL_A)){
-			autobalance = true;
-			autoBalance();
-				}
-				else{
-					autobalance = false;
-						}
+
 
 	}
 
