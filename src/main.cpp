@@ -28,6 +28,24 @@ using namespace std;
 
 
 //chassis PID
+
+void reset_encoders(){
+	RF.set_zero_position(0);
+	RM.set_zero_position(0);
+	RB.set_zero_position(0);
+	LF.set_zero_position(0);
+	LM.set_zero_position(0);
+	LB.set_zero_position(0);
+}
+
+void stop_motors(){
+	RF.move(0);
+	RM.move(0);
+	RB.move(0);
+	LF.move(0);
+	LM.move(0);
+	LB.move(0);
+}
 	void drive(int target){
 		// reset_encoders();
 		reset_encoders();
@@ -164,11 +182,7 @@ void autonomous() {
 	stop_motors();
 }
 
-
-	//tesssssssssssssssssssssst
-	drive(300);
-	turn(90);
-}
+//
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -234,4 +248,4 @@ void opcontrol() {
 
 	}
 
-}
+	}
