@@ -26,6 +26,23 @@ using namespace std;
 	//controller
 	Controller con (CONTROLLER_MASTER);
 
+void reset_encoders(){
+	LF.set_zero_position(0);
+	LM.set_zero_position(0);
+	LB.set_zero_position(0);
+	RF.set_zero_position(0);
+	RM.set_zero_position(0);
+	RB.set_zero_position(0);
+}
+
+void stop_motors(){
+	LF.move(0);
+	LM.move(0);
+	LB.move(0);
+	RF.move(0);
+	RM.move(0);
+	RB.move(0);
+}
 
 //chassis PID
 	void driveForward(int target){
