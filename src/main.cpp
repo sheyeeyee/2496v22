@@ -117,36 +117,6 @@ using namespace std;
 // 			delay(15);
 // 		}
 // 	}
-
-bool autobalance = false;
-	void autoBalance(){
-		int target = 0;
-		double kP = 0.2;
-		double kI = 0;
-		double kD = 0;
-		int integral = 0;
-		int derivative = 0;
-		int error;
-		int prev_error;
-		int power;
-
-		int current_pos = (int)imu.get_pitch();
-		error = target - current_pos;
-		while(abs(error) > 0){
-			if(autobalance == false){
-				break;
-			}
-			current_pos = (int)imu.get_pitch();
-			error = target - current_pos;
-			integral += error;
-			derivative = error - prev_error;
-			prev_error = error;
-			power = kP*error + integral*kI + derivative*kD;
-			LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
-			delay(15);
-			}
-	}
-
 //this is just a brainstrom for turning
 void turn(int degrees){
 	reset_encoders();
