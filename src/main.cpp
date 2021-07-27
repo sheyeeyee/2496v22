@@ -28,23 +28,46 @@ using namespace std;
 
 
 //chassis PID
-	void drive (int target){
-		double kP = 0.2;
-		double kI = 0.0;
+	void driveForward(int target){
+		// reset_encoders();
+		reset_encoders();
+		//target is in inches
+		target*=28.65; // the conversion for 36:1 4 inch wheels
+		// RF.set_zero_position(0);
+		double kP = 0.4;
+		double kI = 0.1;
 		double kD = 0.0;
 		int integral = 0;
 		int derivative = 0;
 		int error;
 		int prev_error;
 		int power;
-
-		int current_pos = (LF.get_position() + LM.get_position() + LB.get_position() + RF.get_position() + RM.get_position() + RB.get_position())/6;
-
+		// cout << "Hi" << endl;
+		// cout << "Left Motor: " << LF.get_position() << endl;
+		// cout << LM.get_position() << endl;
+		// cout << LB.get_position() << endl;
+		// cout << RF.get_position() << endl;
+		// cout << RM.get_position() << endl;
+		// RM.set_encoder_units(motor_encoder_units_e(100));
+		// cout << RM.get_position() << endl;
+		// cout << RB.get_position() << endl;
+		int current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
+		// cout << "hit" << endl;
+		// cout << "Current Pos: " << current_pos << endl;
 		error = target - current_pos;
-		while(target - current_pos >= 15){
-			current_pos = (LF.get_position() + LM.get_position() + LB.get_position() + RF.get_position() + RM.get_position() + RB.get_position())/6;
+		// cout << "Target: " << target << endl;
+		// cout << "Error: " << error << endl;
+		while(error >= 15){
+			current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
+			// cout << "Position: " << current_pos << endl;
 			error = target - current_pos;
 			integral += error;
+			if(error == 0){
+				integral = 0;
+			}
+			if(integral > 3000){
+				integral = 0;
+			}
 			derivative = error - prev_error;
 			prev_error = error;
 			power = kP*error + integral*kI + derivative*kD;
@@ -57,10 +80,16 @@ using namespace std;
 		return -1;
 	}
 
-	void turn(int target){
-		double kP = 0.2;
-		double kI = 0;
-		double kD = 0;
+
+void driveReverse(int target){
+		// reset_encoders();
+		reset_encoders();
+		//target is in inches
+		target*=28.65; // the conversion for 36:1 4 inch wheels
+		// RF.set_zero_position(0);
+		double kP = 0.4;
+		double kI = 0.1;
+		double kD = 0.0;
 		int integral = 0;
 		int derivative = 0;
 		int error;
@@ -70,11 +99,19 @@ using namespace std;
 
 		int current_pos = (int)imu.get_yaw();
 		error = target - current_pos;
-
-		while(error > 2){
-			current_pos = (int)imu.get_yaw();
+		// cout << "Target: " << target << endl;
+		// cout << "Error: " << error << endl;
+		while(error >= 15){
+			current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
+			// cout << "Position: " << current_pos << endl;
 			error = target - current_pos;
 			integral += error;
+			if(error == 0){
+				integral = 0;
+			}
+			if(integral > 3000){
+				integral = 0;
+			}
 			derivative = error - prev_error;
 			prev_error = error;
 			power = abs(error*kP + integral*kI + derivative*kD);
@@ -117,34 +154,49 @@ bool autobalance = false;
 			}
 	}
 
-/**
- * A callback function for LLEMU's center button.
- *
- * When this callback is fired, it will toggle line 2 of the LCD text between
- * "I was pressed!" and nothing.
- */
-void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		lcd::set_text(2, "I was pressed!");
-	} else {
-		lcd::clear_line(2);
+//this is just a brainstrom for turning
+void turn2(int degrees){
+	reset_encoders();
+	degrees *= 18.95; //this is honestly just some random number
+	double kP, kI, kD;
+	int integral;
+	int derivative;
+	int error;
+	int prev_error;
+	int power;
+	int current_pos;
+
+	current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
+	error = degrees - current_pos;
+	while(abs(error) >= 15){
+		current_pos = (LF.get_position() + LM.get_position() + LB.get_position()) / 3;
+		error = degrees - current_pos;
+		integral += error;
+		if(error == 0){
+			integral = 0;
+		}
+		if(integral >= 3000){
+			integral = 0;
+		}
+		derivative = error - prev_error;
+		prev_error = error;
+		power = kP*error + kI*integral + kD*derivative;
+
+		LF.move(power); LM.move(power); LB.move(power); RF.move(-power); RM.move(-power); RB.move(-power);
 	}
 }
-
-/**
- * Runs initialization code. This occurs as soon as the program is started.
- *
- * All other competition modes are blocked by initialize; it is recommended
- * to keep execution time for this mode under a few seconds.
- */
-void initialize() {
-	lcd::initialize();
-	lcd::set_text(1, "sup gamer");
-
-	lcd::register_btn1_cb(on_center_button);
-}
+//reset for PID
+	void reset(bool enable){
+		int target;
+	  int current_error;
+	  int i_value;
+	  bool is_enabled;
+	  double kP, kI, kD;
+	  int prev_error = 0;
+      prev_error = 0;
+      i_value = 0;
+      is_enabled = enable;
+  }
 
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -180,11 +232,17 @@ void autonomous() {
 
 	con.set_text(1,1,"sup gamer");
 	imu.reset();
+	// delay(3000);
+	stop_motors();
 
-
-	//tesssssssssssssssssssssst
-	drive(300);
-	turn(90);
+//tesssssssssssssssssssssst
+	// drive(10000);
+	driveForward(100);
+	delay(15);
+	driveForward(50);
+	driveReverse(100);
+	// turn(90);
+	stop_motors();
 }
 
 
