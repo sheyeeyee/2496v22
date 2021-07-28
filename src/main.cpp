@@ -15,11 +15,11 @@ using namespace std;
 		Motor RM (3, E_MOTOR_GEARSET_18);
 		Motor RB (1, E_MOTOR_GEARSET_18);
 			//inertial sensor for auton PID
-			Imu imu (10);
+			Imu imu (21);
 
 	//lift
-	Motor lift_left (11, E_MOTOR_GEARSET_06, true);
-	Motor lift_right (20, E_MOTOR_GEARSET_06);
+	Motor lift_left (13, E_MOTOR_GEARSET_06);
+	Motor lift_right (20, E_MOTOR_GEARSET_06, true);
 		//potentiometer for PID
 		ADIAnalogIn lift_pot('A');
 
@@ -52,9 +52,9 @@ void stop_motors(){
 		//target is in inches
 		target*=28.65; // the conversion for 36:1 4 inch wheels
 		// RF.set_zero_position(0);
-		double kP = 0.4;
-		double kI = 0.1;
-		double kD = 0.0;
+		double kP = 0.5;
+		double kI = 0.01;
+		double kD = 0.02;
 		int integral = 0;
 		int derivative = 0;
 		int error;
@@ -76,8 +76,9 @@ void stop_motors(){
 			prev_error = error;
 			power = kP*error + integral*kI + derivative*kD;
 			LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
-			delay(15);
+			delay(10);
 		}
+		stop_motors();
 	}
 
 	int iter_pos(Imu imu){
@@ -87,10 +88,10 @@ void stop_motors(){
 //this is just a brainstrom for turning
 void turn(int degrees){
 	reset_encoders();
-	degrees *= 20; //this is honestly just some random number
-	double kP = 0.4;
-	double kI = 0.1;
-	double kD = 0;
+	degrees *= 9.2113; //this is honestly just some random number
+	double kP = 0.075;
+	double kI = 0.015;
+	double kD = 0.02;
 	int integral;
 	int derivative;
 	int error;
@@ -100,14 +101,14 @@ void turn(int degrees){
 
 	current_pos = (LF.get_position() + LM.get_position() + LB.get_position()) / 3;
 	error = degrees - current_pos;
-	while(abs(error) >= 15){
+	while(abs(error) >= 1){
 		current_pos = (LF.get_position() + LM.get_position() + LB.get_position()) / 3;
 		error = degrees - current_pos;
 		integral += error;
 		if(error == 0){
 			integral = 0;
 		}
-		if(integral >= 3000){
+		if(integral >= 1500){
 			integral = 0;
 		}
 
@@ -116,8 +117,9 @@ void turn(int degrees){
 		power = kP*error + kI*integral + kD*derivative;
 
 		LF.move(power); LM.move(power); LB.move(power); RF.move(-power); RM.move(-power); RB.move(-power);
-		delay(15);
+		delay(10);
 	}
+
 }
 //reset for PID
 	void reset(bool enable){
@@ -171,15 +173,20 @@ void autonomous() {
 
 //tesssssssssssssssssssssst
 	// drive(10000);
-	drive(100);
-	delay(15);
-	drive(50);
-	delay(15);
-	drive(-100);
-	delay(15);
+	// drive(50);
+	// delay(1000);
+	// drive(50);
+	// delay(1000);
+	// drive(-25);
+	// delay(1000);
+	for(int i = 0 ; i < 12 ; i ++){
+
+
 	turn(90);
-	// turn(90);
-	stop_motors();
+	delay(1000);
+}
+	// // turn(90);
+	// stop_motors();
 }
 
 //
