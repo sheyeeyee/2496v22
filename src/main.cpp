@@ -89,8 +89,8 @@ void stop_motors(){
 void turn(int degrees){
 	reset_encoders();
 	degrees *= 9.2113; //this is honestly just some random number
-	double kP = 0.1;
-	double kI = 0.01;
+	double kP = 0.075;
+	double kI = 0.015;
 	double kD = 0.02;
 	int integral;
 	int derivative;
@@ -108,7 +108,7 @@ void turn(int degrees){
 		if(error == 0){
 			integral = 0;
 		}
-		if(integral >= 5000){
+		if(integral >= 1500){
 			integral = 0;
 		}
 
