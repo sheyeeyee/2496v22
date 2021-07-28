@@ -210,17 +210,8 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	double kP = 0.2;
-	double kI = 0.0;
-	double kD = 0.0;
-	int speed = 0;
-	int integral;
-	int derivative;
-	int error, prev_error;
-	int current_pos = imu.get_pitch();
+	
 	while (true) {
-
-		bool autobalance = false;
 		//chassis (arcade drive)
 			/**Set the integers for moving right and left so you can place them in the
 					function.**/
@@ -264,33 +255,7 @@ void opcontrol() {
 							lift_right.move_velocity(0);
 						}
 
-				if(con.get_digital(E_CONTROLLER_DIGITAL_A)){
-					autobalance = true;
-				}
-				else{
-					autobalance = false;
-				}
-
-				while(autobalance == true){
-					current_pos = imu.get_pitch();
-					error = 0-current_pos;
-
-					if(error == 0  || integral > 2000){
-						integral = 0;
-					}
-					integral += error;
-					derivative = error-prev_error;
-					prev_error = error;
-					speed = kP*error + kI * integral + kD * derivative;
-					if(error < 0){
-						RF.move(-speed); RM.move(-speed); RB.move(-speed); LF.move(-speed); LM.move(-speed); LB.move(-speed);
-					}
-					else{
-						RF.move(speed); RM.move(speed); RB.move(speed); LF.move(speed); LM.move(speed); LB.move(speed);
-					}
-					delay(10);
-				}
-
+				delay(5);
 	}
 
 	}
