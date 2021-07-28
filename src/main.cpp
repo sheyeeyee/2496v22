@@ -9,7 +9,7 @@ using namespace std;
 		//left drive
 		Motor LF (8, E_MOTOR_GEARSET_18, true);
 		Motor LM (9, E_MOTOR_GEARSET_18, true);
-		Motor LB (10, E_MOTOR_GEARSET_18, true);
+		Motor LB (7, E_MOTOR_GEARSET_18, true);
 		//right drive
 		Motor RF (4, E_MOTOR_GEARSET_18);
 		Motor RM (3, E_MOTOR_GEARSET_18);
@@ -18,7 +18,7 @@ using namespace std;
 			Imu imu (21);
 
 	//lift
-	Motor lift_left (13, E_MOTOR_GEARSET_06);
+	Motor lift_left (12, E_MOTOR_GEARSET_06);
 	Motor lift_right (20, E_MOTOR_GEARSET_06, true);
 		//potentiometer for PID
 		ADIAnalogIn lift_pot('A');
@@ -94,7 +94,7 @@ void stop_motors(){
 void turn(int degrees){
 	reset_encoders();
 	degrees *= 9.2113; //this is honestly just some random number
-	double kP = 0.075;
+	double kP = 0.1;
 	double kI = 0.015;
 	double kD = 0.02;
 	int integral;
@@ -173,23 +173,20 @@ void autonomous() {
 
 	con.set_text(1,1,"sup gamer");
 	imu.reset();
-	// delay(3000);
+	delay(2300);
+	while(imu.is_calibrating());
 	stop_motors();
 
-//tesssssssssssssssssssssst
-	// drive(10000);
-	// drive(50);
-	// delay(1000);
-	// drive(50);
-	// delay(1000);
-	// drive(-25);
-	// delay(1000);
 	for(int i = 0 ; i < 12 ; i ++){
 
-
-	turn(90);
+	turn(-90);
 	delay(1000);
 }
+	delay(5000);
+	for(int i = 0; i < 12; i ++){
+		turn(90);
+		delay(1000);
+	}
 	// // turn(90);
 	// stop_motors();
 }
@@ -210,17 +207,8 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	double kP = 0.2;
-	double kI = 0.0;
-	double kD = 0.0;
-	int speed = 0;
-	int integral;
-	int derivative;
-	int error, prev_error;
-	int current_pos = imu.get_pitch();
-	while (true) {
 
-		bool autobalance = false;
+	while (true) {
 		//chassis (arcade drive)
 			/**Set the integers for moving right and left so you can place them in the
 					function.**/
@@ -264,33 +252,7 @@ void opcontrol() {
 							lift_right.move_velocity(0);
 						}
 
-				if(con.get_digital(E_CONTROLLER_DIGITAL_A)){
-					autobalance = true;
-				}
-				else{
-					autobalance = false;
-				}
-
-				while(autobalance == true){
-					current_pos = imu.get_pitch();
-					error = 0-current_pos;
-
-					if(error == 0  || integral > 2000){
-						integral = 0;
-					}
-					integral += error;
-					derivative = error-prev_error;
-					prev_error = error;
-					speed = kP*error + kI * integral + kD * derivative;
-					if(error < 0){
-						RF.move(-speed); RM.move(-speed); RB.move(-speed); LF.move(-speed); LM.move(-speed); LB.move(-speed);
-					}
-					else{
-						RF.move(speed); RM.move(speed); RB.move(speed); LF.move(speed); LM.move(speed); LB.move(speed);
-					}
-					delay(10);
-				}
-
+						delay(5);
 	}
 
 	}
