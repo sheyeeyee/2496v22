@@ -9,7 +9,7 @@ using namespace std;
 		//left drive
 		Motor LF (8, E_MOTOR_GEARSET_18, true);
 		Motor LM (9, E_MOTOR_GEARSET_18, true);
-		Motor LB (10, E_MOTOR_GEARSET_18, true);
+		Motor LB (7, E_MOTOR_GEARSET_18, true);
 		//right drive
 		Motor RF (4, E_MOTOR_GEARSET_18);
 		Motor RM (3, E_MOTOR_GEARSET_18);
@@ -18,7 +18,7 @@ using namespace std;
 			Imu imu (21);
 
 	//lift
-	Motor lift_left (13, E_MOTOR_GEARSET_06);
+	Motor lift_left (12, E_MOTOR_GEARSET_06);
 	Motor lift_right (20, E_MOTOR_GEARSET_06, true);
 		//potentiometer for PID
 		ADIAnalogIn lift_pot('A');
@@ -94,7 +94,7 @@ void stop_motors(){
 void turn(int degrees){
 	reset_encoders();
 	degrees *= 9.2113; //this is honestly just some random number
-	double kP = 0.075;
+	double kP = 0.1;
 	double kI = 0.015;
 	double kD = 0.02;
 	int integral;
@@ -173,23 +173,20 @@ void autonomous() {
 
 	con.set_text(1,1,"sup gamer");
 	imu.reset();
-	// delay(3000);
+	delay(2300);
+	while(imu.is_calibrating());
 	stop_motors();
 
-//tesssssssssssssssssssssst
-	// drive(10000);
-	// drive(50);
-	// delay(1000);
-	// drive(50);
-	// delay(1000);
-	// drive(-25);
-	// delay(1000);
 	for(int i = 0 ; i < 12 ; i ++){
 
-
-	turn(90);
+	turn(-90);
 	delay(1000);
 }
+	delay(5000);
+	for(int i = 0; i < 12; i ++){
+		turn(90);
+		delay(1000);
+	}
 	// // turn(90);
 	// stop_motors();
 }
@@ -210,7 +207,7 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	
+
 	while (true) {
 		//chassis (arcade drive)
 			/**Set the integers for moving right and left so you can place them in the
@@ -255,7 +252,7 @@ void opcontrol() {
 							lift_right.move_velocity(0);
 						}
 
-				delay(5);
+						delay(5);
 	}
 
 	}
