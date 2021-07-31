@@ -77,6 +77,7 @@ void stop_motors(){
 			if(integral > 3000){
 				integral = 0;
 			}
+
 			derivative = error - prev_error;
 			prev_error = error;
 			power = kP*error + integral*kI + derivative*kD;
@@ -93,10 +94,10 @@ void stop_motors(){
 //this is just a brainstrom for turning
 void turn(int degrees){
 	reset_encoders();
-	degrees *= 9.2113; //this is honestly just some random number
-	double kP = 0.1;
-	double kI = 0.015;
-	double kD = 0.02;
+	degrees *= 8.8; //this is honestly just some random number
+	double kP = 0.225;
+	double kI = 0.009;
+	double kD = 0.06;
 	int integral;
 	int derivative;
 	int error;
@@ -107,20 +108,32 @@ void turn(int degrees){
 	current_pos = (LF.get_position() + LM.get_position() + LB.get_position()) / 3;
 	error = degrees - current_pos;
 	while(abs(error) >= 1){
+    // for(int i = 0; i < 4 ; i++){
+    //   cout << "" << endl;
+    // }
 		current_pos = (LF.get_position() + LM.get_position() + LB.get_position()) / 3;
+    // cout << "Current pos: " << current_pos << endl;
 		error = degrees - current_pos;
+    // cout << "Error: " << error << endl;
 		integral += error;
 		if(error == 0){
 			integral = 0;
 		}
-		if(integral >= 1500){
+
+		if(integral >= 2500){
 			integral = 0;
 		}
+		// if(abs(error) > 150){
+		// 	integral = 0;
+		// }
 
 		derivative = error - prev_error;
 		prev_error = error;
+    // cout << "P: " << kP*error << endl;
+    // cout << "I: " << kI * integral << endl;
+    // cout << "D: " << kD*derivative << endl;
 		power = kP*error + kI*integral + kD*derivative;
-
+    // cout << "Power: " << power << endl;
 		LF.move(power); LM.move(power); LB.move(power); RF.move(-power); RM.move(-power); RB.move(-power);
 		delay(10);
 	}
@@ -177,16 +190,11 @@ void autonomous() {
 	while(imu.is_calibrating());
 	stop_motors();
 
-	for(int i = 0 ; i < 12 ; i ++){
-
-	turn(-90);
-	delay(1000);
-}
+// 	for(int i = 0 ; i < 12 ; i
+	//when turning left subtract 10 from wanted degree amount
+	turn(90);
 	delay(5000);
-	for(int i = 0; i < 12; i ++){
-		turn(90);
-		delay(1000);
-	}
+	turn(-80);
 	// // turn(90);
 	// stop_motors();
 }
