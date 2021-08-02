@@ -38,6 +38,11 @@ void reset_encoders(){
 	LB.set_zero_position(0);
 }
 
+void reset_lift(){
+	lift_left.set_zero_position(0);
+	lift_right.set_zero_position(0);
+}
+
 void stop_motors(){
 	RF.move(0);
 	RM.move(0);
@@ -47,7 +52,10 @@ void stop_motors(){
 	LB.move(0);
 }
 
-
+void stop_lift(){
+	lift_left.move(0);
+	lift_right.move(0);
+}
 
 
 
@@ -139,6 +147,41 @@ void turn(int degrees){
 	}
 	stop_motors();
 }
+
+void liftMobileGoal(){
+	reset_lift();
+	double kP = 0.2;
+	double kI = 0.005;
+	double kD = 0.02;
+	int integral = 0;
+	int derivative = 0;
+	int power = 0;
+	int current_pos = 0;
+	int error = 0;
+	int prev_error = 0;
+	error = 1300;
+	while(error > 5){
+		if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
+			break;
+		}
+		current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
+		error = 1400 - current_pos;
+		integral += error;
+		if(error == 0){
+			integral = 0;
+		}
+		if(error > 300){
+			integral = 0;
+		}
+		derivative = error - prev_error;
+		prev_error = 0;
+		power = kP * error + integral * kI + derivative * kD;
+		power -= 30;
+		lift_left.move(power); lift_right.move(power);
+		delay(5);
+	}
+	stop_lift();
+}
 //reset for PID
 	void reset(bool enable){
 		int target;
@@ -217,6 +260,8 @@ void autonomous() {
 void opcontrol() {
 
 	while (true) {
+
+
 		//chassis (arcade drive)
 			/**Set the integers for moving right and left so you can place them in the
 					function.**/
@@ -239,8 +284,14 @@ void opcontrol() {
 				RF.move(right);
 				RM.move(right);
 				RB.move(right);
-				con.set_text(1, 1, to_string(LF.get_position()));
-				con.set_text(2, 2, to_string(RF.get_position()));
+				// con.clear();
+
+				// cout << "Lift Left - " << lift_left.get_position() << endl;
+				// cout << "Lift Right - " << lift_right.get_position() << endl;
+
+				// for(int i = 0; i < 5; i ++){
+				// 	cout << endl;
+				// }
 		//lift
 			//lift go up
 			if(con.get_digital(E_CONTROLLER_DIGITAL_R1)){
@@ -260,7 +311,11 @@ void opcontrol() {
 							lift_right.move_velocity(0);
 						}
 
-						delay(5);
+				if(con.get_digital(E_CONTROLLER_DIGITAL_A)){
+					liftMobileGoal();
+				}
+
+				delay(5);
 	}
 
 	}
