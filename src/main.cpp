@@ -150,8 +150,8 @@ void turn(int degrees){
 
 void liftMobileGoal(){
 	reset_lift();
-	double kP = 0.2;
-	double kI = 0.005;
+	double kP = 0.1;
+	double kI = 0.0025;
 	double kD = 0.02;
 	int integral = 0;
 	int derivative = 0;
@@ -174,9 +174,9 @@ void liftMobileGoal(){
 			integral = 0;
 		}
 		derivative = error - prev_error;
-		prev_error = 0;
 		power = kP * error + integral * kI + derivative * kD;
-		power -= 30;
+		prev_error = 0;
+		power -= 15;
 		lift_left.move(power); lift_right.move(power);
 		delay(5);
 	}
@@ -195,6 +195,37 @@ void liftMobileGoal(){
       is_enabled = enable;
   }
 
+void autoBalance(){
+	double kP = 0.2;
+	double kI = 0.005;
+	double kD = 0.0;
+	int error = 0;
+	int prev_error = 0;
+	int power = 0;
+	int integral = 0;
+	int derivative = 0;
+	int current_pos = (int)imu.get_pitch();
+
+	while(abs(imu.get_pitch()) > 0){
+		if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
+			break;
+		}
+		current_pos = (int) imu.get_pitch();
+		error = 0 - current_pos;
+		if(error == 0){
+			integral = 0;
+		}
+		if(integral > 2000){
+			integral = 0;
+		}
+		integral += error;
+		derivative = error - prev_error;
+		prev_error = error;
+		power = kP * error + kI * integral + kD * derivative;
+		delay(5);
+	}
+	stop_motors();
+}
 /**
  * Runs while the robot is in the disabled state of Field Management System or
  * the VEX Competition Switch, following either autonomous or opcontrol. When
@@ -288,7 +319,9 @@ void opcontrol() {
 
 				// cout << "Lift Left - " << lift_left.get_position() << endl;
 				// cout << "Lift Right - " << lift_right.get_position() << endl;
-
+				cout << "Pitch: " << imu.get_pitch() << endl;
+				cout << "Yaw: " << imu.get_yaw() << endl;
+				cout << "Roll: " << imu.get_roll() << endl;
 				// for(int i = 0; i < 5; i ++){
 				// 	cout << endl;
 				// }
@@ -309,12 +342,15 @@ void opcontrol() {
 							lift_left.move_velocity(0);
 						lift_right.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 							lift_right.move_velocity(0);
-						}
 
+						}
 				if(con.get_digital(E_CONTROLLER_DIGITAL_A)){
 					liftMobileGoal();
 				}
 
+				if(con.get_digital(E_CONTROLLER_DIGITAL_X)){
+					autoBalance();
+				}
 				delay(5);
 	}
 
