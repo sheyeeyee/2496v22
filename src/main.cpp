@@ -7,19 +7,19 @@ using namespace std;
 //CONSTRUCTORS
 	//chassis
 		//left drive
-		Motor LF (8, E_MOTOR_GEARSET_18, true);
-		Motor LM (9, E_MOTOR_GEARSET_18, true);
-		Motor LB (7, E_MOTOR_GEARSET_18, true);
+		Motor LF (3, E_MOTOR_GEARSET_18, true);
+		Motor LM (5, E_MOTOR_GEARSET_18, true);
+		Motor LB (6, E_MOTOR_GEARSET_18, true);
 		//right drive
-		Motor RF (4, E_MOTOR_GEARSET_18);
-		Motor RM (3, E_MOTOR_GEARSET_18);
-		Motor RB (1, E_MOTOR_GEARSET_18);
+		Motor RF (9, E_MOTOR_GEARSET_18);
+		Motor RM (8, E_MOTOR_GEARSET_18);
+		Motor RB (7, E_MOTOR_GEARSET_18);
 			//inertial sensor for auton PID
 			Imu imu (21);
 
 	//lift
-	Motor lift_left (12, E_MOTOR_GEARSET_06);
-	Motor lift_right (20, E_MOTOR_GEARSET_06, true);
+	Motor lift_left (1, E_MOTOR_GEARSET_06, true);
+	Motor lift_right (10, E_MOTOR_GEARSET_06);
 		//potentiometer for PID
 		ADIAnalogIn lift_pot('A');
 
