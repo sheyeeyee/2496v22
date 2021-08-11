@@ -182,6 +182,41 @@ void liftMobileGoal(){
 	}
 	stop_lift();
 }
+
+void liftDown(){
+	reset_lift();
+	double kP = 0.1;
+	double kI = 0.0025;
+	double kD = 0.02;
+	int integral = 0;
+	int derivative = 0;
+	int power = 0;
+	int current_pos = 0;
+	int error = 0;
+	int prev_error = 0;
+	error = -1500;
+	while(abs(error) > 5){
+		if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
+			break;
+		}
+		current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
+		error = -1500 - current_pos;
+		integral += error;
+		if(error == 0){
+			integral = 0;
+		}
+		if(abs(error) > 300){
+			integral = 0;
+		}
+		derivative = error - prev_error;
+		power = kP * error + integral * kI + derivative * kD;
+		prev_error = 0;
+		power -= 15;
+		lift_left.move(power); lift_right.move(power);
+		delay(5);
+	}
+	stop_lift();
+}
 //reset for PID
 	void reset(bool enable){
 		int target;
@@ -198,7 +233,7 @@ void liftMobileGoal(){
 void autoBalance(){
 	double kP = 0.2;
 	double kI = 0.005;
-	double kD = 0.0;
+	double kD = 0.02;
 	int error = 0;
 	int prev_error = 0;
 	int power = 0;
@@ -222,6 +257,7 @@ void autoBalance(){
 		derivative = error - prev_error;
 		prev_error = error;
 		power = kP * error + kI * integral + kD * derivative;
+		LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
 		delay(5);
 	}
 	stop_motors();
@@ -259,11 +295,11 @@ void autonomous() {
 	lcd::initialize();
 
 	con.set_text(1,1,"sup gamer");
+
 	imu.reset();
 	delay(2300);
 	while(imu.is_calibrating());
 	stop_motors();
-
 // 	for(int i = 0 ; i < 12 ; i
 	//when turning left subtract 10 from wanted degree amount
 	turn(90);
@@ -289,9 +325,12 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+	imu.reset();
+	delay(2300);
+	while(imu.is_calibrating());
+	stop_motors();
 
 	while (true) {
-
 
 		//chassis (arcade drive)
 			/**Set the integers for moving right and left so you can place them in the
@@ -319,9 +358,9 @@ void opcontrol() {
 
 				// cout << "Lift Left - " << lift_left.get_position() << endl;
 				// cout << "Lift Right - " << lift_right.get_position() << endl;
-				cout << "Pitch: " << imu.get_pitch() << endl;
-				cout << "Yaw: " << imu.get_yaw() << endl;
-				cout << "Roll: " << imu.get_roll() << endl;
+				// cout << "Pitch: " << imu.get_pitch() << endl;
+				// cout << "Yaw: " << imu.get_yaw() << endl;
+				// cout << "Roll: " << imu.get_roll() << endl;
 				// for(int i = 0; i < 5; i ++){
 				// 	cout << endl;
 				// }
