@@ -89,9 +89,16 @@ void stop_lift(){
 			derivative = error - prev_error;
 			prev_error = error;
 			power = kP*error + integral*kI + derivative*kD;
-			LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
+			LF.move(power); LM.move(power); LB.move(power); RF.move(power-10); RM.move(power-10); RB.move(power-10);
 			delay(10);
 		}
+		stop_motors();
+		if(target > 0){
+		RF.move(-15);
+		RM.move(-15);
+		RB.move(-15);
+	}
+		delay(75);
 		stop_motors();
 	}
 
@@ -187,7 +194,7 @@ void moveLift(int target){
 	reset_lift();
 	double kP = 0.1;
 	double kI = 0.0025;
-	double kD = 0.02;
+	double kD = 0.01;
 	int integral = 0;
 	int derivative = 0;
 	int power = 0;
@@ -218,6 +225,40 @@ void moveLift(int target){
 	stop_lift();
 }
 
+void moveMogo(int target){
+	reset_lift();
+	double kP = 0.1;
+	double kI = 0.0025;
+	double kD = 0.01;
+	int integral = 0;
+	int derivative = 0;
+	int power = 0;
+	int current_pos = 0;
+	int error = 0;
+	int prev_error = 0;
+	error = target - current_pos;
+	while(abs(error)>target/2){
+		// if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
+		// 	break;
+		// }
+		current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
+		error = target - current_pos;
+		integral += error;
+		if(error == 0){
+			integral = 0;
+		}
+		if(error > 300){
+			integral = 0;
+		}
+		derivative = error - prev_error;
+		power = kP * error + integral * kI + derivative * kD;
+		prev_error = 0;
+		// power -= 15;
+		lift_left.move(power); lift_right.move(power);
+		delay(5);
+	}
+	stop_lift();
+}
 //reset for PID
 	void reset(bool enable){
 		int target;
@@ -276,12 +317,19 @@ void autonomous() {
 	// turn(-80);
 	// // turn(90);
 	// stop_motors();
-	moveLift(-2000);
+	//RED RIGHT
+	moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
 	delay(5);
-	drive(300);
+	drive(100); //Drive to neutral
+	delay(5);
+	moveMogo(1000); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
+	delay(5);
+	drive(-80);
+	delay(5);
+	turn(45);
 }
 
-//
+
 
 /**
  * Runs the operator control code. This function will be started in its own task
