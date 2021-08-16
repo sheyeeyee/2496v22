@@ -57,6 +57,12 @@ void stop_lift(){
 	lift_right.move(0);
 }
 
+void park_lift(){
+	lift_left.move(0);
+	lift_right.move(0);
+	lift_left.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+	lift_right.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+}
 
 
 	void drive(int target){
@@ -247,7 +253,7 @@ void moveMogo(int target){
 		if(error == 0){
 			integral = 0;
 		}
-		if(error > 300){
+		if(error > 600){
 			integral = 0;
 		}
 		derivative = error - prev_error;
@@ -257,7 +263,7 @@ void moveMogo(int target){
 		lift_left.move(power); lift_right.move(power);
 		delay(5);
 	}
-	stop_lift();
+	park_lift();
 }
 //reset for PID
 	void reset(bool enable){
@@ -317,6 +323,7 @@ void autonomous() {
 	// turn(-80);
 	// // turn(90);
 	// stop_motors();
+
 	//RED RIGHT
 	moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
 	delay(5);
@@ -324,9 +331,67 @@ void autonomous() {
 	delay(5);
 	moveMogo(1000); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
 	delay(5);
-	drive(-80);
+	drive(-80); // go backwards
 	delay(5);
-	turn(45);
+	turn(45); // turn right just cuz
+
+	//RED RIGHT but maybe more
+
+	// moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
+	// delay(5);
+	// drive(100); //Drive to neutral
+	// delay(5);
+	// moveMogo(1000); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
+	// delay(5);
+	// drive(-80); // go backwards
+	// delay(5);
+	// turn(45); // turn right just cuz
+	// delay(5);
+	// drive(10);
+	// delay(5);
+	// moveLift(-200);
+	// delay(5);
+	// drive(-10);
+	// delay(5);
+	// turn(-90);
+	// delay(5);
+	// drive(110);
+	// delay(5);
+	// moveMogo(1000);
+	// delay(5);
+	// drive(-110);
+	//RED LEFT
+	// moveLift(-1900);
+	// delay(5);
+	// drive(100);
+	// delay(5);
+	// moveMogo(1000);
+	// drive(-80);
+	// delay(5);
+	// turn(-30);
+
+	//BLUE RIGHT
+	// moveLift(-1900);
+	// delay(5);
+	// drive(100);
+	// delay(5);
+	// moveMogo(1000);
+	// drive(-80);
+	// delay(5);
+	// turn(-30);
+
+	//BLUE LEFT
+	// moveLift(-1900);
+	// delay(5);
+	// drive(100);
+	// delay(5);
+	// moveMogo(1000);
+	// delay(5);
+	// drive(-80);
+	// delay(5);
+	// turn(30);
+
+
 }
 
 
