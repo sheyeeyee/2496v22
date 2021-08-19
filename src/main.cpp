@@ -58,8 +58,8 @@ void stop_lift(){
 }
 
 void park_lift(){
-	lift_left.move(0);
-	lift_right.move(0);
+	lift_left.move_velocity(0);
+	lift_right.move_velocity(0);
 	lift_left.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 	lift_right.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 }
@@ -243,7 +243,7 @@ void moveMogo(int target){
 	int error = 0;
 	int prev_error = 0;
 	error = target - current_pos;
-	while(abs(error)>target/2){
+	while(abs(error)>target/2-100){
 		// if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
 		// 	break;
 		// }
@@ -325,73 +325,45 @@ void autonomous() {
 	// stop_motors();
 
 	//RED RIGHT
-	moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
-	delay(5);
-	drive(100); //Drive to neutral
-	delay(5);
-	moveMogo(1000); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
-	delay(5);
-	drive(-80); // go backwards
-	delay(5);
-	turn(45); // turn right just cuz
-
-	//RED RIGHT but maybe more
-
+	// moveMogo(1200);
+	// delay(5);
 	// moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
 	// delay(5);
 	// drive(100); //Drive to neutral
 	// delay(5);
-	// moveMogo(1000); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
+	// moveMogo(1200); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
 	// delay(5);
 	// drive(-80); // go backwards
+	// delay(5); // turn right just cuz
+
+	//RED RIGHT but maybe more
+
+	moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
+	delay(5);
+	drive(100); //Drive to neutral
+	delay(5);
+	moveMogo(1400);
+	// park_lift(); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
+	delay(5);
+	drive(-80); // go backwards
+	delay(5);
+	turn(75); // turn right just cuz
+	delay(5);
+	drive(30);
+	delay(15);
+	moveLift(-150);
+	delay(5);
+	drive(-20);
 	// delay(5);
-	// turn(45); // turn right just cuz
+	// turn(-130);
 	// delay(5);
-	// drive(10);
+	// drive(109);
 	// delay(5);
-	// moveLift(-200);
+	// moveMogo(1200);
 	// delay(5);
-	// drive(-10);
-	// delay(5);
-	// turn(-90);
-	// delay(5);
-	// drive(110);
-	// delay(5);
-	// moveMogo(1000);
-	// delay(5);
+	// park_lift();
 	// drive(-110);
-	//RED LEFT
-	// moveLift(-1900);
 	// delay(5);
-	// drive(100);
-	// delay(5);
-	// moveMogo(1000);
-	// drive(-80);
-	// delay(5);
-	// turn(-30);
-
-	//BLUE RIGHT
-	// moveLift(-1900);
-	// delay(5);
-	// drive(100);
-	// delay(5);
-	// moveMogo(1000);
-	// drive(-80);
-	// delay(5);
-	// turn(-30);
-
-	//BLUE LEFT
-	// moveLift(-1900);
-	// delay(5);
-	// drive(100);
-	// delay(5);
-	// moveMogo(1000);
-	// delay(5);
-	// drive(-80);
-	// delay(5);
-	// turn(30);
-
-
 }
 
 
