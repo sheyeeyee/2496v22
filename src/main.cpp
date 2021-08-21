@@ -328,7 +328,7 @@ void autonomous() {
 	//sherk programming arc
 		moveLift(-1900);
 		drive(100);
-
+	//HI
 
 	//RED RIGHT
 	// moveMogo(1200);
