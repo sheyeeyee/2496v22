@@ -324,6 +324,12 @@ void autonomous() {
 	// // turn(90);
 	// stop_motors();
 
+
+	//sherk programming arc
+		moveLift(-1900);
+		drive(100);
+
+
 	//RED RIGHT
 	// moveMogo(1200);
 	// delay(5);
@@ -338,22 +344,22 @@ void autonomous() {
 
 	//RED RIGHT but maybe more
 
-	moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
-	delay(5);
-	drive(100); //Drive to neutral
-	delay(5);
-	moveMogo(1400);
-	// park_lift(); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
-	delay(5);
-	drive(-80); // go backwards
-	delay(5);
-	turn(75); // turn right just cuz
-	delay(5);
-	drive(30);
-	delay(15);
-	moveLift(-150);
-	delay(5);
-	drive(-20);
+	// moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
+	// delay(5);
+	// drive(100); //Drive to neutral
+	// delay(5);
+	// moveMogo(1400);
+	// // park_lift(); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
+	// delay(5);
+	// drive(-80); // go backwards
+	// delay(5);
+	// turn(75); // turn right just cuz
+	// delay(5);
+	// drive(30);
+	// delay(15);
+	// moveLift(-150);
+	// delay(5);
+	// drive(-20);
 	// delay(5);
 	// turn(-130);
 	// delay(5);
