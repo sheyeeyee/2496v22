@@ -15,7 +15,7 @@ using namespace std;
 		Motor RM (8, E_MOTOR_GEARSET_18);
 		Motor RB (7, E_MOTOR_GEARSET_18);
 			//inertial sensor for auton PID
-			Imu imu (21);
+			// Imu imu (21);
 
 	//lift
 	Motor lift_left (1, E_MOTOR_GEARSET_06, true);
@@ -57,6 +57,12 @@ void stop_lift(){
 	lift_right.move(0);
 }
 
+void park_lift(){
+	lift_left.move_velocity(0);
+	lift_right.move_velocity(0);
+	lift_left.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+	lift_right.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+}
 
 
 	void drive(int target){
@@ -89,9 +95,16 @@ void stop_lift(){
 			derivative = error - prev_error;
 			prev_error = error;
 			power = kP*error + integral*kI + derivative*kD;
-			LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
+			LF.move(power); LM.move(power); LB.move(power); RF.move(power-10); RM.move(power-10); RB.move(power-10);
 			delay(10);
 		}
+		stop_motors();
+		if(target > 0){
+		RF.move(-15);
+		RM.move(-15);
+		RB.move(-15);
+	}
+		delay(75);
 		stop_motors();
 	}
 
@@ -182,6 +195,76 @@ void liftMobileGoal(){
 	}
 	stop_lift();
 }
+
+void moveLift(int target){
+	reset_lift();
+	double kP = 0.1;
+	double kI = 0.0025;
+	double kD = 0.01;
+	int integral = 0;
+	int derivative = 0;
+	int power = 0;
+	int current_pos = 0;
+	int error = 0;
+	int prev_error = 0;
+	error = target - current_pos;
+	while(abs(error)>5){
+		// if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
+		// 	break;
+		// }
+		current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
+		error = target - current_pos;
+		integral += error;
+		if(error == 0){
+			integral = 0;
+		}
+		if(error > 300){
+			integral = 0;
+		}
+		derivative = error - prev_error;
+		power = kP * error + integral * kI + derivative * kD;
+		prev_error = 0;
+		// power -= 15;
+		lift_left.move(power); lift_right.move(power);
+		delay(5);
+	}
+	stop_lift();
+}
+
+void moveMogo(int target){
+	reset_lift();
+	double kP = 0.1;
+	double kI = 0.0025;
+	double kD = 0.01;
+	int integral = 0;
+	int derivative = 0;
+	int power = 0;
+	int current_pos = 0;
+	int error = 0;
+	int prev_error = 0;
+	error = target - current_pos;
+	while(abs(error)>target/2-100){
+		// if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
+		// 	break;
+		// }
+		current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
+		error = target - current_pos;
+		integral += error;
+		if(error == 0){
+			integral = 0;
+		}
+		if(error > 600){
+			integral = 0;
+		}
+		derivative = error - prev_error;
+		power = kP * error + integral * kI + derivative * kD;
+		prev_error = 0;
+		// power -= 15;
+		lift_left.move(power); lift_right.move(power);
+		delay(5);
+	}
+	park_lift();
+}
 //reset for PID
 	void reset(bool enable){
 		int target;
@@ -195,37 +278,6 @@ void liftMobileGoal(){
       is_enabled = enable;
   }
 
-void autoBalance(){
-	double kP = 0.2;
-	double kI = 0.005;
-	double kD = 0.0;
-	int error = 0;
-	int prev_error = 0;
-	int power = 0;
-	int integral = 0;
-	int derivative = 0;
-	int current_pos = (int)imu.get_pitch();
-
-	while(abs(imu.get_pitch()) > 0){
-		if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
-			break;
-		}
-		current_pos = (int) imu.get_pitch();
-		error = 0 - current_pos;
-		if(error == 0){
-			integral = 0;
-		}
-		if(integral > 2000){
-			integral = 0;
-		}
-		integral += error;
-		derivative = error - prev_error;
-		prev_error = error;
-		power = kP * error + kI * integral + kD * derivative;
-		delay(5);
-	}
-	stop_motors();
-}
 /**
  * Runs while the robot is in the disabled state of Field Management System or
  * the VEX Competition Switch, following either autonomous or opcontrol. When
@@ -259,21 +311,77 @@ void autonomous() {
 	lcd::initialize();
 
 	con.set_text(1,1,"sup gamer");
-	imu.reset();
-	delay(2300);
-	while(imu.is_calibrating());
-	stop_motors();
 
+	// imu.reset();
+	// delay(2300);
+	// while(imu.is_calibrating());
+	// stop_motors();
 // 	for(int i = 0 ; i < 12 ; i
 	//when turning left subtract 10 from wanted degree amount
-	turn(90);
-	delay(5000);
-	turn(-80);
+	// turn(90);
+	// delay(5000);
+	// turn(-80);
 	// // turn(90);
 	// stop_motors();
+
+
+	//sherk programming arc
+		moveLift(-1900);
+		delay(2);
+		//get goal
+		turn(90);
+		delay(5);
+		drive(50);
+		moveMogo(1400);
+		delay(5);
+		//back out
+		drive(-50);
+		delay(5);
+		turn(-90);
+
+	//RED RIGHT
+	// moveMogo(1200);
+	// delay(5);
+	// moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
+	// delay(5);
+	// drive(100); //Drive to neutral
+	// delay(5);
+	// moveMogo(1200); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
+	// delay(5);
+	// drive(-80); // go backwards
+	// delay(5); // turn right just cuz
+
+	//RED RIGHT but maybe more
+
+	// moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
+	// delay(5);
+	// drive(100); //Drive to neutral
+	// delay(5);
+	// moveMogo(1400);
+	// // park_lift(); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
+	// delay(5);
+	// drive(-80); // go backwards
+	// delay(5);
+	// turn(75); // turn right just cuz
+	// delay(5);
+	// drive(30);
+	// delay(15);
+	// moveLift(-150);
+	// delay(5);
+	// drive(-20);
+	// delay(5);
+	// turn(-130);
+	// delay(5);
+	// drive(109);
+	// delay(5);
+	// moveMogo(1200);
+	// delay(5);
+	// park_lift();
+	// drive(-110);
+	// delay(5);
 }
 
-//
+
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -289,9 +397,13 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-
+	// imu.reset();
+	// delay(2300);
+	// while(imu.is_calibrating());
+	// stop_motors();
+	// cout << "this is working" << endl;
+	// cout << "This is working" << endl;
 	while (true) {
-
 
 		//chassis (arcade drive)
 			/**Set the integers for moving right and left so you can place them in the
@@ -319,20 +431,22 @@ void opcontrol() {
 
 				// cout << "Lift Left - " << lift_left.get_position() << endl;
 				// cout << "Lift Right - " << lift_right.get_position() << endl;
-				cout << "Pitch: " << imu.get_pitch() << endl;
-				cout << "Yaw: " << imu.get_yaw() << endl;
-				cout << "Roll: " << imu.get_roll() << endl;
+				// cout << "Pitch: " << imu.get_pitch() << endl;
+				// cout << "Yaw: " << imu.get_yaw() << endl;
+				// cout << "Roll: " << imu.get_roll() << endl;
 				// for(int i = 0; i < 5; i ++){
 				// 	cout << endl;
 				// }
 		//lift
 			//lift go up
 			if(con.get_digital(E_CONTROLLER_DIGITAL_R1)){
+				// cout << "Pressed R1" << endl;
 				lift_left.move(69);
 				lift_right.move(69);
 			}
 				//lift go down
 				else if(con.get_digital(E_CONTROLLER_DIGITAL_R2)){
+					// cout << "Pressed R2" << endl;
 					lift_left.move(-69);
 					lift_right.move(-69);
 				}
@@ -345,12 +459,10 @@ void opcontrol() {
 
 						}
 				if(con.get_digital(E_CONTROLLER_DIGITAL_A)){
+					cout << "Pressed A" << endl;
 					liftMobileGoal();
 				}
 
-				if(con.get_digital(E_CONTROLLER_DIGITAL_X)){
-					autoBalance();
-				}
 				delay(5);
 	}
 
