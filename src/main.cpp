@@ -278,8 +278,21 @@ void opcontrol() {
 				RF.move(right);
 				RM.move(right);
 				RB.move(right);
+<<<<<<< Updated upstream
 				con.set_text(1, 1, to_string(LF.get_position()));
 				con.set_text(2, 2, to_string(RF.get_position()));
+=======
+				// con.clear();
+
+				// cout << "Lift Left - " << lift_left.get_position() << endl;
+				// cout << "Lift Right - " << lift_right.get_position() << endl;
+				// cout << "Pitch: " << imu.get_pitch() << endl;
+				// cout << "Yaw: " << imu.get_yaw() << endl;
+				// cout << "Roll: " << imu.get_roll() << endl;
+				// for(int i = 0; i < 5; i ++){
+				// 	cout << endl;
+				// }
+>>>>>>> Stashed changes
 		//lift
 			//lift go up
 			if(con.get_digital(E_CONTROLLER_DIGITAL_R1)){

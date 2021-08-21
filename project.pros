@@ -298,6 +298,15 @@
                 "version": "4.2.0"
             }
         },
+<<<<<<< Updated upstream
         "upload_options": {}
+=======
+        "upload_options": {
+            "compress_bin": true,
+            "description": "hi",
+            "remote_name": "2496v22 aliza ver",
+            "slot": 2
+        }
+>>>>>>> Stashed changes
     }
 }
