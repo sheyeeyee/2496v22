@@ -95,14 +95,14 @@ void park_lift(){
 			derivative = error - prev_error;
 			prev_error = error;
 			power = kP*error + integral*kI + derivative*kD;
-			LF.move(power); LM.move(power); LB.move(power); RF.move(power-10); RM.move(power-10); RB.move(power-10);
+			LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
 			delay(10);
 		}
 		stop_motors();
 		if(target > 0){
-		RF.move(-15);
-		RM.move(-15);
-		RB.move(-15);
+		RF.move(-25);
+		RM.move(-25);
+		RB.move(-25);
 	}
 		delay(75);
 		stop_motors();
@@ -316,19 +316,11 @@ void autonomous() {
 	// delay(2300);
 	// while(imu.is_calibrating());
 	// stop_motors();
-// 	for(int i = 0 ; i < 12 ; i
-	//when turning left subtract 10 from wanted degree amount
-	// turn(90);
-	// delay(5000);
-	// turn(-80);
-	// // turn(90);
-	// stop_motors();
-
 
 	//sherk programming arc
-		moveLift(-1900);
-		drive(100);
-	//HI
+		// moveLift(-1900);
+		// drive(100);
+
 
 	//RED RIGHT
 	// moveMogo(1200);
@@ -344,32 +336,30 @@ void autonomous() {
 
 	//RED RIGHT but maybe more
 
-	// moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
-	// delay(5);
-	// drive(100); //Drive to neutral
-	// delay(5);
-	// moveMogo(1400);
-	// // park_lift(); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
-	// delay(5);
-	// drive(-80); // go backwards
-	// delay(5);
-	// turn(75); // turn right just cuz
-	// delay(5);
-	// drive(30);
-	// delay(15);
-	// moveLift(-150);
-	// delay(5);
-	// drive(-20);
-	// delay(5);
-	// turn(-130);
-	// delay(5);
-	// drive(109);
-	// delay(5);
-	// moveMogo(1200);
-	// delay(5);
-	// park_lift();
-	// drive(-110);
-	// delay(5);
+	moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
+	delay(5);
+	drive(100); //Drive to neutral
+	delay(5);
+	moveMogo(1400);// Lift the Neutral
+	delay(5);
+	drive(-70); // go backwards
+	delay(5);
+	turn(80); // turn right
+	delay(5);
+	drive(35); // go forward a little
+	delay(15);
+	moveLift(-750); // drop the mobile goal
+	delay(5);
+	drive(-30); // Go back
+	delay(5);
+	turn(170); // turn to face the tall goal
+	delay(5);
+	drive(83);
+	delay(5);
+	moveMogo(950);
+	delay(5);
+	drive(-70);
+	delay(5);
 }
 
 
@@ -408,7 +398,11 @@ void opcontrol() {
 							an X at the end bc that is the horizontal axis and the right
 							joystick is for going left and right.**/
 			int left = power + turn;
-			int right = power - turn;
+			int right = power - turn - (power/10);
+			//if drives forward, right side goes faster than left or left goes slower, left
+			// most likely will not continue to any faster, so plan is to reduce right side speed
+			// if it is turning, then left side will turn slower than before theoretically, but
+			// turn faster for the right side as well, making it even?
 				//tbh still tryna figure out how this sum difference thing works
 
 				//put the left and right integers down here
@@ -418,16 +412,7 @@ void opcontrol() {
 				RF.move(right);
 				RM.move(right);
 				RB.move(right);
-				// con.clear();
 
-				// cout << "Lift Left - " << lift_left.get_position() << endl;
-				// cout << "Lift Right - " << lift_right.get_position() << endl;
-				// cout << "Pitch: " << imu.get_pitch() << endl;
-				// cout << "Yaw: " << imu.get_yaw() << endl;
-				// cout << "Roll: " << imu.get_roll() << endl;
-				// for(int i = 0; i < 5; i ++){
-				// 	cout << endl;
-				// }
 		//lift
 			//lift go up
 			if(con.get_digital(E_CONTROLLER_DIGITAL_R1)){
@@ -455,6 +440,5 @@ void opcontrol() {
 				}
 
 				delay(5);
-	}
-
+			}
 	}
