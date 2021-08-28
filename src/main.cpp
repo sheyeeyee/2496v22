@@ -15,7 +15,7 @@ using namespace std;
 		Motor RM (8, E_MOTOR_GEARSET_18);
 		Motor RB (7, E_MOTOR_GEARSET_18);
 			//inertial sensor for auton PID
-			// Imu imu (21);
+		Imu imu (21);
 
 	//lift
 	Motor lift_left (1, E_MOTOR_GEARSET_06, true);
@@ -112,7 +112,60 @@ void park_lift(){
 		return -1;
 	}
 
-//this is just a brainstrom for turning
+// only do -180-180 turns
+void imuTurn(double degrees)
+{
+	if(degrees < 0)
+	{
+		imu.set_heading(350);
+	}
+	else
+	{
+		imu.set_heading(10);
+	}
+
+	int time = 0;
+	float kP = 0.8;
+	float kI = 0.02;
+
+	double target = imu.get_heading() + degrees;
+	double error = target - imu.get_heading();
+	double lastError = error;
+	double integral = 0.0;
+
+	int inRangeTime = 0;
+	bool inRange = false;
+
+	while(true)
+	{
+		lastError = error;
+		error = target - imu.get_heading();
+		if(error < 3.0)
+		{
+			integral += error;
+		}
+
+		double power = error * kP + integral * kI;
+		LF.move(power); LM.move(power); LB.move(power); RF.move(-power); RM.move(-power); RB.move(-power);
+
+		if(error < 1.0)
+		{
+			if(!inRange)
+			{
+				inRangeTime = time;
+				inRange = true;
+			}
+			else if(time + 300 >= inRangeTime)
+			{
+				break;
+			}
+		}
+		delay(10);
+		time += 10;
+	}
+	stop_motors();
+}
+
 void turn(int degrees){
 	reset_encoders();
 	degrees *= 8.8; //this is honestly just some random number
@@ -231,6 +284,44 @@ void moveLift(int target){
 	stop_lift();
 }
 
+
+void winPointMoveDown(int target){
+	reset_lift();
+	double kP = 0.1;
+	double kI = 0.0025;
+	double kD = 0.01;
+	int integral = 0;
+	int derivative = 0;
+	int power = 0;
+	int current_pos = 0;
+	int error = 0;
+	int prev_error = 0;
+	error = target - current_pos;
+	while(abs(error)>5){
+		// if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
+		// 	break;
+		// }
+		current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
+		error = target - current_pos;
+		integral += error;
+		if(error == 0){
+			integral = 0;
+		}
+		if(error > 300){
+			integral = 0;
+		}
+		derivative = error - prev_error;
+		power = kP * error + integral * kI + derivative * kD;
+		prev_error = 0;
+		// power -= 15;
+		power = min(abs(power), 69);
+		power *= -1;
+		lift_left.move(power); lift_right.move(power);
+		delay(5);
+	}
+	stop_lift();
+}
+
 void moveMogo(int target){
 	reset_lift();
 	double kP = 0.1;
@@ -334,7 +425,7 @@ void autonomous() {
 	// drive(-80); // go backwards
 	// delay(5); // turn right just cuz
 
-	//RED RIGHT but maybe more
+	//RIGHT Global but more
 
 	moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
 	delay(5);
@@ -360,6 +451,15 @@ void autonomous() {
 	delay(5);
 	drive(-70);
 	delay(5);
+
+	// winPointMoveDown(-1900); // lift Down
+	// delay(5);
+	// drive(25);
+	// delay(5);
+	// moveMogo(1400);
+	// delay(5);
+	// drive(-30);
+
 }
 
 
