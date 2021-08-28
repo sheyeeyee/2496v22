@@ -427,31 +427,32 @@ void autonomous() {
 
 	//RIGHT Global but more
 
-	moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
-	delay(5);
-	drive(100); //Drive to neutral
-	delay(5);
-	moveMogo(1400);// Lift the Neutral
-	delay(5);
-	drive(-70); // go backwards
-	delay(5);
-	turn(80); // turn right
-	delay(5);
-	drive(35); // go forward a little
-	delay(15);
-	moveLift(-750); // drop the mobile goal
-	delay(5);
-	drive(-30); // Go back
-	delay(5);
-	turn(170); // turn to face the tall goal
-	delay(5);
-	drive(83);
-	delay(5);
-	moveMogo(950);
-	delay(5);
-	drive(-70);
-	delay(5);
+	// moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
+	// delay(5);
+	// drive(100); //Drive to neutral
+	// delay(5);
+	// moveMogo(1400);// Lift the Neutral
+	// delay(5);
+	// drive(-70); // go backwards
+	// delay(5);
+	// turn(80); // turn right
+	// delay(5);
+	// drive(35); // go forward a little
+	// delay(15);
+	// moveLift(-750); // drop the mobile goal
+	// delay(5);
+	// drive(-30); // Go back
+	// delay(5);
+	// turn(170); // turn to face the tall goal
+	// delay(5);
+	// drive(83); // drive to pick up
+	// delay(5);
+	// moveMogo(950); // pick up
+	// delay(5);
+	// drive(-70); // go back
+	// delay(5);
 
+	// Winpoint
 	// winPointMoveDown(-1900); // lift Down
 	// delay(5);
 	// drive(25);
@@ -459,6 +460,76 @@ void autonomous() {
 	// moveMogo(1400);
 	// delay(5);
 	// drive(-30);
+
+	//Skills?
+	moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
+	delay(5);
+	drive(20); //drive a little forward
+	delay(5);
+	moveMogo(1800); // lift mobile goal to position where if i run  function then it can get to the back
+	liftMobileGoal(); // put on back
+	delay(5);
+	turn(-80); // turn left
+	delay(5);
+	drive(200); // drive to toher side of field
+	delay(5);
+	turn(-90); // turn to face the mobile goal weighing the platform down
+	delay(5);
+	moveLift(-2000); // move lift down
+	delay(5);
+	drive(35); // drive to mogo
+	delay(5);
+	liftMobileGoal(); // pick it up and drop it into cage
+	delay(5);
+	turn(200); // turn to face other side
+	delay(5);
+	drive(220); // push neutral with us to other side
+	delay(5);
+	drive(-20); // go back a litle to line up with other mogo
+	delay(5);
+	moveLift(-1400); // put lift down
+	delay(5);
+	turn(-80); // turn to face mogo
+	delay(5);
+	drive(40); // drive and pick up mogo
+	delay(5);
+	moveMogo(1400); // hold mogo in lift
+	delay(5);
+	turn(-80); // turn to face other side of field
+	delay(5);
+	drive(200); // drive to the other side of the field
+	delay(5);
+	moveLift(-700); //put the lift down
+	delay(5);
+	drive(-100); // reverse out to face center neut mogo
+	delay(5);
+	turn(-75); // turn to facce neutral mogo
+	delay(5);
+	drive(50); // go forward and grab it
+	delay(5);
+	moveMogo(1400); // pick it up
+	delay(5);
+	turn(85); // turn right
+	delay(5);
+	drive(50); // put in front of platform
+	delay(5);
+	moveLift(-700); // put lift down
+	delay(5);
+	drive(-50); // reverse back to where once was
+	delay(5);
+	turn(-80); // turn left again
+	delay(5);
+	drive(60); // drive forward and pick up 3rd mogo
+	delay(5);
+	moveMogo(1400); //pick up neutral
+	delay(5);
+	turn(90); // turn right to face platform
+	delay(5);
+	drive(90); // drive into a home zone
+	delay(5);
+	moveLift(-700); // put mogo down
+	delay(5);
+	drive(-170); // drive to other color side of mogo alliance
 
 }
 
