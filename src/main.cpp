@@ -360,12 +360,35 @@ void moveMogo(int target){
   }
 
 	void autoBalance(){
-		float kP = 0.3;
-		float kI = 0.1;
+		float kP = 2.5;
 		float kD = 0.2;
+		// float kI = 0.005;
 		int power;
 		float error;
 		float pError;
+		int integral;
+
+		while(abs(imu.get_pitch()) >= 1.5){
+			if(con.get_digital(E_CONTROLLER_DIGITAL_X)){
+				break;
+			}
+			error = 1.5 - imu.get_pitch();
+			if(error <= 10){
+				integral += error;
+			}
+			// if(integral >= 25){
+			// 	integral = 0;
+			// }
+			int derivative = pError - error;
+			power = kP*error + kD*derivative;
+			LF.move(-power); LM.move(-power); LB.move(-power); RF.move(-(power-(power/10))); RM.move(-(power-(power/10))); RB.move(-(power-(power/10)));
+			pError = error;
+			delay(5);
+			if(abs(imu.get_pitch()) <= 5){
+				stop_motors();
+			}
+		}
+		stop_motors();
 	}
 
 /**
@@ -408,10 +431,8 @@ void autonomous() {
 	imu.reset();
 	delay(100);
 	while(imu.is_calibrating()) stop_motors();
-	//sherk programming arc
 
-		// moveLift(-1900);
-		// drive(100);
+
 	// Left with imu
 	// moveLift(-1900);
 	// delay(5);
@@ -429,7 +450,7 @@ void autonomous() {
 	// delay(5);
 	// drive(-35);
 	// delay(5);
-	// imuTurn(170);
+	// imuTurn(180);
 	// delay(5);
 	// drive(115);
 	// delay(5);
@@ -437,7 +458,7 @@ void autonomous() {
 	// delay(5);
 	// drive(-140);
 
-	// //RED RIGHT
+	// Global
 	// moveMogo(1200);
 	// delay(5);
 	// moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
@@ -467,7 +488,7 @@ void autonomous() {
 	delay(5);
 	drive(-30); // Go back
 	delay(5);
-	imuTurn(-164); // turn to face the tall goal
+	imuTurn(-159); // turn to face the tall goal
 	delay(5);
 	drive(82); // drive to pick up
 	delay(15);
@@ -573,9 +594,9 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	// imu.reset();
-	// delay(100);
-	// while(imu.is_calibrating())	stop_motors();
+	imu.reset();
+	delay(100);
+	while(imu.is_calibrating())	stop_motors();
 	// cout << "this is working" << endl;
 	// cout << "This is working" << endl;
 	while (true) {
@@ -634,7 +655,7 @@ void opcontrol() {
 					liftMobileGoal();
 				}
 
-
+				if(con.get_digital(E_CONTROLLER_DIGITAL_Y)) autoBalance();
 
 				delay(5);
 			}
