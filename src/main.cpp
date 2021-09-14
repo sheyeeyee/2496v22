@@ -360,35 +360,39 @@ void moveMogo(int target){
   }
 
 	void autoBalance(){
-		float kP = 2.5;
+		float kP = 2.0;
 		float kD = 0.2;
-		// float kI = 0.005;
+		float kI = 0.005;
 		int power;
 		float error;
 		float pError;
 		int integral;
 
+		int derivative;
 		while(abs(imu.get_pitch()) >= 1.5){
 			if(con.get_digital(E_CONTROLLER_DIGITAL_X)){
 				break;
 			}
 			error = 1.5 - imu.get_pitch();
-			if(error <= 10){
+			if(abs(error) <= 15 && error > 8){
 				integral += error;
 			}
-			// if(integral >= 25){
+			// else{
 			// 	integral = 0;
 			// }
-			int derivative = pError - error;
-			power = kP*error + kD*derivative;
-			LF.move(-power); LM.move(-power); LB.move(-power); RF.move(-(power-(power/10))); RM.move(-(power-(power/10))); RB.move(-(power-(power/10)));
+			if(abs(integral) >= 100){
+				integral = 0;
+			}
+			derivative = pError - error;
+			power = kP*error + kI*integral + kD*derivative;
+			LF.move(-power); LM.move(-power); LB.move(-power); RF.move(-power); RM.move(-power); RB.move(-power);
 			pError = error;
 			delay(5);
-			if(abs(imu.get_pitch()) <= 5){
+			if(abs(imu.get_pitch()) <= 9){
 				stop_motors();
 			}
 		}
-		stop_motors();
+		// stop_motors();
 	}
 
 /**
@@ -459,8 +463,6 @@ void autonomous() {
 	// drive(-140);
 
 	// Global
-	// moveMogo(1200);
-	// delay(5);
 	// moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
 	// delay(5);
 	// drive(100); //Drive to neutral
@@ -468,10 +470,9 @@ void autonomous() {
 	// moveMogo(1200); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
 	// delay(5);
 	// drive(-80); // go backwards
-	// delay(5); // turn right just cuz
+	// delay(5);
 
-	//RIGHT Global but more
-
+	//RIGHT Global but more imu 
 	moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
 	delay(5);
 	drive(115); //Drive to neutral
@@ -495,7 +496,7 @@ void autonomous() {
 	moveMogo(1300); // pick up
 	delay(5);
 	drive(-80); // go back
-	delay(5);
+	// delay(5);
 
 	// Winpoint
 	// winPointMoveDown(-1900); // lift Down
