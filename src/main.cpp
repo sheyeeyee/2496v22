@@ -15,7 +15,7 @@ using namespace std;
 		Motor RM (8, E_MOTOR_GEARSET_18);
 		Motor RB (7, E_MOTOR_GEARSET_18);
 			//inertial sensor for auton PID
-			// Imu imu (21);
+		Imu imu (16);
 
 	//lift
 	Motor lift_left (1, E_MOTOR_GEARSET_06, true);
@@ -95,14 +95,22 @@ void park_lift(){
 			derivative = error - prev_error;
 			prev_error = error;
 			power = kP*error + integral*kI + derivative*kD;
-			LF.move(power); LM.move(power); LB.move(power); RF.move(power-10); RM.move(power-10); RB.move(power-10);
+			if(power < 0){
+				power = min(power, -127);
+			}
+			else{
+				if(power > 0){
+					power = min(power, 127);
+				}
+			}
+			LF.move(power); LM.move(power); LB.move(power); RF.move(power-(power/10)); RM.move(power-(power/10)); RB.move(power-(power/10));
 			delay(10);
 		}
 		stop_motors();
 		if(target > 0){
-		RF.move(-15);
-		RM.move(-15);
-		RB.move(-15);
+		RF.move(-25);
+		RM.move(-25);
+		RB.move(-25);
 	}
 		delay(75);
 		stop_motors();
@@ -112,7 +120,42 @@ void park_lift(){
 		return -1;
 	}
 
-//this is just a brainstrom for turning
+// only do -180-180 turns
+void imuTurn(double degrees)
+{
+	if(degrees < 0)
+	{
+		imu.set_heading(350);
+	}
+	else
+	{
+		imu.set_heading(10);
+	}
+	float kP = 0.3;
+	float kI = 0.1;
+	float kD = 0.2;
+	double target = imu.get_heading() + degrees;
+	double error = target - imu.get_heading(); // -90
+	double lastError = error;
+	int power = 0;
+	double integral = 0.0;
+	double derivative = 0.0;
+
+	while(abs(error) > 1.0)	{
+		error = target - imu.get_heading();
+		integral += error;
+		if(abs(integral) >= 600){
+			integral = 0;
+		}
+		derivative = error - lastError;
+		power = error * kP + integral * kI + derivative *kD;
+		lastError = error;
+		LF.move(power); LM.move(power); LB.move(power); RF.move(-power); RM.move(-power); RB.move(-power);
+		delay(10);
+	}
+	stop_motors();
+}
+
 void turn(int degrees){
 	reset_encoders();
 	degrees *= 8.8; //this is honestly just some random number
@@ -231,6 +274,44 @@ void moveLift(int target){
 	stop_lift();
 }
 
+
+void winPointMoveDown(int target){
+	reset_lift();
+	double kP = 0.1;
+	double kI = 0.0025;
+	double kD = 0.01;
+	int integral = 0;
+	int derivative = 0;
+	int power = 0;
+	int current_pos = 0;
+	int error = 0;
+	int prev_error = 0;
+	error = target - current_pos;
+	while(abs(error)>5){
+		// if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
+		// 	break;
+		// }
+		current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
+		error = target - current_pos;
+		integral += error;
+		if(error == 0){
+			integral = 0;
+		}
+		if(error > 300){
+			integral = 0;
+		}
+		derivative = error - prev_error;
+		power = kP * error + integral * kI + derivative * kD;
+		prev_error = 0;
+		// power -= 15;
+		power = min(abs(power), 69);
+		power *= -1;
+		lift_left.move(power); lift_right.move(power);
+		delay(5);
+	}
+	stop_lift();
+}
+
 void moveMogo(int target){
 	reset_lift();
 	double kP = 0.1;
@@ -278,6 +359,42 @@ void moveMogo(int target){
       is_enabled = enable;
   }
 
+	void autoBalance(){
+		float kP = 2.0;
+		float kD = 0.2;
+		float kI = 0.005;
+		int power;
+		float error;
+		float pError;
+		int integral;
+
+		int derivative;
+		while(abs(imu.get_pitch()) >= 1.5){
+			if(con.get_digital(E_CONTROLLER_DIGITAL_X)){
+				break;
+			}
+			error = 1.5 - imu.get_pitch();
+			if(abs(error) <= 15 && error > 8){
+				integral += error;
+			}
+			// else{
+			// 	integral = 0;
+			// }
+			if(abs(integral) >= 100){
+				integral = 0;
+			}
+			derivative = pError - error;
+			power = kP*error + kI*integral + kD*derivative;
+			LF.move(-power); LM.move(-power); LB.move(-power); RF.move(-power); RM.move(-power); RB.move(-power);
+			pError = error;
+			delay(5);
+			if(abs(imu.get_pitch()) <= 9){
+				stop_motors();
+			}
+		}
+		// stop_motors();
+	}
+
 /**
  * Runs while the robot is in the disabled state of Field Management System or
  * the VEX Competition Switch, following either autonomous or opcontrol. When
@@ -307,41 +424,45 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
+
+
+ //For left turns do -10 from wanted values
 void autonomous() {
 	lcd::initialize();
 
 	con.set_text(1,1,"sup gamer");
 
-	// imu.reset();
-	// delay(2300);
-	// while(imu.is_calibrating());
-	// stop_motors();
-// 	for(int i = 0 ; i < 12 ; i
-	//when turning left subtract 10 from wanted degree amount
-	// turn(90);
-	// delay(5000);
-	// turn(-80);
-	// // turn(90);
-	// stop_motors();
+	imu.reset();
+	delay(100);
+	while(imu.is_calibrating()) stop_motors();
 
 
-	//sherk programming arc
-		moveLift(-1900);
-		delay(2);
-		//get goal
-		turn(90);
-		delay(5);
-		drive(50);
-		moveMogo(1400);
-		delay(5);
-		//back out
-		drive(-50);
-		delay(5);
-		turn(-90);
-
-	//RED RIGHT
+	// Left with imu
+	// moveLift(-1900);
+	// delay(5);
+	// drive(120);
+	// delay(5);
 	// moveMogo(1200);
 	// delay(5);
+	// drive(-65);
+	// delay(5);
+	// imuTurn(-137);
+	// delay(5);
+	// drive(35);
+	// delay(5);
+	// moveLift(-525);
+	// delay(5);
+	// drive(-35);
+	// delay(5);
+	// imuTurn(180);
+	// delay(5);
+	// drive(115);
+	// delay(5);
+	// moveMogo(1000);
+	// delay(5);
+	// drive(-140);
+
+	// Global
 	// moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
 	// delay(5);
 	// drive(100); //Drive to neutral
@@ -349,36 +470,113 @@ void autonomous() {
 	// moveMogo(1200); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
 	// delay(5);
 	// drive(-80); // go backwards
-	// delay(5); // turn right just cuz
-
-	//RED RIGHT but maybe more
-
-	// moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
 	// delay(5);
-	// drive(100); //Drive to neutral
+
+	//RIGHT Global but more imu 
+	moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
+	delay(5);
+	drive(115); //Drive to neutral
+	delay(5);
+	moveMogo(1200);// Lift the Neutral
+	delay(5);
+	drive(-60); // go backwards
+	delay(5);
+	imuTurn(105); // turn right
+	delay(5);
+	drive(30); // go forward a little
+	delay(15);
+	moveLift(-750); // drop the mobile goal
+	delay(5);
+	drive(-30); // Go back
+	delay(5);
+	imuTurn(-159); // turn to face the tall goal
+	delay(5);
+	drive(82); // drive to pick up
+	delay(15);
+	moveMogo(1300); // pick up
+	delay(5);
+	drive(-80); // go back
+	// delay(5);
+
+	// Winpoint
+	// winPointMoveDown(-1900); // lift Down
+	// delay(5);
+	// drive(25);
 	// delay(5);
 	// moveMogo(1400);
-	// // park_lift(); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
 	// delay(5);
-	// drive(-80); // go backwards
+	// drive(-30);
+
+	//Skills?
+	// moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
 	// delay(5);
-	// turn(75); // turn right just cuz
+	// drive(20); //drive a little forward
 	// delay(5);
-	// drive(30);
-	// delay(15);
-	// moveLift(-150);
+	// moveMogo(1800); // lift mobile goal to position where if i run  function then it can get to the back
+	// liftMobileGoal(); // put on back
 	// delay(5);
-	// drive(-20);
+	// turn(-80); // turn left
 	// delay(5);
-	// turn(-130);
+	// drive(200); // drive to toher side of field
 	// delay(5);
-	// drive(109);
+	// turn(-90); // turn to face the mobile goal weighing the platform down
 	// delay(5);
-	// moveMogo(1200);
+	// moveLift(-2000); // move lift down
 	// delay(5);
-	// park_lift();
-	// drive(-110);
+	// drive(35); // drive to mogo
 	// delay(5);
+	// liftMobileGoal(); // pick it up and drop it into cage
+	// delay(5);
+	// turn(200); // turn to face other side
+	// delay(5);
+	// drive(220); // push neutral with us to other side
+	// delay(5);
+	// drive(-20); // go back a litle to line up with other mogo
+	// delay(5);
+	// moveLift(-1400); // put lift down
+	// delay(5);
+	// turn(-80); // turn to face mogo
+	// delay(5);
+	// drive(40); // drive and pick up mogo
+	// delay(5);
+	// moveMogo(1400); // hold mogo in lift
+	// delay(5);
+	// turn(-80); // turn to face other side of field
+	// delay(5);
+	// drive(200); // drive to the other side of the field
+	// delay(5);
+	// moveLift(-700); //put the lift down
+	// delay(5);
+	// drive(-100); // reverse out to face center neut mogo
+	// delay(5);
+	// turn(-75); // turn to facce neutral mogo
+	// delay(5);
+	// drive(50); // go forward and grab it
+	// delay(5);
+	// moveMogo(1400); // pick it up
+	// delay(5);
+	// turn(85); // turn right
+	// delay(5);
+	// drive(50); // put in front of platform
+	// delay(5);
+	// moveLift(-700); // put lift down
+	// delay(5);
+	// drive(-50); // reverse back to where once was
+	// delay(5);
+	// turn(-80); // turn left again
+	// delay(5);
+	// drive(60); // drive forward and pick up 3rd mogo
+	// delay(5);
+	// moveMogo(1400); //pick up neutral
+	// delay(5);
+	// turn(90); // turn right to face platform
+	// delay(5);
+	// drive(90); // drive into a home zone
+	// delay(5);
+	// moveLift(-700); // put mogo down
+	// delay(5);
+	// drive(-170); // drive to other color side of mogo alliance
+
 }
 
 
@@ -397,14 +595,14 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	// imu.reset();
-	// delay(2300);
-	// while(imu.is_calibrating());
-	// stop_motors();
+	imu.reset();
+	delay(100);
+	while(imu.is_calibrating())	stop_motors();
 	// cout << "this is working" << endl;
 	// cout << "This is working" << endl;
 	while (true) {
-
+		// cout << "Heading Value: " << imu.get_heading() << endl;
+		// cout << "Pitch: " << imu.get_pitch() << endl;
 		//chassis (arcade drive)
 			/**Set the integers for moving right and left so you can place them in the
 					function.**/
@@ -417,7 +615,11 @@ void opcontrol() {
 							an X at the end bc that is the horizontal axis and the right
 							joystick is for going left and right.**/
 			int left = power + turn;
-			int right = power - turn;
+			int right = power - turn - (power/10);
+			//if drives forward, right side goes faster than left or left goes slower, left
+			// most likely will not continue to any faster, so plan is to reduce right side speed
+			// if it is turning, then left side will turn slower than before theoretically, but
+			// turn faster for the right side as well, making it even?
 				//tbh still tryna figure out how this sum difference thing works
 
 				//put the left and right integers down here
@@ -427,16 +629,7 @@ void opcontrol() {
 				RF.move(right);
 				RM.move(right);
 				RB.move(right);
-				// con.clear();
 
-				// cout << "Lift Left - " << lift_left.get_position() << endl;
-				// cout << "Lift Right - " << lift_right.get_position() << endl;
-				// cout << "Pitch: " << imu.get_pitch() << endl;
-				// cout << "Yaw: " << imu.get_yaw() << endl;
-				// cout << "Roll: " << imu.get_roll() << endl;
-				// for(int i = 0; i < 5; i ++){
-				// 	cout << endl;
-				// }
 		//lift
 			//lift go up
 			if(con.get_digital(E_CONTROLLER_DIGITAL_R1)){
@@ -447,8 +640,8 @@ void opcontrol() {
 				//lift go down
 				else if(con.get_digital(E_CONTROLLER_DIGITAL_R2)){
 					// cout << "Pressed R2" << endl;
-					lift_left.move(-69);
-					lift_right.move(-69);
+					lift_left.move(-127);
+					lift_right.move(-127);
 				}
 					//lift go no
 					else{
@@ -459,11 +652,12 @@ void opcontrol() {
 
 						}
 				if(con.get_digital(E_CONTROLLER_DIGITAL_A)){
-					cout << "Pressed A" << endl;
+					// cout << "Pressed A" << endl;
 					liftMobileGoal();
 				}
 
-				delay(5);
-	}
+				if(con.get_digital(E_CONTROLLER_DIGITAL_Y)) autoBalance();
 
+				delay(5);
+			}
 	}
