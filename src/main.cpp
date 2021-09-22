@@ -468,6 +468,7 @@ void autonomous() {
 	// delay(5);
 
 	//RIGHT Global but more imu
+	//SETUP IS KEY
 	moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
 	delay(5);
 	drive(115); //Drive to neutral
@@ -488,7 +489,7 @@ void autonomous() {
 	delay(5);
 	drive(92); // drive to pick up
 	delay(15);
-	moveMogo(1250); // pick up
+	moveMogo(1200); // pick up
 	delay(5);
 	drive(-80); // go back
 	delay(5);
