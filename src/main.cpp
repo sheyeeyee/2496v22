@@ -15,7 +15,7 @@ using namespace std;
 		Motor RM (8, E_MOTOR_GEARSET_18);
 		Motor RB (7, E_MOTOR_GEARSET_18);
 			//inertial sensor for auton PID
-		Imu imu (16);
+		Imu imu (17);
 
 	//lift
 	Motor lift_left (1, E_MOTOR_GEARSET_06, true);
@@ -79,6 +79,7 @@ void park_lift(){
 		int error;
 		int prev_error;
 		int power;
+		int powerAdj = 0;
 		int current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
 		error = target - current_pos;
 		while(abs(error) >= 15){
@@ -103,16 +104,10 @@ void park_lift(){
 					power = min(power, 127);
 				}
 			}
-			LF.move(power); LM.move(power); LB.move(power); RF.move(power-(power/10)); RM.move(power-(power/10)); RB.move(power-(power/10));
+			powerAdj = power/10;
+			LF.move(power); LM.move(power); LB.move(power); RF.move(power-powerAdj); RM.move(power-powerAdj); RB.move(power-powerAdj);
 			delay(10);
 		}
-		stop_motors();
-		if(target > 0){
-		RF.move(-25);
-		RM.move(-25);
-		RB.move(-25);
-	}
-		delay(75);
 		stop_motors();
 	}
 
@@ -436,67 +431,67 @@ void autonomous() {
 	delay(100);
 	while(imu.is_calibrating()) stop_motors();
 
+	// imuTurn(90);
 
 	// Left with imu
-	moveLift(-1900);
-	delay(5);
-	drive(120);
-	delay(5);
-	moveMogo(1200);
-	delay(5);
-	drive(-65);
-	delay(5);
-	imuTurn(-142);
-	delay(5);
-	drive(35);
-	delay(5);
-	moveLift(-525);
-	delay(5);
-	drive(-35);
-	delay(5);
-	imuTurn(163);
-	delay(5);
-	drive(115);
-	delay(5);
-	moveMogo(1000);
-	delay(5);
-	drive(-110);
-	delay(5);
-	moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
-	Global
-	delay(5);
-	drive(100); //Drive to neutral
-	delay(5);
-	moveMogo(1200); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
-	delay(5);
-	drive(-80); // go backwards
-	delay(5);
-
-	//RIGHT Global but more imu
+	// moveLift(-1900);
+	// delay(5);
+	// drive(120);
+	// delay(5);
+	// moveMogo(1200);
+	// delay(5);
+	// drive(-65);
+	// delay(5);
+	// imuTurn(-142);
+	// delay(5);
+	// drive(35);
+	// delay(5);
+	// moveLift(-525);
+	// delay(5);
+	// drive(-35);
+	// delay(5);
+	// imuTurn(163);
+	// delay(5);
+	// drive(115);
+	// delay(5);
+	// moveMogo(1000);
+	// delay(5);
+	// drive(-110);
+	// delay(5);
 	// moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
 	// delay(5);
-	// drive(115); //Drive to neutral
+	// drive(100); //Drive to neutral
 	// delay(5);
-	// moveMogo(1200);// Lift the Neutral
+	// moveMogo(1200); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
 	// delay(5);
-	// drive(-60); // go backwards
+	// drive(-80); // go backwards
 	// delay(5);
-	// imuTurn(105); // turn right
-	// delay(5);
-	// drive(30); // go forward a little
-	// delay(15);
-	// moveLift(-750); // drop the mobile goal
-	// delay(5);
-	// drive(-30); // Go back
-	// delay(5);
-	// imuTurn(-159); // turn to face the tall goal
-	// delay(5);
-	// drive(82); // drive to pick up
-	// delay(15);
-	// moveMogo(1300); // pick up
-	// delay(5);
-	// drive(-80); // go back
-	// delay(5);
+
+	//RIGHT Global but more imu
+	moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
+	delay(5);
+	drive(115); //Drive to neutral
+	delay(5);
+	moveMogo(1200);// Lift the Neutral
+	delay(5);
+	drive(-70); // go backwards
+	delay(5);
+	imuTurn(126); // turn right
+	delay(5);
+	drive(30); // go forward a little
+	delay(15);
+	moveLift(-750); // drop the mobile goal
+	delay(5);
+	drive(-30); // Go back
+	delay(5);
+	imuTurn(-180); // turn to face the tall goal
+	delay(5);
+	drive(92); // drive to pick up
+	delay(15);
+	moveMogo(1250); // pick up
+	delay(5);
+	drive(-80); // go back
+	delay(5);
 
 	// Winpoint
 	// winPointMoveDown(-1900); // lift Down
@@ -615,7 +610,7 @@ void opcontrol() {
 							an X at the end bc that is the horizontal axis and the right
 							joystick is for going left and right.**/
 			int left = power + turn;
-			int right = power - turn - (power/10);
+			int right = power - turn - power/10;
 			//if drives forward, right side goes faster than left or left goes slower, left
 			// most likely will not continue to any faster, so plan is to reduce right side speed
 			// if it is turning, then left side will turn slower than before theoretically, but
