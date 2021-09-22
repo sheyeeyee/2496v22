@@ -438,30 +438,30 @@ void autonomous() {
 
 
 	// Left with imu
-	// moveLift(-1900);
-	// delay(5);
-	// drive(120);
-	// delay(5);
-	// moveMogo(1200);
-	// delay(5);
-	// drive(-65);
-	// delay(5);
-	// imuTurn(-137);
-	// delay(5);
-	// drive(35);
-	// delay(5);
-	// moveLift(-525);
-	// delay(5);
-	// drive(-35);
-	// delay(5);
-	// imuTurn(180);
-	// delay(5);
-	// drive(115);
-	// delay(5);
-	// moveMogo(1000);
-	// delay(5);
-	// drive(-140);
-
+	moveLift(-1900);
+	delay(5);
+	drive(120);
+	delay(5);
+	moveMogo(1200);
+	delay(5);
+	drive(-65);
+	delay(5);
+	imuTurn(-142);
+	delay(5);
+	drive(35);
+	delay(5);
+	moveLift(-525);
+	delay(5);
+	drive(-35);
+	delay(5);
+	imuTurn(163);
+	delay(5);
+	drive(115);
+	delay(5);
+	moveMogo(1000);
+	delay(5);
+	drive(-110);
+	delay(5);
 	// Global
 	// moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
 	// delay(5);
@@ -472,7 +472,7 @@ void autonomous() {
 	// drive(-80); // go backwards
 	// delay(5);
 
-	//RIGHT Global but more imu 
+	//RIGHT Global but more imu
 	moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
 	delay(5);
 	drive(115); //Drive to neutral
