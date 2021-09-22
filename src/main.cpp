@@ -462,40 +462,40 @@ void autonomous() {
 	delay(5);
 	drive(-110);
 	delay(5);
-	// Global
-	// moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
-	// delay(5);
-	// drive(100); //Drive to neutral
-	// delay(5);
-	// moveMogo(1200); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
-	// delay(5);
-	// drive(-80); // go backwards
-	// delay(5);
+	moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
+	Global
+	delay(5);
+	drive(100); //Drive to neutral
+	delay(5);
+	moveMogo(1200); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
+	delay(5);
+	drive(-80); // go backwards
+	delay(5);
 
 	//RIGHT Global but more imu
-	moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
-	delay(5);
-	drive(115); //Drive to neutral
-	delay(5);
-	moveMogo(1200);// Lift the Neutral
-	delay(5);
-	drive(-60); // go backwards
-	delay(5);
-	imuTurn(105); // turn right
-	delay(5);
-	drive(30); // go forward a little
-	delay(15);
-	moveLift(-750); // drop the mobile goal
-	delay(5);
-	drive(-30); // Go back
-	delay(5);
-	imuTurn(-159); // turn to face the tall goal
-	delay(5);
-	drive(82); // drive to pick up
-	delay(15);
-	moveMogo(1300); // pick up
-	delay(5);
-	drive(-80); // go back
+	// moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
+	// delay(5);
+	// drive(115); //Drive to neutral
+	// delay(5);
+	// moveMogo(1200);// Lift the Neutral
+	// delay(5);
+	// drive(-60); // go backwards
+	// delay(5);
+	// imuTurn(105); // turn right
+	// delay(5);
+	// drive(30); // go forward a little
+	// delay(15);
+	// moveLift(-750); // drop the mobile goal
+	// delay(5);
+	// drive(-30); // Go back
+	// delay(5);
+	// imuTurn(-159); // turn to face the tall goal
+	// delay(5);
+	// drive(82); // drive to pick up
+	// delay(15);
+	// moveMogo(1300); // pick up
+	// delay(5);
+	// drive(-80); // go back
 	// delay(5);
 
 	// Winpoint
