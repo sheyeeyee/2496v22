@@ -235,6 +235,7 @@ void liftMobileGoal(){
 }
 
 void moveLift(int target){
+	stop_lift();
 	reset_lift();
 	double kP = 0.1;
 	double kI = 0.0025;
@@ -248,25 +249,24 @@ void moveLift(int target){
 	error = target - current_pos;
 	while(abs(error)>5){
 		// if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
-		// 	break;
-		// }
-		current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
-		error = target - current_pos;
-		integral += error;
-		if(error == 0){
-			integral = 0;
+			// 	break;
+			// }
+			current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
+			error = target - current_pos;
+			integral += error;
+			if(error == 0){
+				integral = 0;
+			}
+			if(error > 300){
+				integral = 0;
+			}
+			derivative = error - prev_error;
+			power = kP * error + integral * kI + derivative * kD;
+			prev_error = 0;
+			// power -= 15;
+			lift_left.move(power); lift_right.move(power);
+			delay(5);
 		}
-		if(error > 300){
-			integral = 0;
-		}
-		derivative = error - prev_error;
-		power = kP * error + integral * kI + derivative * kD;
-		prev_error = 0;
-		// power -= 15;
-		lift_left.move(power); lift_right.move(power);
-		delay(5);
-	}
-	stop_lift();
 }
 
 
@@ -387,9 +387,90 @@ void moveMogo(int target){
 				stop_motors();
 			}
 		}
-		// stop_motors();
 	}
+	void driveLiftDown(int dTarget, int lTarget){
+		reset_encoders();
+		reset_lift();
+		//target is in inches
+		dTarget*=28.65; // the conversion for 36:1 4 inch wheels
+		// RF.set_zero_position(0);
+		double kP = 0.1;
+		double kI = 0.0025;
+		double kD = 0.01;
+		int integral = 0;
+		int derivative = 0;
+		int power = 0;
+		int current_pos = 0;
+		int error = 0;
+		int prev_error = 0;
+		error = lTarget - current_pos;
+		//----------
+		double dkP = 0.5;
+		double dkI = 0.01;
+		double dkD = 0.02;
+		int dintegral = 0;
+		int dderivative = 0;
+		int derror;
+		int dprev_error;
+		int dpower;
+		int powerAdj = 0;
+		int d_current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
+		derror = dTarget - d_current_pos;
+		//-------------------
+		while(abs(derror) >= 15 && abs(error)>5){
+			d_current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
+			current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
+			error = lTarget - current_pos;
+			integral += error;
+			if(error == 0){
+				integral = 0;
+			}
+			if(error > 300){
+				integral = 0;
+			}
+			derivative = error - prev_error;
+			power = kP * error + integral * kI + derivative * kD;
+			prev_error = 0;
+			// power -= 15;
+			if(abs(error) < 5){
+				stop_lift();
+			}
+			else{
+				lift_left.move(power); lift_right.move(power);
+			}
 
+			derror = dTarget - d_current_pos;
+			dintegral += derror;
+			if(derror == 0){
+				dintegral = 0;
+			}
+			if(dintegral > 3000){
+				dintegral = 0;
+			}
+
+			dderivative = derror - dprev_error;
+			dprev_error = derror;
+			dpower = dkP*derror + dintegral*dkI + dderivative*dkD;
+			if(dpower < 0){
+				dpower = min(dpower, -127);
+			}
+			else{
+				if(dpower > 0){
+					dpower = min(dpower, 127);
+				}
+			}
+			powerAdj = dpower/10;
+			if(abs(derror) < 15){
+				stop_motors();
+		}
+		else{
+			LF.move(dpower); LM.move(dpower); LB.move(dpower); RF.move(dpower-powerAdj); RM.move(dpower-powerAdj); RB.move(dpower-powerAdj);
+		}
+			delay(10);
+		}
+		stop_motors();
+		stop_lift();
+	}
 /**
  * Runs while the robot is in the disabled state of Field Management System or
  * the VEX Competition Switch, following either autonomous or opcontrol. When
@@ -433,40 +514,38 @@ void autonomous() {
 
 
 	// imuTurn(90);
-
+	
 	// Left with imu
-	moveLift(-1900);
-	delay(5);
-	drive(120);
+	driveLiftDown(120, -1900);
 	delay(5);
 	moveMogo(1100);
 	delay(5);
 	drive(-55);
 	delay(5);
-	imuTurn(-110);
 	delay(5);
+	imuTurn(-110);
 	drive(30);
 	delay(5);
-	moveLift(-525);
+	moveLift(-600);
 	delay(5);
 	drive(-35);
 	delay(5);
 	imuTurn(180);
 	delay(5);
-	drive(90);
+	drive(87);
 	delay(5);
 	moveMogo(1000);
 	delay(5);
 	drive(-100);
 	delay(5);
-	// moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
-	// delay(5);
-	// drive(50); //Drive to neutral
-	// delay(5);
-	// moveMogo(1200); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
-	// delay(5);
-	// drive(-100); // go backwards
-	// delay(5);
+	moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
+	delay(5);
+	drive(50); //Drive to neutral
+	delay(5);
+	moveMogo(1200); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
+	delay(5);
+	drive(-100); // go backwards
+	delay(5);
 
 	//RIGHT Global but more imu
 	//SETUP IS KEY
@@ -657,4 +736,5 @@ void opcontrol() {
 
 				delay(5);
 			}
+
 	}
