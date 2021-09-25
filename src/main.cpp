@@ -406,7 +406,8 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
+void competition_initialize() {
+}
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -425,11 +426,11 @@ void competition_initialize() {}
 void autonomous() {
 	lcd::initialize();
 
+		imu.reset();
+		delay(100);
+		while(imu.is_calibrating()) stop_motors();
 	con.set_text(1,1,"sup gamer");
 
-	imu.reset();
-	delay(100);
-	while(imu.is_calibrating()) stop_motors();
 
 	// imuTurn(90);
 
@@ -438,7 +439,7 @@ void autonomous() {
 	delay(5);
 	drive(120);
 	delay(5);
-	moveMogo(1200);
+	moveMogo(1100);
 	delay(5);
 	drive(-55);
 	delay(5);
@@ -452,14 +453,14 @@ void autonomous() {
 	delay(5);
 	imuTurn(180);
 	delay(5);
-	drive(80);
+	drive(90);
 	delay(5);
 	moveMogo(1000);
 	delay(5);
-	drive(-110);
+	drive(-100);
 	delay(5);
-	moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
-	delay(5);
+	// moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
+	// delay(5);
 	// drive(50); //Drive to neutral
 	// delay(5);
 	// moveMogo(1200); // Pick up neutral ( value needs to be higher because of added weight from mobile goal, 2x)
