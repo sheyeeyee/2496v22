@@ -247,7 +247,7 @@ void moveLift(int target){
 	int error = 0;
 	int prev_error = 0;
 	error = target - current_pos;
-	while(abs(error)>10){
+	while(abs(error)>7){
 		// if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
 			// 	break;
 			// }
@@ -417,7 +417,7 @@ void moveMogo(int target){
 		int d_current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
 		derror = dTarget - d_current_pos;
 		//-------------------
-		while(abs(derror) >= 15 && abs(error)>5){
+		while(abs(derror) >= 15 && abs(error)>7){
 			d_current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
 			current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
 			error = lTarget - current_pos;
@@ -472,27 +472,27 @@ void moveMogo(int target){
 		stop_lift();
 	}
 	void currAuton(){
-		driveLiftDown(115, -1900); //Drive to neutral and set lift down
+		driveLiftDown(120, -1900);
 		delay(5);
-		moveMogo(1200);// Lift the Neutral
+		moveMogo(1100);
 		delay(5);
-		drive(-70); // go backwards
+		drive(-55);
 		delay(5);
-		imuTurn(126); // turn right
 		delay(5);
-		drive(30); // go forward a little
-		delay(15);
-		moveLift(-750); // drop the mobile goal
+		imuTurn(-110);
+		drive(30);
 		delay(5);
-		drive(-30); // Go back
+		moveLift(-600);
 		delay(5);
-		imuTurn(-180); // turn to face the tall goal
+		drive(-35);
 		delay(5);
-		drive(92); // drive to pick up
-		delay(15);
-		moveMogo(1200); // pick up
+		imuTurn(180);
 		delay(5);
-		drive(-80); // go back
+		drive(87);
+		delay(5);
+		moveMogo(1000);
+		delay(5);
+		drive(-100);
 		delay(5);
 
 	}
@@ -543,55 +543,55 @@ void autonomous() {
 	// imuTurn(90);
 
 	// Left with imu
-	// driveLiftDown(120, -1900);
-	// delay(5);
-	// moveMogo(1100);
-	// delay(5);
-	// drive(-55);
-	// delay(5);
-	// delay(5);
-	// imuTurn(-110);
-	// drive(30);
-	// delay(5);
-	// moveLift(-600);
-	// delay(5);
-	// drive(-35);
-	// delay(5);
-	// imuTurn(180);
-	// delay(5);
-	// drive(87);
-	// delay(5);
-	// moveMogo(1000);
-	// delay(5);
-	// drive(-100);
-	// delay(5);
 
+	driveLiftDown(120, -1900);
+	delay(5);
+	moveMogo(1100);
+	delay(5);
+	drive(-55);
+	delay(5);
+	delay(5);
+	imuTurn(-110);
+	drive(30);
+	delay(5);
+	moveLift(-600);
+	delay(5);
+	drive(-35);
+	delay(5);
+	imuTurn(180);
+	delay(5);
+	drive(87);
+	delay(5);
+	moveMogo(1000);
+	delay(5);
+	drive(-100);
+	delay(5);
 
 	//RIGHT Global but more imu
 	//SETUP IS KEY
 
-	driveLiftDown(115, -1900); //Drive to neutral and set lift down
-	delay(5);
-	moveMogo(1200);// Lift the Neutral
-	delay(5);
-	drive(-70); // go backwards
-	delay(5);
-	imuTurn(126); // turn right
-	delay(5);
-	drive(30); // go forward a little
-	delay(15);
-	moveLift(-750); // drop the mobile goal
-	delay(5);
-	drive(-30); // Go back
-	delay(5);
-	imuTurn(-180); // turn to face the tall goal
-	delay(5);
-	drive(92); // drive to pick up
-	delay(15);
-	moveMogo(1200); // pick up
-	delay(5);
-	drive(-80); // go back
-	delay(5);
+	// driveLiftDown(115, -1900); //Drive to neutral and set lift down
+	// delay(5);
+	// moveMogo(1200);// Lift the Neutral
+	// delay(5);
+	// drive(-70); // go backwards
+	// delay(5);
+	// imuTurn(126); // turn right
+	// delay(5);
+	// drive(30); // go forward a little
+	// delay(15);
+	// moveLift(-750); // drop the mobile goal
+	// delay(5);
+	// drive(-30); // Go back
+	// delay(5);
+	// imuTurn(-180); // turn to face the tall goal
+	// delay(5);
+	// drive(92); // drive to pick up
+	// delay(15);
+	// moveMogo(1200); // pick up
+	// delay(5);
+	// drive(-80); // go back
+	// delay(5);
 
 	// Winpoint
 	// winPointMoveDown(-1900); // lift Down
