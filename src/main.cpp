@@ -732,6 +732,12 @@ void opcontrol() {
 				}
 
 				if(con.get_digital(E_CONTROLLER_DIGITAL_Y)) autoBalance();
+<<<<<<< Updated upstream
+=======
+				if(con.get_digital(E_CONTROLLER_DIGITAL_UP)){
+					currAuton();
+				}
+>>>>>>> Stashed changes
 
 				delay(5);
 			}
