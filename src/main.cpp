@@ -27,6 +27,7 @@ using namespace std;
 	Controller con (CONTROLLER_MASTER);
 
 
+
 	//main auton and used for the singular button press
 	void currAuton(){
 		driveLiftDown(115, -1900); //Drive to neutral and set lift down
@@ -51,8 +52,8 @@ using namespace std;
 		delay(5);
 		drive(-80); // go back
 		delay(5);
-
 	}
+
 /**
  * Runs while the robot is in the disabled state of Field Management System or
  * the VEX Competition Switch, following either autonomous or opcontrol. When
@@ -249,13 +250,11 @@ void autonomous() {
 void opcontrol() {
 
 	imu.reset();
-	delay(100);
+	delay(90);
 	while(imu.is_calibrating())	stop_motors();
 	// cout << "this is working" << endl;
-	// cout << "This is working" << endl;
+
 	while (true) {
-		// cout << "Heading Value: " << imu.get_heading() << endl;
-		// cout << "Pitch: " << imu.get_pitch() << endl;
 		//chassis (arcade drive)
 			/**Set the integers for moving right and left so you can place them in the
 					function.
