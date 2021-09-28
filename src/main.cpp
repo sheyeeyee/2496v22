@@ -104,7 +104,7 @@ void park_lift(){
 					power = min(power, 127);
 				}
 			}
-			powerAdj = power/10;
+			// powerAdj = power/10;
 			LF.move(power); LM.move(power); LB.move(power); RF.move(power-powerAdj); RM.move(power-powerAdj); RB.move(power-powerAdj);
 			delay(10);
 		}
@@ -459,7 +459,8 @@ void moveMogo(int target){
 					dpower = min(dpower, 127);
 				}
 			}
-			powerAdj = dpower/10;
+			// powerAdj = dpower/10;
+
 			if(abs(derror) < 15){
 				stop_motors();
 		}
@@ -486,7 +487,7 @@ void moveMogo(int target){
 		delay(5);
 		drive(-30); // Go back
 		delay(5);
-		imuTurn(-170); // turn to face the tall goal
+		imuTurn(-180); // turn to face the tall goal
 		delay(5);
 		drive(87); // drive to pick up
 		delay(15);
@@ -592,7 +593,7 @@ void autonomous() {
 	delay(5);
 	drive(-30); // Go back
 	delay(5);
-	imuTurn(-170); // turn to face the tall goal
+	imuTurn(-180); // turn to face the tall goal
 	delay(5);
 	drive(87); // drive to pick up
 	delay(15);
@@ -718,7 +719,7 @@ void opcontrol() {
 							an X at the end bc that is the horizontal axis and the right
 							joystick is for going left and right.**/
 			int left = power + turn;
-			int right = power - turn - power/10;
+			int right = power - turn - power/20;
 			//if drives forward, right side goes faster than left or left goes slower, left
 			// most likely will not continue to any faster, so plan is to reduce right side speed
 			// if it is turning, then left side will turn slower than before theoretically, but
