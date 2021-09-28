@@ -400,7 +400,7 @@ void moveMogo(int target){
 		int integral = 0;
 		int derivative = 0;
 		int power = 0;
-		int current_pos = 0;
+		int current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
 		int error = 0;
 		int prev_error = 0;
 		error = lTarget - current_pos;
@@ -417,7 +417,7 @@ void moveMogo(int target){
 		int d_current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
 		derror = dTarget - d_current_pos;
 		//-------------------
-		while(abs(derror) >= 15 && abs(error)>7){
+		while(abs(derror) >= 15 || abs(error)>7){
 			d_current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
 			current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
 			error = lTarget - current_pos;
@@ -472,29 +472,28 @@ void moveMogo(int target){
 		stop_lift();
 	}
 	void currAuton(){
-		driveLiftDown(120, -1900);
+		driveLiftDown(115, -1900); //Drive to neutral and set lift down
 		delay(5);
-		moveMogo(1100);
+		moveMogo(1200);// Lift the Neutral
 		delay(5);
-		drive(-55);
+		drive(-70); // go backwards
 		delay(5);
+		imuTurn(126); // turn right
 		delay(5);
-		imuTurn(-110);
-		drive(30);
+		drive(30); // go forward a little
+		delay(15);
+		moveLift(-275); // drop the mobile goal
 		delay(5);
-		moveLift(-600);
+		drive(-30); // Go back
 		delay(5);
-		drive(-35);
+		imuTurn(-170); // turn to face the tall goal
 		delay(5);
-		imuTurn(180);
+		drive(87); // drive to pick up
+		delay(15);
+		moveMogo(1550); // pick up
+		delay(6);
+		drive(-84); // go back
 		delay(5);
-		drive(87);
-		delay(5);
-		moveMogo(1000);
-		delay(5);
-		drive(-100);
-		delay(5);
-
 	}
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -534,64 +533,73 @@ void competition_initialize() {
 void autonomous() {
 	lcd::initialize();
 
-		imu.reset();
-		delay(100);
-		while(imu.is_calibrating()) stop_motors();
-	con.set_text(1,1,"sup gamer");
+	// 	imu.reset();
+	// 	delay(100);
+	// 	while(imu.is_calibrating()) stop_motors();
+	// con.set_text(1,1,"sup gamer");
+
+  // //GLOBAL SAFE
+	// driveLiftDown(120, -1900);
+	// delay(5);
+	// moveMogo(1100);
+	// delay(5);
+	// drive(-105);
+	// delay(5);
+
 
 
 	// imuTurn(90);
 
 	// Left with imu
 
-	driveLiftDown(120, -1900);
-	delay(5);
-	moveMogo(1100);
-	delay(5);
-	drive(-55);
-	delay(5);
-	delay(5);
-	imuTurn(-110);
-	drive(30);
-	delay(5);
-	moveLift(-600);
-	delay(5);
-	drive(-35);
-	delay(5);
-	imuTurn(180);
-	delay(5);
-	drive(87);
-	delay(5);
-	moveMogo(1000);
-	delay(5);
-	drive(-100);
-	delay(5);
+	// driveLiftDown(120, -1900);
+	// delay(5);
+	// moveMogo(1100);
+	// delay(5);
+	// drive(-75);
+	// delay(5);
+	// delay(5);
+	// imuTurn(-110);
+	// drive(20);
+	// delay(5);
+	// moveLift(-525);
+	// delay(5);
+	// drive(-35);
+	// delay(5);
+	// imuTurn(175);
+	// delay(5);
+	// drive(87);
+	// delay(5);
+	// moveMogo(1000);
+	// delay(5);
+	// drive(-100);
+	// delay(5);
 
 	//RIGHT Global but more imu
 	//SETUP IS KEY
 
-	// driveLiftDown(115, -1900); //Drive to neutral and set lift down
-	// delay(5);
-	// moveMogo(1200);// Lift the Neutral
-	// delay(5);
-	// drive(-70); // go backwards
-	// delay(5);
-	// imuTurn(126); // turn right
-	// delay(5);
-	// drive(30); // go forward a little
-	// delay(15);
-	// moveLift(-750); // drop the mobile goal
-	// delay(5);
-	// drive(-30); // Go back
-	// delay(5);
-	// imuTurn(-180); // turn to face the tall goal
-	// delay(5);
-	// drive(92); // drive to pick up
-	// delay(15);
-	// moveMogo(1200); // pick up
-	// delay(5);
-	// drive(-80); // go back
-	// delay(5);
+	driveLiftDown(115, -1900); //Drive to neutral and set lift down
+	delay(5);
+	moveMogo(1200);// Lift the Neutral
+	delay(5);
+	drive(-70); // go backwards
+	delay(5);
+	imuTurn(126); // turn right
+	delay(5);
+	drive(30); // go forward a little
+	delay(15);
+	moveLift(-275); // drop the mobile goal
+	delay(5);
+	drive(-30); // Go back
+	delay(5);
+	imuTurn(-170); // turn to face the tall goal
+	delay(5);
+	drive(87); // drive to pick up
+	delay(15);
+	moveMogo(1550); // pick up
+	delay(6);
+	drive(-84); // go back
+	delay(5);
 
 	// Winpoint
 	// winPointMoveDown(-1900); // lift Down
@@ -752,7 +760,10 @@ void opcontrol() {
 				}
 
 				if(con.get_digital(E_CONTROLLER_DIGITAL_Y)) autoBalance();
-				if(con.get_digital(E_CONTROLLER_DIGITAL_UP)) currAuton();
+
+				if(con.get_digital(E_CONTROLLER_DIGITAL_UP)){
+						currAuton();
+				}
 
 				delay(5);
 			}
