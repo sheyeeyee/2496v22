@@ -201,22 +201,22 @@ void turn(int degrees){
 
 void liftMobileGoal(){
 	reset_lift();
-	double kP = 0.1;
+	double kP = 0.4;
 	double kI = 0.0025;
-	double kD = 0.02;
+	double kD = 0.01;
 	int integral = 0;
 	int derivative = 0;
 	int power = 0;
 	int current_pos = 0;
 	int error = 0;
 	int prev_error = 0;
-	error = 1800;
+	error = 1700;
 	while(error > 5){
 		if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
 			break;
 		}
 		current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
-		error = 1800 - current_pos;
+		error = 1700 - current_pos;
 		integral += error;
 		if(error == 0){
 			integral = 0;
@@ -473,75 +473,14 @@ void moveMogo(int target){
 		stop_lift();
 	}
 
-	void turnLift(double degrees, int target){
-
-		if(degrees < 0)
-		{
-			imu.set_heading(350);
-		}
-		else
-		{
-			imu.set_heading(10);
-		}
-		float tkP = 0.3;
-		float tkI = 0.1;
-		float tkD = 0.2;
-		double tTarget = imu.get_heading() + degrees;
-		double tError = tTarget - imu.get_heading(); // -90
-		double tlastError = tError;
-		int tpower = 0;
-		double tintegral = 0.0;
-		double tderivative = 0.0;
-		reset_lift();
-		double kP = 0.1;
-		double kI = 0.0025;
-		double kD = 0.01;
-		int integral = 0;
-		int derivative = 0;
-		int power = 0;
-		int current_pos = 0;
-		int error = 0;
-		int prev_error = 0;
-		error = target - current_pos;
-
-		while(abs(tError) > 1.0 || abs(error)>target/2-100)	{
-			current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
-			error = target - current_pos;
-			integral += error;
-			if(error == 0){
-				integral = 0;
-			}
-			if(error > 600){
-				integral = 0;
-			}
-			derivative = error - prev_error;
-			power = kP * error + integral * kI + derivative * kD;
-			prev_error = 0;
-			// power -= 15;
-			if(abs(error)>target/2-100) power = 0;
-			lift_left.move(power); lift_right.move(power);
-
-			tError = tTarget - imu.get_heading();
-			tintegral += tError;
-			if(abs(tintegral) >= 600){
-				tintegral = 0;
-			}
-			tderivative = tError - tlastError;
-			tpower = tError * tkP + tintegral * tkI + tderivative * tkD;
-			tlastError = tError;
-			if(abs(tError) <= 1.0) tpower = 0;
-			LF.move(tpower); LM.move(tpower); LB.move(tpower); RF.move(-tpower); RM.move(-tpower); RB.move(-tpower);
-			delay(10);
-		}
-		stop_lift();
-		stop_motors();
-	}
 
 	void currAuton(){
 
 		driveLiftDown(110, -1900);
 		delay(5);
-		turnLift(-180, 1100);
+		moveMogo(1300);
+		turn(-180);
+		// turnLift(-180, 1400);
 		delay(5);
 		drive(105);
 		delay(5);
