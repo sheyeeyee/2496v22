@@ -536,7 +536,7 @@ void moveMogo(int target){
 		stop_lift();
 		stop_motors();
 	}
-	
+
 	void currAuton(){
 
 		driveLiftDown(110, -1900);
@@ -816,7 +816,7 @@ void opcontrol() {
 				if(con.get_digital(E_CONTROLLER_DIGITAL_UP)){
 						currAuton();
 				}
-
+ //OK
 				delay(5);
 			}
 	}
