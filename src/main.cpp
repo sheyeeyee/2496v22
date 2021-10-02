@@ -210,13 +210,13 @@ void liftMobileGoal(){
 	int current_pos = 0;
 	int error = 0;
 	int prev_error = 0;
-	error = 1300;
+	error = 1800;
 	while(error > 5){
 		if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
 			break;
 		}
 		current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
-		error = 1400 - current_pos;
+		error = 1800 - current_pos;
 		integral += error;
 		if(error == 0){
 			integral = 0;
@@ -459,7 +459,7 @@ void moveMogo(int target){
 					dpower = min(dpower, 127);
 				}
 			}
-			// powerAdj = dpower/10;
+			powerAdj = dpower/10;
 
 			if(abs(derror) < 15){
 				stop_motors();
@@ -472,29 +472,79 @@ void moveMogo(int target){
 		stop_motors();
 		stop_lift();
 	}
+
+	void turnLift(double degrees, int target){
+
+		if(degrees < 0)
+		{
+			imu.set_heading(350);
+		}
+		else
+		{
+			imu.set_heading(10);
+		}
+		float tkP = 0.3;
+		float tkI = 0.1;
+		float tkD = 0.2;
+		double tTarget = imu.get_heading() + degrees;
+		double tError = tTarget - imu.get_heading(); // -90
+		double tlastError = tError;
+		int tpower = 0;
+		double tintegral = 0.0;
+		double tderivative = 0.0;
+		reset_lift();
+		double kP = 0.1;
+		double kI = 0.0025;
+		double kD = 0.01;
+		int integral = 0;
+		int derivative = 0;
+		int power = 0;
+		int current_pos = 0;
+		int error = 0;
+		int prev_error = 0;
+		error = target - current_pos;
+
+		while(abs(tError) > 1.0 || abs(error)>target/2-100)	{
+			current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
+			error = target - current_pos;
+			integral += error;
+			if(error == 0){
+				integral = 0;
+			}
+			if(error > 600){
+				integral = 0;
+			}
+			derivative = error - prev_error;
+			power = kP * error + integral * kI + derivative * kD;
+			prev_error = 0;
+			// power -= 15;
+			if(abs(error)>target/2-100) power = 0;
+			lift_left.move(power); lift_right.move(power);
+
+			tError = tTarget - imu.get_heading();
+			tintegral += tError;
+			if(abs(tintegral) >= 600){
+				tintegral = 0;
+			}
+			tderivative = tError - tlastError;
+			tpower = tError * tkP + tintegral * tkI + tderivative * tkD;
+			tlastError = tError;
+			if(abs(tError) <= 1.0) tpower = 0;
+			LF.move(tpower); LM.move(tpower); LB.move(tpower); RF.move(-tpower); RM.move(-tpower); RB.move(-tpower);
+			delay(10);
+		}
+		stop_lift();
+		stop_motors();
+	}
 	void currAuton(){
-		driveLiftDown(115, -1900); //Drive to neutral and set lift down
+
+		driveLiftDown(115, -1900);
 		delay(5);
-		moveMogo(1200);// Lift the Neutral
+		turnLift(180, 1100);
 		delay(5);
-		drive(-70); // go backwards
+		drive(105);
 		delay(5);
-		imuTurn(126); // turn right
-		delay(5);
-		drive(30); // go forward a little
-		delay(15);
-		moveLift(-275); // drop the mobile goal
-		delay(5);
-		drive(-30); // Go back
-		delay(5);
-		imuTurn(-180); // turn to face the tall goal
-		delay(5);
-		drive(87); // drive to pick up
-		delay(15);
-		moveMogo(1550); // pick up
-		delay(6);
-		drive(-84); // go back
-		delay(5);
+
 	}
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -540,12 +590,12 @@ void autonomous() {
 	// con.set_text(1,1,"sup gamer");
 
   // //GLOBAL SAFE
-	// driveLiftDown(120, -1900);
-	// delay(5);
-	// moveMogo(1100);
-	// delay(5);
-	// drive(-105);
-	// delay(5);
+	driveLiftDown(120, -1900);
+	delay(5);
+	moveMogo(1100);
+	delay(5);
+	drive(-105);
+	delay(5);
 
 
 
@@ -579,28 +629,28 @@ void autonomous() {
 	//RIGHT Global but more imu
 	//SETUP IS KEY
 
-	driveLiftDown(115, -1900); //Drive to neutral and set lift down
-	delay(5);
-	moveMogo(1200);// Lift the Neutral
-	delay(5);
-	drive(-70); // go backwards
-	delay(5);
-	imuTurn(126); // turn right
-	delay(5);
-	drive(30); // go forward a little
-	delay(15);
-	moveLift(-275); // drop the mobile goal
-	delay(5);
-	drive(-30); // Go back
-	delay(5);
-	imuTurn(-180); // turn to face the tall goal
-	delay(5);
-	drive(87); // drive to pick up
-	delay(15);
-	moveMogo(1550); // pick up
-	delay(6);
-	drive(-84); // go back
-	delay(5);
+	// driveLiftDown(115, -1900); //Drive to neutral and set lift down
+	// delay(5);
+	// moveMogo(1200);// Lift the Neutral
+	// delay(5);
+	// drive(-70); // go backwards
+	// delay(5);
+	// imuTurn(126); // turn right
+	// delay(5);
+	// drive(30); // go forward a little
+	// delay(15);
+	// moveLift(-275); // drop the mobile goal
+	// delay(5);
+	// drive(-30); // Go back
+	// delay(5);
+	// imuTurn(-180); // turn to face the tall goal
+	// delay(5);
+	// drive(87); // drive to pick up
+	// delay(15);
+	// moveMogo(1550); // pick up
+	// delay(6);
+	// drive(-84); // go back
+	// delay(5);
 
 	// Winpoint
 	// winPointMoveDown(-1900); // lift Down
@@ -719,7 +769,7 @@ void opcontrol() {
 							an X at the end bc that is the horizontal axis and the right
 							joystick is for going left and right.**/
 			int left = power + turn;
-			int right = power - turn - power/20;
+			int right = power - turn-(power/25);
 			//if drives forward, right side goes faster than left or left goes slower, left
 			// most likely will not continue to any faster, so plan is to reduce right side speed
 			// if it is turning, then left side will turn slower than before theoretically, but
