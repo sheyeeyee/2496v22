@@ -476,30 +476,26 @@ void moveMogo(int target){
 
 	void currAuton(){
 
-		driveLiftDown(95, -1900); //Drive to neutral and set lift down
+		driveLiftDown(105, -1900);
 		delay(5);
-		moveMogo(1200);// Lift the Neutral
+		moveMogo(1100);
 		delay(5);
-		drive(-70); // go backwards
+		drive(-75);
 		delay(5);
-		imuTurn(126); // turn right
+		imuTurn(-120);
+		drive(10);
 		delay(5);
-		drive(30); // go forward a little
-		delay(15);
-		moveLift(-275); // drop the mobile goal
+		moveLift(-525);
 		delay(5);
-		drive(-30); // Go back
+		drive(-25);
 		delay(5);
-		imuTurn(-170); // turn to face the tall goal
+		imuTurn(155);
 		delay(5);
-		drive(87); // drive to pick up
-		delay(15);
-		moveMogo(1550); // pick up
-		delay(6);
-		drive(-84); // go back
+		drive(88);
 		delay(5);
-
-
+		moveMogo(1200);
+		delay(5);
+		drive(-85);
 
 	}
 /**
@@ -559,26 +555,26 @@ void autonomous() {
 
 			// Left with imu
 
-			// driveLiftDown(120, -1900);
-			// delay(5);
-			// moveMogo(1100);
-			// delay(5);
-			// drive(-75);
-			// delay(5);
-			// imuTurn(-110);
-			// drive(20);
-			// delay(5);
-			// moveLift(-525);
-			// delay(5);
-			// drive(-35);
-			// delay(5);
-			// imuTurn(165);
-			// delay(5);
-			// drive(87);
-			// delay(5);
-			// moveMogo(1000);
-			// delay(5);
-			// drive(-100);
+			driveLiftDown(120, -1900);
+			delay(5);
+			moveMogo(1100);
+			delay(5);
+			drive(-75);
+			delay(5);
+			imuTurn(-110);
+			drive(20);
+			delay(5);
+			moveLift(-525);
+			delay(5);
+			drive(-35);
+			delay(5);
+			imuTurn(165);
+			delay(5);
+			drive(87);
+			delay(5);
+			moveMogo(1000);
+			delay(5);
+			drive(-100);
 
 	//RIGHT Global but more imu
 	//SETUP IS KEY
