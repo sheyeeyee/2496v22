@@ -375,7 +375,7 @@ void moveMogo(int target){
 			// else{
 			// 	integral = 0;
 			// }
-			if(abs(integral) >= 100){
+			if(abs(integral) >= 250){
 				integral = 0;
 			}
 			derivative = pError - error;
@@ -536,11 +536,12 @@ void moveMogo(int target){
 		stop_lift();
 		stop_motors();
 	}
+	
 	void currAuton(){
 
-		driveLiftDown(115, -1900);
+		driveLiftDown(110, -1900);
 		delay(5);
-		turnLift(180, 1100);
+		turnLift(-180, 1100);
 		delay(5);
 		drive(105);
 		delay(5);
