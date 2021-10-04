@@ -201,6 +201,7 @@ void turn(int degrees){
 
 void liftMobileGoal(){
 	stop_motors();
+	reset_lift();
 	double kP = 0.4;
 	double kI = 0.0025;
 	double kD = 0.01;
@@ -227,7 +228,6 @@ void liftMobileGoal(){
 		derivative = error - prev_error;
 		power = kP * error + integral * kI + derivative * kD;
 		prev_error = 0;
-		power -= 15;
 		lift_left.move(power); lift_right.move(power);
 		delay(5);
 	}
@@ -475,27 +475,29 @@ void moveMogo(int target){
 
 
 	void currAuton(){
+		driveLiftDown(95, -1900); //Drive to neutral and set lift down
+		delay(5);
+		moveMogo(1200);// Lift the Neutral
+		delay(5);
+		drive(-70); // go backwards
+		delay(5);
+		imuTurn(126); // turn right
+		delay(5);
+		drive(30); // go forward a little
+		delay(15);
+		moveLift(-275); // drop the mobile goal
+		delay(5);
+		drive(-30); // Go back
+		delay(5);
+		imuTurn(-170); // turn to face the tall goal
+		delay(5);
+		drive(87); // drive to pick up
+		delay(15);
+		moveMogo(1550); // pick up
+		delay(6);
+		drive(-84); // go back
+		delay(5);
 
-		driveLiftDown(105, -1900);
-		delay(5);
-		moveMogo(1100);
-		delay(5);
-		drive(-75);
-		delay(5);
-		imuTurn(-120);
-		drive(10);
-		delay(5);
-		moveLift(-525);
-		delay(5);
-		drive(-25);
-		delay(5);
-		imuTurn(155);
-		delay(5);
-		drive(88);
-		delay(5);
-		moveMogo(1200);
-		delay(5);
-		drive(-85);
 
 	}
 /**
@@ -555,52 +557,52 @@ void autonomous() {
 
 			// Left with imu
 
-			driveLiftDown(120, -1900);
-			delay(5);
-			moveMogo(1100);
-			delay(5);
-			drive(-75);
-			delay(5);
-			imuTurn(-110);
-			drive(20);
-			delay(5);
-			moveLift(-525);
-			delay(5);
-			drive(-35);
-			delay(5);
-			imuTurn(165);
-			delay(5);
-			drive(87);
-			delay(5);
-			moveMogo(1000);
-			delay(5);
-			drive(-100);
+			// driveLiftDown(120, -1900);
+			// delay(5);
+			// moveMogo(1100);
+			// delay(5);
+			// drive(-75);
+			// delay(5);
+			// imuTurn(-110);
+			// drive(20);
+			// delay(5);
+			// moveLift(-525);
+			// delay(5);
+			// drive(-35);
+			// delay(5);
+			// imuTurn(165);
+			// delay(5);
+			// drive(87);
+			// delay(5);
+			// moveMogo(1000);
+			// delay(5);
+			// drive(-100);
 
 	//RIGHT Global but more imu
 	//SETUP IS KEY
 
-	// driveLiftDown(95, -1900); //Drive to neutral and set lift down
-	// delay(5);
-	// moveMogo(1200);// Lift the Neutral
-	// delay(5);
-	// drive(-70); // go backwards
-	// delay(5);
-	// imuTurn(126); // turn right
-	// delay(5);
-	// drive(30); // go forward a little
-	// delay(15);
-	// moveLift(-275); // drop the mobile goal
-	// delay(5);
-	// drive(-30); // Go back
-	// delay(5);
-	// imuTurn(-170); // turn to face the tall goal
-	// delay(5);
-	// drive(87); // drive to pick up
-	// delay(15);
-	// moveMogo(1550); // pick up
-	// delay(6);
-	// drive(-84); // go back
-	// delay(5);
+	driveLiftDown(95, -1900); //Drive to neutral and set lift down
+	delay(5);
+	moveMogo(1200);// Lift the Neutral
+	delay(5);
+	drive(-70); // go backwards
+	delay(5);
+	imuTurn(126); // turn right
+	delay(5);
+	drive(30); // go forward a little
+	delay(15);
+	moveLift(-275); // drop the mobile goal
+	delay(5);
+	drive(-30); // Go back
+	delay(5);
+	imuTurn(-170); // turn to face the tall goal
+	delay(5);
+	drive(87); // drive to pick up
+	delay(15);
+	moveMogo(1550); // pick up
+	delay(6);
+	drive(-84); // go back
+	delay(5);
 
 	// Winpoint
 	// winPointMoveDown(-1900); // lift Down
@@ -719,7 +721,7 @@ void opcontrol() {
 							an X at the end bc that is the horizontal axis and the right
 							joystick is for going left and right.**/
 			int left = power + turn;
-			int right = power - turn-(power/25);
+			int right = power - turn-(power/15);
 			//if drives forward, right side goes faster than left or left goes slower, left
 			// most likely will not continue to any faster, so plan is to reduce right side speed
 			// if it is turning, then left side will turn slower than before theoretically, but
