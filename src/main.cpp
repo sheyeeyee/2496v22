@@ -151,53 +151,6 @@ void imuTurn(double degrees)
 	stop_motors();
 }
 
-void turn(int degrees){
-	reset_encoders();
-	degrees *= 8.8; //this is honestly just some random number
-	double kP = 0.225;
-	double kI = 0.009;
-	double kD = 0.06;
-	int integral;
-	int derivative;
-	int error;
-	int prev_error;
-	int power;
-	int current_pos;
-
-	current_pos = (LF.get_position() + LM.get_position() + LB.get_position()) / 3;
-	error = degrees - current_pos;
-	while(abs(error) >= 1){
-    // for(int i = 0; i < 4 ; i++){
-    //   cout << "" << endl;
-    // }
-		current_pos = (LF.get_position() + LM.get_position() + LB.get_position()) / 3;
-    // cout << "Current pos: " << current_pos << endl;
-		error = degrees - current_pos;
-    // cout << "Error: " << error << endl;
-		integral += error;
-		if(error == 0){
-			integral = 0;
-		}
-
-		if(integral >= 2500){
-			integral = 0;
-		}
-		// if(abs(error) > 150){
-		// 	integral = 0;
-		// }
-
-		derivative = error - prev_error;
-		prev_error = error;
-    // cout << "P: " << kP*error << endl;
-    // cout << "I: " << kI * integral << endl;
-    // cout << "D: " << kD*derivative << endl;
-		power = kP*error + kI*integral + kD*derivative;
-    // cout << "Power: " << power << endl;
-		LF.move(power); LM.move(power); LB.move(power); RF.move(-power); RM.move(-power); RB.move(-power);
-		delay(10);
-	}
-	stop_motors();
-}
 
 void liftMobileGoal(){
 	stop_motors();
@@ -417,7 +370,7 @@ void moveMogo(int target){
 		int d_current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
 		derror = dTarget - d_current_pos;
 		//-------------------
-		while(abs(derror) >= 15 || abs(error)>7){
+		while(abs(derror) >= 20 || abs(error)>20){
 			d_current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
 			current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
 			error = lTarget - current_pos;
@@ -474,31 +427,80 @@ void moveMogo(int target){
 	}
 
 
+
+	void turnLift(double degrees, int target)
+	{
+		if(degrees < 0)
+		{
+			imu.set_heading(350);
+		}
+		else
+		{
+			imu.set_heading(10);
+		}
+		reset_lift();
+		float tkP = 0.2;
+		float tkI = 0.1;
+		float tkD = 0.2;
+		double tTarget = imu.get_heading() + degrees;
+		double tError = tTarget - imu.get_heading(); // -90
+		double tlastError = tError;
+		int tpower = 0;
+		double tintegral = 0.0;
+		double tderivative = 0.0;
+		double kP = 0.1;
+		double kI = 0.0025;
+		double kD = 0.01;
+		int integral = 0;
+		int derivative = 0;
+		int power = 0;
+		int current_pos = 0;
+		int error = 0;
+		int prev_error = 0;
+		error = target - current_pos;
+
+		while(abs(tError) > 1.0 || abs(error)>target/2-100) {
+			tError = tTarget - imu.get_heading();
+			tintegral += tError;
+			current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
+			error = target - current_pos;
+			integral += error;
+			if(error == 0){
+				integral = 0;
+			}
+			if(error > 600){
+				integral = 0;
+			}
+			derivative = error - prev_error;
+			if(abs(tintegral) >= 600){
+				tintegral = 0;
+			}
+			tderivative = tError - tlastError;
+			tpower = tError * tkP + tintegral * tkI + tderivative * tkD;
+			tlastError = tError;
+			power = kP * error + integral * kI + derivative * kD;
+			prev_error = 0;
+			if(abs(tError) < 1.0){
+				stop_motors();
+			}
+			if(abs(error)<target/2-100) {
+				stop_lift();
+				park_lift();
+			}
+			LF.move(tpower); LM.move(tpower); LB.move(tpower); RF.move(-tpower); RM.move(-tpower); RB.move(-tpower);
+			lift_left.move(power); lift_right.move(power);
+			delay(10);
+		}
+		park_lift();
+		stop_motors();
+	}
+
 	void currAuton(){
-		driveLiftDown(95, -1900); //Drive to neutral and set lift down
+		driveLiftDown(98, -1850);
 		delay(5);
-		moveMogo(1200);// Lift the Neutral
+		turnLift(-170, 500);
 		delay(5);
-		drive(-70); // go backwards
-		delay(5);
-		imuTurn(126); // turn right
-		delay(5);
-		drive(30); // go forward a little
-		delay(15);
-		moveLift(-275); // drop the mobile goal
-		delay(5);
-		drive(-30); // Go back
-		delay(5);
-		imuTurn(-170); // turn to face the tall goal
-		delay(5);
-		drive(87); // drive to pick up
-		delay(15);
-		moveMogo(1550); // pick up
-		delay(6);
-		drive(-84); // go back
-		delay(5);
-
-
+		drive(80);
 	}
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -509,8 +511,8 @@ void disabled() {}
 
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
- * Management System or the VEX Competition Switch. This is intended for
  * competition-specific initialization routines, such as an autonomous selector
+ * Management System or the VEX Competition Switch. This is intended for
  * on the LCD.
  *
  * This task will exit when the robot is enabled and autonomous or opcontrol
@@ -557,52 +559,53 @@ void autonomous() {
 
 			// Left with imu
 
-			// driveLiftDown(120, -1900);
-			// delay(5);
-			// moveMogo(1100);
-			// delay(5);
-			// drive(-75);
-			// delay(5);
-			// imuTurn(-110);
-			// drive(20);
-			// delay(5);
-			// moveLift(-525);
-			// delay(5);
-			// drive(-35);
-			// delay(5);
-			// imuTurn(165);
-			// delay(5);
-			// drive(87);
-			// delay(5);
-			// moveMogo(1000);
-			// delay(5);
-			// drive(-100);
+				// driveLiftDown(105, -1850);
+				// delay(5);
+				// moveMogo(1100);
+				// delay(5);
+				// drive(-75);
+				// delay(5);
+				// imuTurn(-110);
+				// delay(5);
+				// drive(10);
+				// delay(5);
+				// moveLift(-275);
+				// delay(5);
+				// drive(-30);
+				// delay(5);
+				// imuTurn(170);
+				// delay(5);
+				// drive(87);
+				// delay(5);
+				// moveMogo(1250);
+				// delay(5);
+				// drive(-100);
 
 	//RIGHT Global but more imu
 	//SETUP IS KEY
 
-	driveLiftDown(95, -1900); //Drive to neutral and set lift down
-	delay(5);
-	moveMogo(1200);// Lift the Neutral
-	delay(5);
-	drive(-70); // go backwards
-	delay(5);
-	imuTurn(126); // turn right
-	delay(5);
-	drive(30); // go forward a little
-	delay(15);
-	moveLift(-275); // drop the mobile goal
-	delay(5);
-	drive(-30); // Go back
-	delay(5);
-	imuTurn(-170); // turn to face the tall goal
-	delay(5);
-	drive(87); // drive to pick up
-	delay(15);
-	moveMogo(1550); // pick up
-	delay(6);
-	drive(-84); // go back
-	delay(5);
+	// driveLiftDown(95, -1900); //Drive to neutral and set lift down
+	// delay(5);
+	// moveMogo(1200);// Lift the Neutral
+	// delay(5);
+	// drive(-70); // go backwards
+	// delay(5);
+	// imuTurn(126); // turn right
+	// delay(5);
+	// drive(30); // go forward a little
+	// delay(15);
+	// moveLift(-275); // drop the mobile goal
+	// delay(5);
+	// drive(-30); // Go back
+	// delay(5);
+	// imuTurn(-170); // turn to face the tall goal
+	// delay(5);
+	// drive(87); // drive to pick up
+	// delay(15);
+	// moveMogo(1550); // pick up
+	// delay(6);
+	// drive(-84); // go back
+	// delay(5);
 
 	// Winpoint
 	// winPointMoveDown(-1900); // lift Down
@@ -612,76 +615,6 @@ void autonomous() {
 	// moveMogo(1400);
 	// delay(5);
 	// drive(-30);
-
-	//Skills?
-	// moveLift(-1900); // Lift Down, the Lift starts at like 20 degrees les than a flat 90 from the top.
-	// delay(5);
-	// drive(20); //drive a little forward
-	// delay(5);
-	// moveMogo(1800); // lift mobile goal to position where if i run  function then it can get to the back
-	// liftMobileGoal(); // put on back
-	// delay(5);
-	// turn(-80); // turn left
-	// delay(5);
-	// drive(200); // drive to toher side of field
-	// delay(5);
-	// turn(-90); // turn to face the mobile goal weighing the platform down
-	// delay(5);
-	// moveLift(-2000); // move lift down
-	// delay(5);
-	// drive(35); // drive to mogo
-	// delay(5);
-	// liftMobileGoal(); // pick it up and drop it into cage
-	// delay(5);
-	// turn(200); // turn to face other side
-	// delay(5);
-	// drive(220); // push neutral with us to other side
-	// delay(5);
-	// drive(-20); // go back a litle to line up with other mogo
-	// delay(5);
-	// moveLift(-1400); // put lift down
-	// delay(5);
-	// turn(-80); // turn to face mogo
-	// delay(5);
-	// drive(40); // drive and pick up mogo
-	// delay(5);
-	// moveMogo(1400); // hold mogo in lift
-	// delay(5);
-	// turn(-80); // turn to face other side of field
-	// delay(5);
-	// drive(200); // drive to the other side of the field
-	// delay(5);
-	// moveLift(-700); //put the lift down
-	// delay(5);
-	// drive(-100); // reverse out to face center neut mogo
-	// delay(5);
-	// turn(-75); // turn to facce neutral mogo
-	// delay(5);
-	// drive(50); // go forward and grab it
-	// delay(5);
-	// moveMogo(1400); // pick it up
-	// delay(5);
-	// turn(85); // turn right
-	// delay(5);
-	// drive(50); // put in front of platform
-	// delay(5);
-	// moveLift(-700); // put lift down
-	// delay(5);
-	// drive(-50); // reverse back to where once was
-	// delay(5);
-	// turn(-80); // turn left again
-	// delay(5);
-	// drive(60); // drive forward and pick up 3rd mogo
-	// delay(5);
-	// moveMogo(1400); //pick up neutral
-	// delay(5);
-	// turn(90); // turn right to face platform
-	// delay(5);
-	// drive(90); // drive into a home zone
-	// delay(5);
-	// moveLift(-700); // put mogo down
-	// delay(5);
-	// drive(-170); // drive to other color side of mogo alliance
 
 }
 
