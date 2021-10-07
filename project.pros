@@ -301,7 +301,7 @@
         "upload_options": {
             "compress_bin": true,
             "description": "hi",
-            "remote_name": "2496v22 testing",
+            "remote_name": "2496v22 none",
             "slot": 5
         }
     }

@@ -306,17 +306,33 @@ void moveMogo(int target){
       i_value = 0;
       is_enabled = enable;
   }
+	void park(){
 
+			LF.move_velocity(0);
+			LM.move_velocity(0);
+			LB.move_velocity(0);
+			RF.move_velocity(0);
+			RM.move_velocity(0);
+			RB.move_velocity(0);
+			RF.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+			RM.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+			RB.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+			LF.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+			LM.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+			LB.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+	}
 	void autoBalance(){
-		float kP = 2.0;
-		float kD = 0.2;
-		float kI = 0.005;
+		float kP = 2.25;
+		float kD = 0.0;
+		float kI = 0.0;
 		int power;
 		float error;
 		float pError;
 		int integral;
 
 		int derivative;
+		int localTime= 0;
+		con.clear();
 		while(abs(imu.get_pitch()) >= 1.5){
 			if(con.get_digital(E_CONTROLLER_DIGITAL_X)){
 				break;
@@ -325,20 +341,28 @@ void moveMogo(int target){
 			if(abs(error) <= 15 && error > 8){
 				integral += error;
 			}
+			else {
+				integral = 0;
+			}
 			// else{
 			// 	integral = 0;
 			// }
-			if(abs(integral) >= 250){
+			if(abs(integral) >= 350){
 				integral = 0;
 			}
 			derivative = pError - error;
-			power = kP*error + kI*integral + kD*derivative;
-			LF.move(-power); LM.move(-power); LB.move(-power); RF.move(-power); RM.move(-power); RB.move(-power);
+			// power = kP*error + kI*integral + kD*derivative;
+			power = imu.get_pitch() * kP;
+			LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
 			pError = error;
-			delay(5);
-			if(abs(imu.get_pitch()) <= 9){
-				stop_motors();
+
+			if(localTime % 50 == 0) {con.print(0,0, "Pitch: %.2f", imu.get_pitch());}
+			if(abs(imu.get_pitch()) <= 20.5){
+				park();
 			}
+			delay(5);
+			localTime += 5;
+
 		}
 	}
 	void driveLiftDown(int dTarget, int lTarget){
@@ -370,7 +394,7 @@ void moveMogo(int target){
 		int d_current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
 		derror = dTarget - d_current_pos;
 		//-------------------
-		while(abs(derror) >= 20 || abs(error)>20){
+		while(abs(derror) >= 100 || abs(error)>100){
 			d_current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
 			current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
 			error = lTarget - current_pos;
@@ -496,11 +520,29 @@ void moveMogo(int target){
 	}
 
 	void currAuton(){
-		driveLiftDown(98, -1850);
-		delay(5);
-		turnLift(-170, 500);
-		delay(5);
-		drive(80);
+
+						// driveLiftDown(105, -1850);
+						// delay(5);
+						// moveMogo(1100);
+						// delay(5);
+						// drive(-75);
+						// delay(5);
+						// imuTurn(-110);
+						// delay(5);
+						// drive(10);
+						// delay(5);
+						// moveLift(-275);
+						// delay(5);
+						// drive(-30);
+						// delay(5);
+						// imuTurn(170);
+						// delay(5);
+						// drive(87);
+						// delay(5);
+						// moveMogo(1250);
+						// delay(5);
+						// drive(-100);
+
 	}
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -546,13 +588,11 @@ void autonomous() {
 	// con.set_text(1,1,"sup gamer");
 
   //GLOBAL SAFE
-	// driveLiftDown(110, -1900);
+	// driveLiftDown(95, -1850);
 	// delay(5);
-	// moveMogo(1100);
+	// turnLift(-175, 500);
 	// delay(5);
-	// drive(-105);
-	// delay(5);
-
+	// drive(80);
 
 
 	// imuTurn(90);
@@ -616,6 +656,11 @@ void autonomous() {
 	// delay(5);
 	// drive(-30);
 
+	//Skills ?
+	// moveLift(-1800);
+	// drive(20);
+	// liftMobileGoal();
+	// imuTurn(-90);
 }
 
 
@@ -639,7 +684,10 @@ void opcontrol() {
 	while(imu.is_calibrating())	stop_motors();
 	// cout << "this is working" << endl;
 	// cout << "This is working" << endl;
+	int localTime = 0;
+	con.clear();
 	while (true) {
+		if(localTime % 50 == 0) {con.print(0,0, "Pitch: %.2f", imu.get_pitch());}
 		// cout << "Heading Value: " << imu.get_heading() << endl;
 		// cout << "Pitch: " << imu.get_pitch() << endl;
 		//chassis (arcade drive)
@@ -700,6 +748,7 @@ void opcontrol() {
 				if(con.get_digital(E_CONTROLLER_DIGITAL_UP)){
 						currAuton();
 				}
+				localTime+=5;
  //OK
 				delay(5);
 			}
