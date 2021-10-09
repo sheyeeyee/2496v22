@@ -128,7 +128,7 @@ void imuTurn(double degrees)
 	}
 	float kP = 0.3;
 	float kI = 0.1;
-	float kD = 0.2;
+	float kD = 0.1;
 	double target = imu.get_heading() + degrees;
 	double error = target - imu.get_heading(); // -90
 	double lastError = error;
@@ -164,13 +164,13 @@ void liftMobileGoal(){
 	int current_pos = 0;
 	int error = 0;
 	int prev_error = 0;
-	error = 1700;
+	error = 2050;
 	while(error > 5){
 		if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
 			break;
 		}
 		current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
-		error = 1700 - current_pos;
+		error = 2050 - current_pos;
 		integral += error;
 		if(error == 0){
 			integral = 0;
@@ -322,7 +322,7 @@ void moveMogo(int target){
 			LB.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 	}
 	void autoBalance(){
-		float kP = 2.25;
+		float kP = 2.35;
 		float kD = 0.0;
 		float kI = 0.0;
 		int power;
@@ -356,7 +356,9 @@ void moveMogo(int target){
 			LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
 			pError = error;
 
-			if(localTime % 50 == 0) {con.print(0,0, "Pitch: %.2f", imu.get_pitch());}
+			if(localTime % 50 == 0) {
+				con.print(0,0, "Pitch: %.2f", imu.get_pitch());
+			}
 			if(abs(imu.get_pitch()) <= 20.5){
 				park();
 			}
@@ -521,27 +523,28 @@ void moveMogo(int target){
 
 	void currAuton(){
 
-						// driveLiftDown(105, -1850);
-						// delay(5);
-						// moveMogo(1100);
-						// delay(5);
-						// drive(-75);
-						// delay(5);
-						// imuTurn(-110);
-						// delay(5);
-						// drive(10);
-						// delay(5);
-						// moveLift(-275);
-						// delay(5);
-						// drive(-30);
-						// delay(5);
-						// imuTurn(170);
-						// delay(5);
-						// drive(87);
-						// delay(5);
-						// moveMogo(1250);
-						// delay(5);
-						// drive(-100);
+		driveLiftDown(95, -1900); //Drive to neutral and set lift down
+		delay(5);
+		moveMogo(1200);// Lift the Neutral
+		delay(5);
+		drive(-70); // go backwards
+		delay(5);
+		imuTurn(126); // turn right
+		delay(5);
+		drive(30); // go forward a little
+		delay(15);
+		moveLift(-275); // drop the mobile goal
+		delay(5);
+		drive(-30); // Go back
+		delay(5);
+		imuTurn(-170); // turn to face the tall goal
+		delay(5);
+		drive(87); // drive to pick up
+		delay(15);
+		moveMogo(1550); // pick up
+		delay(6);
+		drive(-84); // go back
+		delay(5);
 
 	}
 /**
@@ -624,28 +627,28 @@ void autonomous() {
 	//RIGHT Global but more imu
 	//SETUP IS KEY
 
-	// driveLiftDown(95, -1900); //Drive to neutral and set lift down
-	// delay(5);
-	// moveMogo(1200);// Lift the Neutral
-	// delay(5);
-	// drive(-70); // go backwards
-	// delay(5);
-	// imuTurn(126); // turn right
-	// delay(5);
-	// drive(30); // go forward a little
-	// delay(15);
-	// moveLift(-275); // drop the mobile goal
-	// delay(5);
-	// drive(-30); // Go back
-	// delay(5);
-	// imuTurn(-170); // turn to face the tall goal
-	// delay(5);
-	// drive(87); // drive to pick up
-	// delay(15);
-	// moveMogo(1550); // pick up
-	// delay(6);
-	// drive(-84); // go back
-	// delay(5);
+	driveLiftDown(95, -1900); //Drive to neutral and set lift down
+	delay(5);
+	moveMogo(1200);// Lift the Neutral
+	delay(5);
+	drive(-70); // go backwards
+	delay(5);
+	imuTurn(126); // turn right
+	delay(5);
+	drive(30); // go forward a little
+	delay(15);
+	moveLift(-275); // drop the mobile goal
+	delay(5);
+	drive(-30); // Go back
+	delay(5);
+	imuTurn(-170); // turn to face the tall goal
+	delay(5);
+	drive(87); // drive to pick up
+	delay(15);
+	moveMogo(1550); // pick up
+	delay(6);
+	drive(-84); // go back
+	delay(5);
 
 	// Winpoint
 	// winPointMoveDown(-1900); // lift Down
@@ -657,9 +660,12 @@ void autonomous() {
 	// drive(-30);
 
 	//Skills ?
-	// moveLift(-1800);
+	// moveLift(-1850);
+	// delay(5);
 	// drive(20);
+	// delay(5);
 	// liftMobileGoal();
+	// delay(5);
 	// imuTurn(-90);
 }
 
@@ -687,7 +693,11 @@ void opcontrol() {
 	int localTime = 0;
 	con.clear();
 	while (true) {
-		if(localTime % 50 == 0) {con.print(0,0, "Pitch: %.2f", imu.get_pitch());}
+		// if(localTime % 50 == 0) {con.print(0,0, "Pitch: %.2f", imu.get_pitch());}
+		if(localTime % 50 == 0) {
+			con.print(0,0, "Left Lift: %.2f", lift_left.get_temperature());
+
+		}
 		// cout << "Heading Value: " << imu.get_heading() << endl;
 		// cout << "Pitch: " << imu.get_pitch() << endl;
 		//chassis (arcade drive)
