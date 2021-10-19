@@ -301,8 +301,13 @@
         "upload_options": {
             "compress_bin": true,
             "description": "hi",
+<<<<<<< Updated upstream
             "remote_name": "2496v22 global",
             "slot": 3
+=======
+            "remote_name": "2496v22 whoosh",
+            "slot": 8
+>>>>>>> Stashed changes
         }
     }
 }

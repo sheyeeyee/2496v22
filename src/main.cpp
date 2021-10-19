@@ -7,6 +7,7 @@ using namespace std;
 //CONSTRUCTORS
 	//chassis
 		//left drive
+		//uytukykukkru
 		Motor LF (3, E_MOTOR_GEARSET_18, true);
 		Motor LM (5, E_MOTOR_GEARSET_18, true);
 		Motor LB (6, E_MOTOR_GEARSET_18, true);
@@ -56,6 +57,14 @@ void stop_lift(){
 	lift_left.move(0);
 	lift_right.move(0);
 }
+
+//possible delete hannah added this for testing
+/*void stopLift(){
+	lift_left.move(0);
+	lift_right.move(0);
+	lift_left.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+	lift_right.move(E_MOTOR_BRAKE_HOLD);
+}*/
 
 void park_lift(){
 	lift_left.move_velocity(0);
@@ -171,6 +180,41 @@ void liftMobileGoal(){
 		}
 		current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
 		error = 2000 - current_pos;
+		integral += error;
+		if(error == 0){
+			integral = 0;
+		}
+		if(error > 300){
+			integral = 0;
+		}
+		derivative = error - prev_error;
+		power = kP * error + integral * kI + derivative * kD;
+		prev_error = 0;
+		lift_left.move(power); lift_right.move(power);
+		delay(5);
+	}
+	stop_lift();
+}
+
+void autonLiftMobileGoal(){
+	stop_motors();
+	reset_lift();
+	double kP = 0.4;
+	double kI = 0.0025;
+	double kD = 0.01;
+	int integral = 0;
+	int derivative = 0;
+	int power = 0;
+	int current_pos = 0;
+	int error = 0;
+	int prev_error = 0;
+	error = 1730;
+	while(error > 5){
+		if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
+			break;
+		}
+		current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
+		error = 1730 - current_pos;
 		integral += error;
 		if(error == 0){
 			integral = 0;
@@ -567,6 +611,50 @@ void competition_initialize() {
  //For left turns do -10 from wanted values
 void autonomous() {
 	lcd::initialize();
+	//imu.reset();
+	imu.reset();
+	delay(100);
+	while(imu.is_calibrating()) stop_motors();
+
+/*a bunch of random code i dont have the guts to delete
+driveLiftDown(20, -1850);
+moveLift(-1900); //lift down
+delay(5);
+drive(38); //to alliance mogo
+delay(5);
+liftMobileGoal(); //cap mogo?
+delay(5);
+drive(-10);
+delay(5);
+drive(200);
+imuTurn(90);
+drive(-25);
+imuTurn(-90);
+drive(-180);
+imuTurn(90);*/
+
+//lift down test see if pid is overshooting check if delay is messing with it?
+//moveLift(-2045);
+//delay(5);
+
+//if time runs out?
+//bring this back after testing lift
+moveLift(-2024); //lift down
+//delay(5);
+stop_lift();
+delay(5);
+drive(38); //to alliance mogo
+delay(5);
+//moveMogo(1100); //just lift
+autonLiftMobileGoal(); //hopefully this caps properly
+delay(5);
+drive(-3); //backup
+delay(5);
+imuTurn(-80); //turn towards opposite side of field
+delay(5);
+//drive(200); //just push into the other home zone
+//bring this back after testing lift
+
 
 	// 	imu.reset();
 	// 	delay(100);
