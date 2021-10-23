@@ -7,7 +7,6 @@ using namespace std;
 //CONSTRUCTORS
 	//chassis
 		//left drive
-		//uytukykukkru
 		Motor LF (3, E_MOTOR_GEARSET_18, true);
 		Motor LM (5, E_MOTOR_GEARSET_18, true);
 		Motor LB (6, E_MOTOR_GEARSET_18, true);
@@ -57,14 +56,6 @@ void stop_lift(){
 	lift_left.move(0);
 	lift_right.move(0);
 }
-
-//possible delete hannah added this for testing
-/*void stopLift(){
-	lift_left.move(0);
-	lift_right.move(0);
-	lift_left.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-	lift_right.move(E_MOTOR_BRAKE_HOLD);
-}*/
 
 void park_lift(){
 	lift_left.move_velocity(0);
@@ -196,41 +187,6 @@ void liftMobileGoal(){
 	stop_lift();
 }
 
-void autonLiftMobileGoal(){
-	stop_motors();
-	reset_lift();
-	double kP = 0.4;
-	double kI = 0.0025;
-	double kD = 0.01;
-	int integral = 0;
-	int derivative = 0;
-	int power = 0;
-	int current_pos = 0;
-	int error = 0;
-	int prev_error = 0;
-	error = 1730;
-	while(error > 5){
-		if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
-			break;
-		}
-		current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
-		error = 1730 - current_pos;
-		integral += error;
-		if(error == 0){
-			integral = 0;
-		}
-		if(error > 300){
-			integral = 0;
-		}
-		derivative = error - prev_error;
-		power = kP * error + integral * kI + derivative * kD;
-		prev_error = 0;
-		lift_left.move(power); lift_right.move(power);
-		delay(5);
-	}
-	stop_lift();
-}
-
 void moveLift(int target){
 	stop_lift();
 	reset_lift();
@@ -268,7 +224,7 @@ void moveLift(int target){
 
 
 void winPointMoveDown(int target){
-	reset_lift();
+			reset_lift();
 	double kP = 0.1;
 	double kI = 0.0025;
 	double kD = 0.01;
@@ -565,6 +521,44 @@ void moveMogo(int target){
 		stop_motors();
 	}
 
+	// void turnLiftNoPid(double degrees, int tpower)
+	// {
+	// 	reset_lift();
+	// 	double kP = 0.1;
+	// 	double kI = 0.0025;
+	// 	double kD = 0.01;
+	// 	int integral = 0;
+	// 	int derivative = 0;
+	// 	int power = 0;
+	// 	int current_pos = 0;
+	// 	int error = 0;
+	// 	int prev_error = 0;
+	// 	error = target - current_pos;
+	//
+	// 	while(abs(error)>target/2-100) {
+	// 		current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
+	// 		error = target - current_pos;
+	// 		integral += error;
+	// 		if(error == 0){
+	// 			integral = 0;
+	// 		}
+	// 		if(error > 600){
+	// 			integral = 0;
+	// 		}
+	// 		power = kP * error + integral * kI + derivative * kD;
+	// 		prev_error = 0;
+	// 		if(abs(error)<target/2-100) {
+	// 			stop_lift();
+	// 			park_lift();
+	// 		}
+	// 		LF.move(tpower); LM.move(tpower); LB.move(tpower); RF.move(-tpower); RM.move(-tpower); RB.move(-tpower);
+	// 		lift_left.move(power); lift_right.move(power);
+	// 		delay(10);
+	// 	}
+	// 	park_lift();
+	// 	stop_motors();
+	// }
+
 	void currAuton(){
 
 		driveLiftDown(95, -1850);
@@ -611,89 +605,165 @@ void competition_initialize() {
  //For left turns do -10 from wanted values
 void autonomous() {
 	lcd::initialize();
-	//imu.reset();
-	imu.reset();
-	delay(100);
-	while(imu.is_calibrating()) stop_motors();
 
-/*a bunch of random code i dont have the guts to delete
-driveLiftDown(20, -1850);
-moveLift(-1900); //lift down
-delay(5);
-drive(38); //to alliance mogo
-delay(5);
-liftMobileGoal(); //cap mogo?
-delay(5);
-drive(-10);
-delay(5);
-drive(200);
-imuTurn(90);
-drive(-25);
-imuTurn(-90);
-drive(-180);
-imuTurn(90);*/
+		imu.reset();
+		delay(100);
+		while(imu.is_calibrating()) stop_motors();
+	//con.set_text(1,1,"sup gamer");
 
-//lift down test see if pid is overshooting check if delay is messing with it?
-//moveLift(-2045);
-//delay(5);
-
-//if time runs out?
-//bring this back after testing lift
-moveLift(-2024); //lift down
-//delay(5);
-stop_lift();
-delay(5);
-drive(38); //to alliance mogo
-delay(5);
-//moveMogo(1100); //just lift
-autonLiftMobileGoal(); //hopefully this caps properly
-delay(5);
-drive(-3); //backup
-delay(5);
-imuTurn(-80); //turn towards opposite side of field
-delay(5);
-//drive(200); //just push into the other home zone
-//bring this back after testing lift
-
-
-	// 	imu.reset();
-	// 	delay(100);
-	// 	while(imu.is_calibrating()) stop_motors();
-	// con.set_text(1,1,"sup gamer");
+//backup that goes for center neutral from the right side?
+	// turnLift(-25, -1850); //turn with lift
+	// delay(5);
+	// drive(115);
+	// delay(5);
+	// moveMogo(1050);
+	// delay(5);
+	// drive(-80);
+	// delay(5);
 
   //GLOBAL SAFE
+	/*
 	driveLiftDown(95, -1850);
 	delay(5);
 	turnLift(-175, 500);
 	delay(5);
-	drive(80);
+	drive(80);*/
 
 
 	// imuTurn(90);
 
 			// Left with imu
-
-				// driveLiftDown(105, -1850);
+				//bring this back it kinda worked for red?
+				// driveLiftDown(100, -1875);
+				// delay(10);
+				// moveMogo(1050);
 				// delay(5);
-				// moveMogo(1100);
+				// drive(-60);
 				// delay(5);
-				// drive(-75);
-				// delay(5);
-				// imuTurn(-110);
+				// imuTurn(-120);
 				// delay(5);
 				// drive(10);
 				// delay(5);
-				// moveLift(-275);
+				// moveLift(-280);
+				// delay(10);
+				// drive(-15);
 				// delay(5);
-				// drive(-30);
+				// imuTurn(175);//adjust turn it should be more ocnsistent with calibration?
+				// delay(5);
+				// drive(88);
+				// delay(7);
+				// moveMogo(1250);
+				// delay(5);
+				// drive(-100);
+
+	driveLiftDown(95, -1880);
+	delay(5);
+	imuTurn(45);
+	delay(5);
+	drive(40);
+	delay(5);
+	moveMogo(1050);
+	delay(5);
+	drive(-10);
+	delay(5);
+	imuTurn(35);
+	delay(5);
+
+	//melody big brain moment
+		//setup help
+		// drive(10);
+		// delay(3);
+		// imuTurn(2);
+		// delay(5);
+		//
+		// //forward for first mogo
+		// driveLiftDown(91, -1880);
+		// delay(10);
+		// moveMogo(1050);
+		// delay(5);
+		//
+		// //backwards to place down
+		// drive(-60);
+		// delay(5);
+		// imuTurn(-120);
+		// delay(5);
+		// drive(10);
+		// delay(5);
+		// moveLift(-400);
+		// delay(10);
+		//
+		// //back out from mogo drop
+		// drive(-15);
+		// delay(5);
+		// moveLift(30);
+		// delay(5);
+		// imuTurn(100);//adjust turn it should be more ocnsistent with calibration?
+		// delay(5);
+		//
+		// //go forward and turn for tall mogo
+		// drive(85);
+		// delay(7);
+		// imuTurn(97);
+		// delay(5);
+		// moveLift(-30);
+		// delay(5);
+		//
+		// //final forward for tall
+		// drive(42);
+		// delay(5);
+		// moveMogo(1250);
+		// delay(5);
+		// drive(-100);
+
+			// Left with imu
+				//test on the blue side even though it should work for both sides??
+				// driveLiftDown(110, -1850);
+				// delay(5);
+				// moveMogo(1050);
+				// delay(5);
+				// drive(-60);
+				// delay(5);
+				// imuTurn(-120);
+				// delay(5);
+				// drive(10);
+				// delay(5);
+				// moveLift(-280);
+				// delay(10);
+				// drive(-15);
 				// delay(5);
 				// imuTurn(170);
 				// delay(5);
-				// drive(87);
+				// drive(88);
 				// delay(5);
 				// moveMogo(1250);
 				// delay(5);
 				// drive(-100);
+
+								// driveLiftDown(110, -1860);
+								// delay(5);
+								// //turnLift(45,300);
+								// //delay(5);
+								// // moveMogo(950);
+								// // delay(5);
+								// // moveMogo(1050);
+								// // delay(5);
+								// drive(-40);
+								// delay(5);
+								// imuTurn(-70);
+								// delay(5);
+								// drive(10);
+								// delay(5);
+								// moveLift(-275);
+								// delay(5);
+								// drive(-25);
+								// delay(5);
+								// imuTurn(170);
+								// delay(5);
+								// drive(87);
+								// delay(5);
+								// moveMogo(1250);
+								// delay(5);
+								// drive(-100);
 
 	//RIGHT Global but more imu
 	//SETUP IS KEY
@@ -762,13 +832,13 @@ void opcontrol() {
 	// cout << "this is working" << endl;
 	// cout << "This is working" << endl;
 	int localTime = 0;
-	con.clear();
+	// con.clear();
 	while (true) {
 		// if(localTime % 50 == 0) {con.print(0,0, "Pitch: %.2f", imu.get_pitch());}
-		if(localTime % 50 == 0) {
-			con.print(0,0, "Left Lift: %.2f", lift_left.get_temperature());
-
-		}
+		// if(localTime % 50 == 0) {
+		// 	con.print(0,0, "Left Lift: %.2f", lift_left.get_temperature());
+		//
+		// }
 		// cout << "Heading Value: " << imu.get_heading() << endl;
 		// cout << "Pitch: " << imu.get_pitch() << endl;
 		//chassis (arcade drive)
