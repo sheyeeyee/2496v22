@@ -668,6 +668,8 @@ void autonomous() {
 	delay(5);
 	imuTurn(35);
 	delay(5);
+	moveLift(-1000);
+	delay(5);
 
 	//melody big brain moment
 		//setup help
