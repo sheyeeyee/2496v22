@@ -523,11 +523,28 @@ void moveMogo(int target){
 
 	void currAuton(){
 
-		driveLiftDown(95, -1850);
+		driveLiftDown(95, -1900); //Drive to neutral and set lift down
 		delay(5);
-		turnLift(-175, 500);
+		moveMogo(1200);// Lift the Neutral
 		delay(5);
-		drive(80);
+		drive(-70); // go backwards
+		delay(5);
+		imuTurn(126); // turn right
+		delay(5);
+		drive(30); // go forward a little
+		delay(15);
+		moveLift(-275); // drop the mobile goal
+		delay(5);
+		drive(-30); // Go back
+		delay(5);
+		imuTurn(-170); // turn to face the tall goal
+		delay(5);
+		drive(95); // drive to pick up
+		delay(15);
+		moveMogo(1550); // pick up
+		delay(6);
+		drive(-84); // go back
+		delay(5);
 
 	}
 /**
@@ -574,11 +591,11 @@ void autonomous() {
 	// con.set_text(1,1,"sup gamer");
 
   //GLOBAL SAFE
-	driveLiftDown(95, -1850);
-	delay(5);
-	turnLift(-175, 500);
-	delay(5);
-	drive(80);
+	// driveLiftDown(95, -1850);
+	// delay(5);
+	// turnLift(-175, 500);
+	// delay(5);
+	// drive(80);
 
 
 	// imuTurn(90);
@@ -610,28 +627,28 @@ void autonomous() {
 	//RIGHT Global but more imu
 	//SETUP IS KEY
 
-	// driveLiftDown(95, -1900); //Drive to neutral and set lift down
-	// delay(5);
-	// moveMogo(1200);// Lift the Neutral
-	// delay(5);
-	// drive(-70); // go backwards
-	// delay(5);
-	// imuTurn(126); // turn right
-	// delay(5);
-	// drive(30); // go forward a little
-	// delay(15);
-	// moveLift(-275); // drop the mobile goal
-	// delay(5);
-	// drive(-30); // Go back
-	// delay(5);
-	// imuTurn(-170); // turn to face the tall goal
-	// delay(5);
-	// drive(87); // drive to pick up
-	// delay(15);
-	// moveMogo(1550); // pick up
-	// delay(6);
-	// drive(-84); // go back
-	// delay(5);
+	driveLiftDown(95, -1900); //Drive to neutral and set lift down
+	delay(5);
+	moveMogo(1200);// Lift the Neutral
+	delay(5);
+	drive(-70); // go backwards
+	delay(5);
+	imuTurn(126); // turn right
+	delay(5);
+	drive(30); // go forward a little
+	delay(15);
+	moveLift(-275); // drop the mobile goal
+	delay(5);
+	drive(-30); // Go back
+	delay(5);
+	imuTurn(-170); // turn to face the tall goal
+	delay(5);
+	drive(95); // drive to pick up
+	delay(15);
+	moveMogo(1550); // pick up
+	delay(6);
+	drive(-84); // go back
+	delay(5);
 
 	// Winpoint
 	// winPointMoveDown(-1900); // lift Down
