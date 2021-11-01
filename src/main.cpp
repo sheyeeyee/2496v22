@@ -136,7 +136,7 @@ void imuTurn(double degrees)
 	double integral = 0.0;
 	double derivative = 0.0;
 
-	while(abs(error) > 1.0)	{
+	while(abs(error) > 0.5)	{
 		error = target - imu.get_heading();
 		integral += error;
 		if(abs(integral) >= 600){
@@ -584,7 +584,8 @@ void competition_initialize() {
  //For left turns do -10 from wanted values
 void autonomous() {
 	lcd::initialize();
-
+	imu.reset();
+	while(imu.is_calibrating()) delay(100);
 	// 	imu.reset();
 	// 	delay(100);
 	// 	while(imu.is_calibrating()) stop_motors();
@@ -627,28 +628,28 @@ void autonomous() {
 	//RIGHT Global but more imu
 	//SETUP IS KEY
 
-	driveLiftDown(95, -1900); //Drive to neutral and set lift down
-	delay(5);
-	moveMogo(1200);// Lift the Neutral
-	delay(5);
-	drive(-70); // go backwards
-	delay(5);
-	imuTurn(126); // turn right
-	delay(5);
-	drive(30); // go forward a little
-	delay(15);
-	moveLift(-275); // drop the mobile goal
-	delay(5);
-	drive(-30); // Go back
-	delay(5);
-	imuTurn(-170); // turn to face the tall goal
-	delay(5);
-	drive(95); // drive to pick up
-	delay(15);
-	moveMogo(1550); // pick up
-	delay(6);
-	drive(-84); // go back
-	delay(5);
+	// driveLiftDown(95, -1900); //Drive to neutral and set lift down
+	// delay(5);
+	// moveMogo(1200);// Lift the Neutral
+	// delay(5);
+	// drive(-70); // go backwards
+	// delay(5);
+	// imuTurn(126); // turn right
+	// delay(5);
+	// drive(30); // go forward a little
+	// delay(15);
+	// moveLift(-275); // drop the mobile goal
+	// delay(5);
+	// drive(-30); // Go back
+	// delay(5);
+	// imuTurn(-170); // turn to face the tall goal
+	// delay(5);
+	// drive(95); // drive to pick up
+	// delay(15);
+	// moveMogo(1550); // pick up
+	// delay(6);
+	// drive(-84); // go back
+	// delay(5);
 
 	// Winpoint
 	// winPointMoveDown(-1900); // lift Down
@@ -660,13 +661,19 @@ void autonomous() {
 	// drive(-30);
 
 	//Skills ?
-	// moveLift(-1850);
-	// delay(5);
-	// drive(20);
-	// delay(5);
-	// liftMobileGoal();
-	// delay(5);
-	// imuTurn(-90);
+	moveLift(-1850);
+	delay(5);
+	drive(40);
+	delay(5);
+	liftMobileGoal(); // put mogo into rack
+	delay(5);
+	drive(5);
+	delay(5);
+	imuTurn(-85); // turning left
+	delay(5);
+	moveLift(-1200); 
+	delay(5);
+	drive(80);
 }
 
 
