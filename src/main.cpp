@@ -118,6 +118,7 @@ void park_lift(){
 // only do -180-180 turns
 void imuTurn(double degrees)
 {
+	int localTime = 0;
 	if(degrees < 0)
 	{
 		imu.set_heading(350);
@@ -126,9 +127,9 @@ void imuTurn(double degrees)
 	{
 		imu.set_heading(10);
 	}
-	float kP = 0.3;
-	float kI = 0.1;
-	float kD = 0.1;
+	float kP = 0.7;
+	float kI = 0.053;
+	float kD = 0.0;
 	double target = imu.get_heading() + degrees;
 	double error = target - imu.get_heading(); // -90
 	double lastError = error;
@@ -146,7 +147,7 @@ void imuTurn(double degrees)
 		power = error * kP + integral * kI + derivative *kD;
 		lastError = error;
 		LF.move(power); LM.move(power); LB.move(power); RF.move(-power); RM.move(-power); RB.move(-power);
-		delay(10);
+		delay(5);
 	}
 	stop_motors();
 }
@@ -220,6 +221,7 @@ void moveLift(int target){
 			lift_left.move(power); lift_right.move(power);
 			delay(5);
 		}
+		stop_lift();
 }
 
 
@@ -545,7 +547,6 @@ void moveMogo(int target){
 		delay(6);
 		drive(-84); // go back
 		delay(5);
-
 	}
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -628,28 +629,28 @@ void autonomous() {
 	//RIGHT Global but more imu
 	//SETUP IS KEY
 
-	// driveLiftDown(95, -1900); //Drive to neutral and set lift down
-	// delay(5);
-	// moveMogo(1200);// Lift the Neutral
-	// delay(5);
-	// drive(-70); // go backwards
-	// delay(5);
-	// imuTurn(126); // turn right
-	// delay(5);
-	// drive(30); // go forward a little
-	// delay(15);
-	// moveLift(-275); // drop the mobile goal
-	// delay(5);
-	// drive(-30); // Go back
-	// delay(5);
-	// imuTurn(-170); // turn to face the tall goal
-	// delay(5);
-	// drive(95); // drive to pick up
-	// delay(15);
-	// moveMogo(1550); // pick up
-	// delay(6);
-	// drive(-84); // go back
-	// delay(5);
+	driveLiftDown(95, -1900); //Drive to neutral and set lift down
+	delay(5);
+	moveMogo(1200);// Lift the Neutral
+	delay(5);
+	drive(-73); // go backwards
+	delay(5);
+	imuTurn(126); // turn right
+	delay(5);
+	drive(30); // go forward a little
+	delay(15);
+	moveLift(-700); // drop the mobile goal
+	delay(5);
+	drive(-30); // Go back
+	delay(5);
+	imuTurn(-168); // turn to face the tall goal
+	delay(5);
+	drive(95); // drive to pick up
+	delay(15);
+	moveMogo(1400); // pick up
+	delay(5);
+	drive(-84); // go back
+	delay(5);
 
 	// Winpoint
 	// winPointMoveDown(-1900); // lift Down
@@ -661,19 +662,19 @@ void autonomous() {
 	// drive(-30);
 
 	//Skills ?
-	moveLift(-1850);
-	delay(5);
-	drive(40);
-	delay(5);
-	liftMobileGoal(); // put mogo into rack
-	delay(5);
-	drive(5);
-	delay(5);
-	imuTurn(-85); // turning left
-	delay(5);
-	moveLift(-1200); 
-	delay(5);
-	drive(80);
+	// moveLift(-1850);
+	// delay(5);
+	// drive(40);
+	// delay(5);
+	// liftMobileGoal(); // put mogo into rack
+	// delay(5);
+	// drive(5);
+	// delay(5);
+	// imuTurn(-90); // turning left
+	// delay(5);
+	// moveLift(-1100);
+	// delay(5);
+	// drive(130);
 }
 
 
@@ -692,9 +693,9 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	imu.reset();
-	delay(100);
-	while(imu.is_calibrating())	stop_motors();
+	// imu.reset();
+	// delay(100);
+	// while(imu.is_calibrating())	stop_motors();
 	// cout << "this is working" << endl;
 	// cout << "This is working" << endl;
 	int localTime = 0;
@@ -702,9 +703,9 @@ void opcontrol() {
 	while (true) {
 		// if(localTime % 50 == 0) {con.print(0,0, "Pitch: %.2f", imu.get_pitch());}
 		if(localTime % 50 == 0) {
-			con.print(0,0, "Left Lift: %.2f", lift_left.get_temperature());
-
+			con.print(0,0, "Right Front: %f", RF.get_position());
 		}
+		// cout << RF.get_position() << endl;
 		// cout << "Heading Value: " << imu.get_heading() << endl;
 		// cout << "Pitch: " << imu.get_pitch() << endl;
 		//chassis (arcade drive)
@@ -765,6 +766,7 @@ void opcontrol() {
 				if(con.get_digital(E_CONTROLLER_DIGITAL_UP)){
 						currAuton();
 				}
+
 				localTime+=5;
  //OK
 				delay(5);
