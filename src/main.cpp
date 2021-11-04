@@ -524,28 +524,28 @@ void moveMogo(int target){
 	}
 
 	void currAuton(){
-
-						driveLiftDown(105, -1850);
-						delay(5);
-						moveMogo(1100);
-						delay(5);
-						drive(-75);
-						delay(5);
-						imuTurn(-110);
-						delay(5);
-						drive(10);
-						delay(5);
-						moveLift(-625);
-						delay(5);
-						drive(-30);
-						delay(5);
-						imuTurn(170);
-						delay(5);
-						drive(87);
-						delay(5);
-						moveMogo(1250);
-						delay(5);
-						drive(-100);
+		// left
+		driveLiftDown(105, -1850);
+		delay(5);
+		moveMogo(1100);
+		delay(5);
+		drive(-95);
+		delay(5);
+		imuTurn(-125);
+		delay(5);
+		drive(10);
+		delay(5);
+		moveLift(-725);
+		delay(5);
+		drive(-30);
+		delay(5);
+		imuTurn(168);
+		delay(5);
+		drive(87);
+		delay(5);
+		moveMogo(1250);
+		delay(5);
+		drive(-100);
 
 	}
 /**
@@ -585,6 +585,7 @@ void competition_initialize() {
  //For left turns do -10 from wanted values
 void autonomous() {
 	lcd::initialize();
+
 	imu.reset();
 	while(imu.is_calibrating()) delay(100);
 	// 	delay(100);
@@ -607,17 +608,17 @@ void autonomous() {
 				delay(5);
 				moveMogo(1100);
 				delay(5);
-				drive(-75);
+				drive(-95);
 				delay(5);
-				imuTurn(-110);
+				imuTurn(-125);
 				delay(5);
 				drive(10);
 				delay(5);
-				moveLift(-275);
+				moveLift(-725);
 				delay(5);
 				drive(-30);
 				delay(5);
-				imuTurn(170);
+				imuTurn(168);
 				delay(5);
 				drive(87);
 				delay(5);
