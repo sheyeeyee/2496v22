@@ -525,28 +525,28 @@ void moveMogo(int target){
 
 	void currAuton(){
 
-		driveLiftDown(95, -1900); //Drive to neutral and set lift down
-		delay(5);
-		moveMogo(1200);// Lift the Neutral
-		delay(5);
-		drive(-70); // go backwards
-		delay(5);
-		imuTurn(126); // turn right
-		delay(5);
-		drive(30); // go forward a little
-		delay(15);
-		moveLift(-275); // drop the mobile goal
-		delay(5);
-		drive(-30); // Go back
-		delay(5);
-		imuTurn(-170); // turn to face the tall goal
-		delay(5);
-		drive(95); // drive to pick up
-		delay(15);
-		moveMogo(1550); // pick up
-		delay(6);
-		drive(-84); // go back
-		delay(5);
+						driveLiftDown(105, -1850);
+						delay(5);
+						moveMogo(1100);
+						delay(5);
+						drive(-75);
+						delay(5);
+						imuTurn(-110);
+						delay(5);
+						drive(10);
+						delay(5);
+						moveLift(-625);
+						delay(5);
+						drive(-30);
+						delay(5);
+						imuTurn(170);
+						delay(5);
+						drive(87);
+						delay(5);
+						moveMogo(1250);
+						delay(5);
+						drive(-100);
+
 	}
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -587,7 +587,6 @@ void autonomous() {
 	lcd::initialize();
 	imu.reset();
 	while(imu.is_calibrating()) delay(100);
-	// 	imu.reset();
 	// 	delay(100);
 	// 	while(imu.is_calibrating()) stop_motors();
 	// con.set_text(1,1,"sup gamer");
@@ -604,53 +603,53 @@ void autonomous() {
 
 			// Left with imu
 
-				// driveLiftDown(105, -1850);
-				// delay(5);
-				// moveMogo(1100);
-				// delay(5);
-				// drive(-75);
-				// delay(5);
-				// imuTurn(-110);
-				// delay(5);
-				// drive(10);
-				// delay(5);
-				// moveLift(-275);
-				// delay(5);
-				// drive(-30);
-				// delay(5);
-				// imuTurn(170);
-				// delay(5);
-				// drive(87);
-				// delay(5);
-				// moveMogo(1250);
-				// delay(5);
-				// drive(-100);
+				driveLiftDown(105, -1850);
+				delay(5);
+				moveMogo(1100);
+				delay(5);
+				drive(-75);
+				delay(5);
+				imuTurn(-110);
+				delay(5);
+				drive(10);
+				delay(5);
+				moveLift(-275);
+				delay(5);
+				drive(-30);
+				delay(5);
+				imuTurn(170);
+				delay(5);
+				drive(87);
+				delay(5);
+				moveMogo(1250);
+				delay(5);
+				drive(-100);
 
 	//RIGHT Global but more imu
 	//SETUP IS KEY
 
-	driveLiftDown(95, -1900); //Drive to neutral and set lift down
-	delay(5);
-	moveMogo(1200);// Lift the Neutral
-	delay(5);
-	drive(-73); // go backwards
-	delay(5);
-	imuTurn(126); // turn right
-	delay(5);
-	drive(30); // go forward a little
-	delay(15);
-	moveLift(-700); // drop the mobile goal
-	delay(5);
-	drive(-30); // Go back
-	delay(5);
-	imuTurn(-168); // turn to face the tall goal
-	delay(5);
-	drive(95); // drive to pick up
-	delay(15);
-	moveMogo(1400); // pick up
-	delay(5);
-	drive(-84); // go back
-	delay(5);
+	// driveLiftDown(95, -1900); //Drive to neutral and set lift down
+	// delay(5);
+	// moveMogo(1200);// Lift the Neutral
+	// delay(5);
+	// drive(-73); // go backwards
+	// delay(5);
+	// imuTurn(126); // turn right
+	// delay(5);
+	// drive(30); // go forward a little
+	// delay(15);
+	// moveLift(-700); // drop the mobile goal
+	// delay(5);
+	// drive(-30); // Go back
+	// delay(5);
+	// imuTurn(-168); // turn to face the tall goal
+	// delay(5);
+	// drive(95); // drive to pick up
+	// delay(15);
+	// moveMogo(1400); // pick up
+	// delay(5);
+	// drive(-84); // go back
+	// delay(5);
 
 	// Winpoint
 	// winPointMoveDown(-1900); // lift Down
@@ -693,18 +692,18 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	// imu.reset();
-	// delay(100);
-	// while(imu.is_calibrating())	stop_motors();
+	imu.reset();
+	delay(100);
+	while(imu.is_calibrating())	stop_motors();
 	// cout << "this is working" << endl;
 	// cout << "This is working" << endl;
 	int localTime = 0;
-	con.clear();
+	// con.clear();
 	while (true) {
 		// if(localTime % 50 == 0) {con.print(0,0, "Pitch: %.2f", imu.get_pitch());}
-		if(localTime % 50 == 0) {
-			con.print(0,0, "Right Front: %f", RF.get_position());
-		}
+		// if(localTime % 50 == 0) {
+		// 	con.print(0,0, "Right Front: %f", RF.get_position());
+		// }
 		// cout << RF.get_position() << endl;
 		// cout << "Heading Value: " << imu.get_heading() << endl;
 		// cout << "Pitch: " << imu.get_pitch() << endl;
