@@ -104,7 +104,7 @@ void park_lift(){
 					power = min(power, 127);
 				}
 			}
-			// powerAdj = power/10;
+			powerAdj = power/10;
 			LF.move(power); LM.move(power); LB.move(power); RF.move(power-powerAdj); RM.move(power-powerAdj); RB.move(power-powerAdj);
 			delay(10);
 		}
@@ -186,6 +186,45 @@ void liftMobileGoal(){
 		delay(5);
 	}
 	stop_lift();
+	stop_motors();
+	reset_lift();
+}
+
+void autonLiftMobileGoal(){
+	stop_motors();
+	reset_lift();
+	double kP = 0.4;
+	double kI = 0.0025;
+	double kD = 0.01;
+	int integral = 0;
+	int derivative = 0;
+	int power = 0;
+	int current_pos = 0;
+	int error = 0;
+	int prev_error = 0;
+	error = 1700;
+	while(error > 5){
+		if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
+			break;
+		}
+		current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
+		error = 1700 - current_pos;
+		integral += error;
+		if(error == 0){
+			integral = 0;
+		}
+		if(error > 300){
+			integral = 0;
+		}
+		derivative = error - prev_error;
+		power = kP * error + integral * kI + derivative * kD;
+		prev_error = 0;
+		lift_left.move(power); lift_right.move(power);
+		delay(5);
+	}
+	stop_lift();
+	stop_motors();
+	reset_lift();
 }
 
 void moveLift(int target){
@@ -524,28 +563,29 @@ void moveMogo(int target){
 	}
 
 	void currAuton(){
-		// left
-		driveLiftDown(105, -1850);
-		delay(5);
-		moveMogo(1100);
-		delay(5);
-		drive(-95);
-		delay(5);
-		imuTurn(-125);
-		delay(5);
-		drive(10);
-		delay(5);
-		moveLift(-725);
-		delay(5);
-		drive(-30);
-		delay(5);
-		imuTurn(168);
-		delay(5);
-		drive(87);
-		delay(5);
-		moveMogo(1250);
-		delay(5);
-		drive(-100);
+
+			// driveLiftDown(95, -1900); //Drive to neutral and set lift down
+			// delay(5);
+			// moveMogo(1200);// Lift the Neutral
+			// delay(5);
+			// drive(-73); // go backwards
+			// delay(5);
+			// imuTurn(126); // turn right
+			// delay(5);
+			// drive(30); // go forward a little
+			// delay(15);
+			// moveLift(-700); // drop the mobile goal
+			// delay(5);
+			// drive(-30); // Go back
+			// delay(5);
+			// imuTurn(-168); // turn to face the tall goal
+			// delay(5);
+			// drive(95); // drive to pick up
+			// delay(15);
+			// moveMogo(1400); // pick up
+			// delay(5);
+			// drive(-84); // go back
+			// delay(5);
 
 	}
 /**
@@ -604,27 +644,27 @@ void autonomous() {
 
 			// Left with imu
 
-				driveLiftDown(105, -1850);
-				delay(5);
-				moveMogo(1100);
-				delay(5);
-				drive(-95);
-				delay(5);
-				imuTurn(-125);
-				delay(5);
-				drive(10);
-				delay(5);
-				moveLift(-725);
-				delay(5);
-				drive(-30);
-				delay(5);
-				imuTurn(168);
-				delay(5);
-				drive(87);
-				delay(5);
-				moveMogo(1250);
-				delay(5);
-				drive(-100);
+				// driveLiftDown(105, -1850);
+				// delay(5);
+				// moveMogo(1100);
+				// delay(5);
+				// drive(-95);
+				// delay(5);
+				// imuTurn(-125);
+				// delay(5);
+				// drive(10);
+				// delay(5);
+				// moveLift(-725);
+				// delay(5);
+				// drive(-30);
+				// delay(5);
+				// imuTurn(168);
+				// delay(5);
+				// drive(87);
+				// delay(5);
+				// moveMogo(1250);
+				// delay(5);
+				// drive(-100);
 
 	//RIGHT Global but more imu
 	//SETUP IS KEY
@@ -662,19 +702,29 @@ void autonomous() {
 	// drive(-30);
 
 	//Skills ?
-	// moveLift(-1850);
-	// delay(5);
-	// drive(40);
-	// delay(5);
-	// liftMobileGoal(); // put mogo into rack
-	// delay(5);
-	// drive(5);
-	// delay(5);
-	// imuTurn(-90); // turning left
-	// delay(5);
-	// moveLift(-1100);
-	// delay(5);
-	// drive(130);
+	moveLift(-2000);
+	delay(5);
+	drive(40);
+	delay(5);
+	autonLiftMobileGoal(); // put mogo into rack
+	delay(1000);
+	drive(12);
+	delay(1000);
+	imuTurn(-89); // turning left
+	delay(5);
+	drive(-15);
+	delay(5);
+	moveLift(-1900);
+	delay(1000);
+	drive(130);
+	delay(1000);
+	moveMogo(2700);
+	delay(1000);
+	drive(100);
+	delay(5);
+	imuTurn(89);
+	drive(130);
+
 }
 
 
