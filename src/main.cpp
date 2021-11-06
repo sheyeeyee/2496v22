@@ -702,7 +702,7 @@ void autonomous() {
 	// drive(-30);
 
 	//Skills ?
-	moveLift(-2000);
+	moveLift(-2250);
 	delay(5);
 	drive(40);
 	delay(5);
@@ -716,17 +716,30 @@ void autonomous() {
 	delay(5);
 	moveLift(-1900);
 	delay(1000);
-	drive(130);
+	drive(120);
 	delay(1000);
 	moveMogo(2700);
 	delay(1000);
 	drive(100);
 	delay(5);
-	imuTurn(89);
-	drive(130);
-
+	imuTurn(80);
+	delay(5);
+	drive(235);
+	delay(5);
+	drive(-20);
+	delay(5);
+	imuTurn(-90);
+	delay(5);
+	drive(30);
+	delay(5);
+	imuTurn(-85);
+	delay(5);
+	drive(100);
+	delay(5);
+	imuTurn(-5);
+	delay(5);
+	while(1 == 1) autoBalance();
 }
-
 
 
 /**
