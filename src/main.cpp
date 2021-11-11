@@ -564,29 +564,11 @@ void moveMogo(int target){
 
 	void currAuton(){
 
-			// driveLiftDown(95, -1900); //Drive to neutral and set lift down
-			// delay(5);
-			// moveMogo(1200);// Lift the Neutral
-			// delay(5);
-			// drive(-73); // go backwards
-			// delay(5);
-			// imuTurn(126); // turn right
-			// delay(5);
-			// drive(30); // go forward a little
-			// delay(15);
-			// moveLift(-700); // drop the mobile goal
-			// delay(5);
-			// drive(-30); // Go back
-			// delay(5);
-			// imuTurn(-168); // turn to face the tall goal
-			// delay(5);
-			// drive(95); // drive to pick up
-			// delay(15);
-			// moveMogo(1400); // pick up
-			// delay(5);
-			// drive(-84); // go back
-			// delay(5);
-
+		// driveLiftDown(95, -1850);
+		// delay(5);
+		// turnLift(-165, 500);
+		// delay(5);
+		// drive(80);
 	}
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -626,16 +608,32 @@ void competition_initialize() {
 void autonomous() {
 	lcd::initialize();
 
-	imu.reset();
-	while(imu.is_calibrating()) delay(100);
+	// imu.reset();
+	// while(imu.is_calibrating()) delay(100);
 	// 	delay(100);
 	// 	while(imu.is_calibrating()) stop_motors();
 	// con.set_text(1,1,"sup gamer");
 
-  //GLOBAL SAFE
+	//Left neutral + 1/2 AWP?
+	driveLiftDown(105, -1850);
+	delay(5);
+	moveMogo(1100);
+	delay(5);
+	drive(-85);
+	delay(5);
+	imuTurn(80);
+	delay(5);
+	moveLift(-725);
+	drive(-45);
+	delay(5);
+	drive(20);
+	imuTurn(90);
+	delay(2000);
+	drive(20);
+	//GLOBAL SAFE
 	// driveLiftDown(95, -1850);
 	// delay(5);
-	// turnLift(-175, 500);
+	// turnLift(-165, 500);
 	// delay(5);
 	// drive(80);
 
@@ -668,7 +666,7 @@ void autonomous() {
 
 	//RIGHT Global but more imu
 	//SETUP IS KEY
-
+	//
 	// driveLiftDown(95, -1900); //Drive to neutral and set lift down
 	// delay(5);
 	// moveMogo(1200);// Lift the Neutral
@@ -683,7 +681,7 @@ void autonomous() {
 	// delay(5);
 	// drive(-30); // Go back
 	// delay(5);
-	// imuTurn(-168); // turn to face the tall goal
+	// imuTurn(-163); // turn to face the tall goal
 	// delay(5);
 	// drive(95); // drive to pick up
 	// delay(15);
@@ -692,53 +690,44 @@ void autonomous() {
 	// drive(-84); // go back
 	// delay(5);
 
-	// Winpoint
-	// winPointMoveDown(-1900); // lift Down
-	// delay(5);
-	// drive(25);
-	// delay(5);
-	// moveMogo(1400);
-	// delay(5);
-	// drive(-30);
-
 	//Skills ?
-	moveLift(-2250);
-	delay(5);
-	drive(40);
-	delay(5);
-	autonLiftMobileGoal(); // put mogo into rack
-	delay(1000);
-	drive(12);
-	delay(1000);
-	imuTurn(-89); // turning left
-	delay(5);
-	drive(-15);
-	delay(5);
-	moveLift(-1900);
-	delay(1000);
-	drive(120);
-	delay(1000);
-	moveMogo(2700);
-	delay(1000);
-	drive(100);
-	delay(5);
-	imuTurn(80);
-	delay(5);
-	drive(235);
-	delay(5);
-	drive(-20);
-	delay(5);
-	imuTurn(-90);
-	delay(5);
-	drive(30);
-	delay(5);
-	imuTurn(-85);
-	delay(5);
-	drive(100);
-	delay(5);
-	imuTurn(-5);
-	delay(5);
-	while(1 == 1) autoBalance();
+	// moveLift(-2250); // move the lift down
+	// delay(5);
+	// drive(40); // go forward for mogo
+	// delay(5);
+	// autonLiftMobileGoal(); // put mogo into rack
+	// delay(1000);
+	// drive(12); // go forward to line up with the neutral
+	// delay(1000);
+	// imuTurn(-89); // turning left
+	// delay(5);
+	// drive(-15); //wall reset
+	// delay(5);
+	// moveLift(-1900); //
+	// delay(1000);
+	// drive(120);
+	// delay(1000);
+	// moveMogo(2700);
+	// delay(1000);
+	// drive(100);
+	// delay(5);
+	// imuTurn(80);
+	// delay(5);
+	// drive(235);
+	// delay(5);
+	// drive(-20);
+	// delay(5);
+	// imuTurn(-90);
+	// delay(5);
+	// drive(30);
+	// delay(5);
+	// imuTurn(-85);
+	// delay(5);
+	// drive(100);
+	// delay(5);
+	// imuTurn(-5);
+	// delay(5);
+	// while(1 == 1) autoBalance();
 }
 
 
