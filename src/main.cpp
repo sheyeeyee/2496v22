@@ -563,12 +563,22 @@ void moveMogo(int target){
 	}
 
 	void currAuton(){
-
-		// driveLiftDown(95, -1850);
+		//
+		// driveLiftDown(105, -1850);
 		// delay(5);
-		// turnLift(-165, 500);
+		// moveMogo(1100);
 		// delay(5);
-		// drive(80);
+		// drive(-85);
+		// delay(5);
+		// imuTurn(80);
+		// delay(5);
+		// moveLift(-725);
+		// drive(-45);
+		// delay(5);
+		// drive(20);
+		// imuTurn(90);
+		// delay(2000);
+		// drive(20);
 	}
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -614,22 +624,32 @@ void autonomous() {
 	// 	while(imu.is_calibrating()) stop_motors();
 	// con.set_text(1,1,"sup gamer");
 
-	//Left neutral + 1/2 AWP?
-	driveLiftDown(105, -1850);
+	//1/2 Awp + central neutral?
+	moveLift(-700);
+	delay(1000);
+	drive(-15);
+	imuTurn(-90);
 	delay(5);
-	moveMogo(1100);
+	drive(70);
 	delay(5);
-	drive(-85);
-	delay(5);
-	imuTurn(80);
-	delay(5);
-	moveLift(-725);
-	drive(-45);
-	delay(5);
-	drive(20);
 	imuTurn(90);
-	delay(2000);
-	drive(20);
+	delay(5);
+	drive(-10);
+	delay(5);
+	moveLift(-900);
+	delay(5);
+	drive(220);
+	delay(5);
+	drive(-20);
+	delay(5);
+	// moveLift(400);
+	// delay(5);
+	// moveLift(-400);
+	// delay(5);
+	// imuTurn(-90);
+	// drive(50);
+	// moveMogo(1100);
+	// drive(-80);
 	//GLOBAL SAFE
 	// driveLiftDown(95, -1850);
 	// delay(5);
