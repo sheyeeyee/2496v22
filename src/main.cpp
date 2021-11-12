@@ -564,21 +564,36 @@ void moveMogo(int target){
 
 	void currAuton(){
 		//
-		// driveLiftDown(105, -1850);
-		// delay(5);
-		// moveMogo(1100);
-		// delay(5);
-		// drive(-85);
-		// delay(5);
-		// imuTurn(80);
-		// delay(5);
-		// moveLift(-725);
-		// drive(-45);
-		// delay(5);
-		// drive(20);
-		// imuTurn(90);
-		// delay(2000);
-		// drive(20);
+		moveLift(-1000);
+	delay(1000);
+	drive(-15);
+	imuTurn(-90);
+	delay(5);
+	drive(70);
+	delay(5);
+	imuTurn(90);
+	delay(5);
+	drive(-10);
+	delay(5);
+	moveLift(-900);
+	delay(5);
+	drive(220);
+	delay(5);
+	drive(-29);
+	delay(5);
+	moveLift(600);
+	delay(5);
+	imuTurn(-90);
+	delay(5);
+	drive(-10);
+	delay(5);
+	moveLift(-600);
+	delay(5);
+	drive(60);
+	delay(5);
+	moveMogo(1100);
+	delay(5);
+	drive(-80);
 	}
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -624,7 +639,23 @@ void autonomous() {
 	// 	while(imu.is_calibrating()) stop_motors();
 	// con.set_text(1,1,"sup gamer");
 
-	//1/2 Awp + central neutral?
+	//Right awp + center neutral ?
+	// imuTurn(45);
+	// delay(5);
+	// drive(32);
+	// delay(1000);
+	// moveLift(-900);
+	// delay(15);
+	// moveLift(900);
+	// delay(5);
+	// drive(13);
+	// delay(5);
+	// drive(-15);
+	// delay(5);
+	// moveLift(-1000);
+	// delay(5);
+
+	//Left 1/2 Awp + central neutral?
 	moveLift(-1000);
 	delay(1000);
 	drive(-15);
@@ -646,11 +677,11 @@ void autonomous() {
 	delay(5);
 	imuTurn(-90);
 	delay(5);
-	drive(-18);
+	drive(-10);
 	delay(5);
 	moveLift(-600);
 	delay(5);
-	drive(65);
+	drive(60);
 	delay(5);
 	moveMogo(1100);
 	delay(5);
