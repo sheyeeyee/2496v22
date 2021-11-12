@@ -625,7 +625,7 @@ void autonomous() {
 	// con.set_text(1,1,"sup gamer");
 
 	//1/2 Awp + central neutral?
-	moveLift(-700);
+	moveLift(-1000);
 	delay(1000);
 	drive(-15);
 	imuTurn(-90);
@@ -646,7 +646,7 @@ void autonomous() {
 	delay(5);
 	imuTurn(-90);
 	delay(5);
-	drive(-35);
+	drive(-18);
 	delay(5);
 	moveLift(-600);
 	delay(5);
