@@ -589,7 +589,7 @@ void moveMogo(int target){
 	delay(5);
 	moveLift(-600);
 	delay(5);
-	drive(60);
+	drive(65);
 	delay(5);
 	moveMogo(1100);
 	delay(5);
@@ -681,7 +681,7 @@ void autonomous() {
 	delay(5);
 	moveLift(-600);
 	delay(5);
-	drive(60);
+	drive(62);
 	delay(5);
 	moveMogo(1100);
 	delay(5);
