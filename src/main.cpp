@@ -651,18 +651,18 @@ void autonomous() {
 	// con.set_text(1,1,"sup gamer");
 
 	//Right awp
-	imuTurn(45);
-	delay(5);
-	drive(32);
-	delay(1000);
-	moveLift(-900);
-	delay(15);
-	moveLift(900);
-	delay(5);
-	drive(13);
-	delay(5);
-	drive(-15);
-	delay(5);
+	// imuTurn(45);
+	// delay(5);
+	// drive(32);
+	// delay(1000);
+	// moveLift(-900);
+	// delay(15);
+	// moveLift(900);
+	// delay(5);
+	// drive(13);
+	// delay(5);
+	// drive(-15);
+	// delay(5);
 	// moveLift(-1000);
 	// delay(5);
 
@@ -699,11 +699,11 @@ void autonomous() {
 	// drive(-80);
 
 	//GLOBAL SAFE
-	// driveLiftDown(95, -1850);
-	// delay(5);
-	// turnLift(-165, 500);
-	// delay(5);
-	// drive(80);
+	driveLiftDown(92, -2000);
+	delay(5);
+	turnLift(-165, 700);
+	delay(5);
+	drive(80);
 
 
 	// imuTurn(90);
@@ -735,7 +735,7 @@ void autonomous() {
 	//RIGHT Global but more imu
 	//SETUP IS KEY
 	//
-	// driveLiftDown(95, -1900); //Drive to neutral and set lift down
+	// driveLiftDown(93, 2000); //Drive to neutral and set lift down
 	// delay(5);
 	// moveMogo(1200);// Lift the Neutral
 	// delay(5);
