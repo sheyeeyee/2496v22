@@ -599,12 +599,12 @@ void moveMogo(int target){
 	}
 
 	void currAuton(){
+
 		driveLiftDown(95, -1850);
 		delay(5);
 		turnLift(-165, 500);
 		delay(5);
 		drive(80);
-
 	}
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -650,19 +650,19 @@ void autonomous() {
 	// 	while(imu.is_calibrating()) stop_motors();
 	// con.set_text(1,1,"sup gamer");
 
-	//Right awp + center neutral ?
-	// imuTurn(45);
-	// delay(5);
-	// drive(32);
-	// delay(1000);
-	// moveLift(-900);
-	// delay(15);
-	// moveLift(900);
-	// delay(5);
-	// drive(13);
-	// delay(5);
-	// drive(-15);
-	// delay(5);
+	//Right awp
+	imuTurn(45);
+	delay(5);
+	drive(32);
+	delay(1000);
+	moveLift(-900);
+	delay(15);
+	moveLift(900);
+	delay(5);
+	drive(13);
+	delay(5);
+	drive(-15);
+	delay(5);
 	// moveLift(-1000);
 	// delay(5);
 
@@ -813,9 +813,9 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	imu.reset();
-	delay(100);
-	while(imu.is_calibrating())	stop_motors();
+	// imu.reset();
+	// delay(100);
+	// while(imu.is_calibrating())	stop_motors();
 	// cout << "this is working" << endl;
 	// cout << "This is working" << endl;
 	int localTime = 0;
