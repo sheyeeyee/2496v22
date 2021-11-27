@@ -7,21 +7,21 @@ using namespace std;
 //CONSTRUCTORS
 	//chassis
 		//left drive
-		Motor LF (3, E_MOTOR_GEARSET_18, true);
-		Motor LM (5, E_MOTOR_GEARSET_18, true);
-		Motor LB (6, E_MOTOR_GEARSET_18, true);
+		Motor LF (16, E_MOTOR_GEARSET_18, true);
+		Motor LM (15, E_MOTOR_GEARSET_18, true);
+		Motor LB (10, E_MOTOR_GEARSET_18, true);
 		//right drive
-		Motor RF (9, E_MOTOR_GEARSET_18);
-		Motor RM (8, E_MOTOR_GEARSET_18);
-		Motor RB (7, E_MOTOR_GEARSET_18);
+		Motor RF (17, E_MOTOR_GEARSET_18);
+		Motor RM (20, E_MOTOR_GEARSET_18);
+		Motor RB (14, E_MOTOR_GEARSET_18);
 			//inertial sensor for auton PID
-		Imu imu (17);
+		Imu imu (19);
 
 	//lift
-	Motor lift_left (1, E_MOTOR_GEARSET_06, true);
-	Motor lift_right (10, E_MOTOR_GEARSET_06);
+	Motor lift_left (3, E_MOTOR_GEARSET_06, true);
+	Motor lift_right (6, E_MOTOR_GEARSET_06);
 		//potentiometer for PID
-		ADIAnalogIn lift_pot('A');
+		// ADIAnalogIn lift_pot('A');
 
 	//controller
 	Controller con (CONTROLLER_MASTER);
@@ -104,7 +104,7 @@ void park_lift(){
 					power = min(power, 127);
 				}
 			}
-			powerAdj = power/10;
+			powerAdj = 0;
 			LF.move(power); LM.move(power); LB.move(power); RF.move(power-powerAdj); RM.move(power-powerAdj); RB.move(power-powerAdj);
 			delay(10);
 		}
@@ -165,13 +165,49 @@ void liftMobileGoal(){
 	int current_pos = 0;
 	int error = 0;
 	int prev_error = 0;
-	error = 2000;
+	error = 1700;
 	while(error > 5){
 		if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
 			break;
 		}
 		current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
-		error = 2000 - current_pos;
+		error = 1700 - current_pos;
+		integral += error;
+		if(error == 0){
+			integral = 0;
+		}
+		if(error > 300){
+			integral = 0;
+		}
+		derivative = error - prev_error;
+		power = kP * error + integral * kI + derivative * kD;
+		prev_error = 0;
+		lift_left.move(power); lift_right.move(power);
+		delay(5);
+	}
+	stop_lift();
+	stop_motors();
+}
+
+void liftMobileGoal2() {
+	stop_motors();
+	reset_lift();
+	double kP = 0.4;
+	double kI = 0.0025;
+	double kD = 0.01;
+	int integral = 0;
+	int derivative = 0;
+	int power = 0;
+	int current_pos = 0;
+	int error = 0;
+	int prev_error = 0;
+	error = 2400;
+	while(error > 5){
+		if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
+			break;
+		}
+		current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
+		error = 2400 - current_pos;
 		integral += error;
 		if(error == 0){
 			integral = 0;
@@ -479,7 +515,7 @@ void moveMogo(int target){
 					dpower = min(dpower, 127);
 				}
 			}
-			powerAdj = dpower/10;
+			powerAdj = 0;
 
 			if(abs(derror) < 15){
 				stop_motors();
@@ -563,37 +599,12 @@ void moveMogo(int target){
 	}
 
 	void currAuton(){
-		//
-		moveLift(-1000);
-	delay(1000);
-	drive(-15);
-	imuTurn(-90);
-	delay(5);
-	drive(70);
-	delay(5);
-	imuTurn(90);
-	delay(5);
-	drive(-10);
-	delay(5);
-	moveLift(-900);
-	delay(5);
-	drive(220);
-	delay(5);
-	drive(-29);
-	delay(5);
-	moveLift(600);
-	delay(5);
-	imuTurn(-90);
-	delay(5);
-	drive(-10);
-	delay(5);
-	moveLift(-600);
-	delay(5);
-	drive(65);
-	delay(5);
-	moveMogo(1100);
-	delay(5);
-	drive(-80);
+		driveLiftDown(95, -1850);
+		delay(5);
+		turnLift(-165, 500);
+		delay(5);
+		drive(80);
+
 	}
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -656,36 +667,37 @@ void autonomous() {
 	// delay(5);
 
 	//Left 1/2 Awp + central neutral?
-	moveLift(-1000);
-	delay(1000);
-	drive(-15);
-	imuTurn(-90);
-	delay(5);
-	drive(70);
-	delay(5);
-	imuTurn(90);
-	delay(5);
-	drive(-10);
-	delay(5);
-	moveLift(-900);
-	delay(5);
-	drive(220);
-	delay(5);
-	drive(-29);
-	delay(5);
-	moveLift(600);
-	delay(5);
-	imuTurn(-90);
-	delay(5);
-	drive(-10);
-	delay(5);
-	moveLift(-600);
-	delay(5);
-	drive(62);
-	delay(5);
-	moveMogo(1100);
-	delay(5);
-	drive(-80);
+	// moveLift(-1000);
+	// delay(1000);
+	// drive(-15);
+	// imuTurn(-90);
+	// delay(5);
+	// drive(70);
+	// delay(5);
+	// imuTurn(90);
+	// delay(5);
+	// drive(-10);
+	// delay(5);
+	// moveLift(-900);
+	// delay(5);
+	// drive(220);
+	// delay(5);
+	// drive(-29);
+	// delay(5);
+	// moveLift(600);
+	// delay(5);
+	// imuTurn(-90);
+	// delay(5);
+	// drive(-10);
+	// delay(5);
+	// moveLift(-600);
+	// delay(5);
+	// drive(62);
+	// delay(5);
+	// moveMogo(1100);
+	// delay(5);
+	// drive(-80);
+
 	//GLOBAL SAFE
 	// driveLiftDown(95, -1850);
 	// delay(5);
@@ -765,11 +777,11 @@ void autonomous() {
 	// delay(1000);
 	// moveMogo(2700);
 	// delay(1000);
-	// drive(100);
+	// drive(98);
 	// delay(5);
-	// imuTurn(80);
+	// imuTurn(92);
 	// delay(5);
-	// drive(235);
+	// drive(245);
 	// delay(5);
 	// drive(-20);
 	// delay(5);
@@ -777,7 +789,7 @@ void autonomous() {
 	// delay(5);
 	// drive(30);
 	// delay(5);
-	// imuTurn(-85);
+	// imuTurn(-80);
 	// delay(5);
 	// drive(100);
 	// delay(5);
@@ -827,8 +839,9 @@ void opcontrol() {
 				/**The turn integer is set to the right joystick, ANALOG_RIGHT, and has
 							an X at the end bc that is the horizontal axis and the right
 							joystick is for going left and right.**/
+			int adj = 0;
 			int left = power + turn;
-			int right = power - turn-(power/15);
+			int right = power - turn-adj;
 			//if drives forward, right side goes faster than left or left goes slower, left
 			// most likely will not continue to any faster, so plan is to reduce right side speed
 			// if it is turning, then left side will turn slower than before theoretically, but
@@ -856,20 +869,23 @@ void opcontrol() {
 					lift_left.move(-127);
 					lift_right.move(-127);
 				}
+				else if(con.get_digital(E_CONTROLLER_DIGITAL_Y)){
+					lift_left.move(-15);
+					lift_right.move(-15);
+				}//gerald was here
 					//lift go no
-					else{
+				else{
 						lift_left.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-							lift_left.move_velocity(0);
+						lift_left.move_velocity(0);
 						lift_right.set_brake_mode(E_MOTOR_BRAKE_HOLD);
-							lift_right.move_velocity(0);
-
-						}
+						lift_right.move_velocity(0);
+				}
 				if(con.get_digital(E_CONTROLLER_DIGITAL_A)){
 					// cout << "Pressed A" << endl;
 					liftMobileGoal();
 				}
-
-				if(con.get_digital(E_CONTROLLER_DIGITAL_Y)) autoBalance();
+				//gerald was here too
+				// if(con.get_digital(E_CONTROLLER_DIGITAL_Y)) autoBalance();
 
 				if(con.get_digital(E_CONTROLLER_DIGITAL_UP)){
 						currAuton();
