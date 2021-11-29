@@ -73,7 +73,7 @@ void park_lift(){
 		// RF.set_zero_position(0);
 		double kP = 0.5;
 		double kI = 0.01;
-		double kD = 0.02;
+		double kD = 0.0;
 		int integral = 0;
 		int derivative = 0;
 		int error;
@@ -463,7 +463,7 @@ void moveMogo(int target){
 		//----------
 		double dkP = 0.5;
 		double dkI = 0.01;
-		double dkD = 0.02;
+		double dkD = 0.0;
 		int dintegral = 0;
 		int dderivative = 0;
 		int derror;
@@ -699,11 +699,11 @@ void autonomous() {
 	// drive(-80);
 
 	//GLOBAL SAFE
-	driveLiftDown(92, -2000);
-	delay(5);
-	turnLift(-165, 700);
-	delay(5);
-	drive(80);
+	// driveLiftDown(90, -2000);
+	// delay(5);
+	// turnLift(-165, 700);
+	// delay(5);
+	// drive(80);
 
 
 	// imuTurn(90);
