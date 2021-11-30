@@ -165,13 +165,13 @@ void liftMobileGoal(){
 	int current_pos = 0;
 	int error = 0;
 	int prev_error = 0;
-	error = 1700;
+	error = 2100;
 	while(error > 5){
 		if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
 			break;
 		}
 		current_pos = (lift_left.get_position() + lift_right.get_position()) / 2;
-		error = 1700 - current_pos;
+		error = 2100 - current_pos;
 		integral += error;
 		if(error == 0){
 			integral = 0;
@@ -461,7 +461,7 @@ void moveMogo(int target){
 		int prev_error = 0;
 		error = lTarget - current_pos;
 		//----------
-		double dkP = 0.5;
+		double dkP = 0.6;
 		double dkI = 0.01;
 		double dkD = 0.0;
 		int dintegral = 0;
@@ -696,14 +696,14 @@ void autonomous() {
 	// delay(5);
 	// moveMogo(1100);
 	// delay(5);
-	// drive(-80);
+	// drive(-75);
 
 	//GLOBAL SAFE
-	// driveLiftDown(90, -2000);
-	// delay(5);
-	// turnLift(-165, 700);
-	// delay(5);
-	// drive(80);
+	driveLiftDown(91, -2000);
+	delay(5);
+	turnLift(-165, 700);
+	delay(5);
+	drive(80);
 
 
 	// imuTurn(90);
