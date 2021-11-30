@@ -699,11 +699,11 @@ void autonomous() {
 	// drive(-75);
 
 	//GLOBAL SAFE
-	driveLiftDown(95, -2000);
-	delay(5);
-	turnLift(-173, 700);
-	delay(5);
-	drive(80);
+	// driveLiftDown(95, -2000);
+	// delay(5);
+	// turnLift(-173, 700);
+	// delay(5);
+	// drive(80);
 
 
 	// imuTurn(90);
@@ -735,32 +735,32 @@ void autonomous() {
 	//RIGHT Global but more imu
 	//SETUP IS KEY
 	//
-	// driveLiftDown(90, -2000); //Drive to neutral and set lift down
-	// delay(5);
-	// moveMogo(1200);// Lift the Neutral
-	// delay(5);
-	// drive(-35); // go backwards
-	// delay(5);
-	// imuTurn(-90); // turn right
-	// delay(5);
-	// drive(30); // go forward a little
-	// delay(15);
-	// moveLift(-900); // drop the mobile goal
-	// delay(5);
-	// drive(-25); // Go back
-	// delay(5);
-	// imuTurn(180); // turn to face the tall goal
-	// delay(5);
-	// drive(40); // drive to pick up
-	// delay(15);
-	// liftMobileGoal(); // pick up
-	// delay(5);
-	// imuTurn(-180);
-	// delay(5);
-	// moveLift(-1800);
-	// delay(5);
-	// drive(30); // go back
-	// delay(5);
+	driveLiftDown(95, -2000); //Drive to neutral and set lift down
+	delay(5);
+	moveMogo(900);// Lift the Neutral
+	delay(5);
+	drive(-40); // go backwards
+	delay(5);
+	imuTurn(-90); // turn right
+	delay(5);
+	drive(30); // go forward a little
+	delay(15);
+	moveLift(-1100); // drop the mobile goal
+	delay(5);
+	drive(-25); // Go back
+	delay(5);
+	imuTurn(180); // turn to face the tall goal
+	delay(5);
+	drive(40); // drive to pick up
+	delay(15);
+	liftMobileGoal(); // pick up
+	delay(5);
+	imuTurn(-180);
+	delay(5);
+	moveLift(-1800);
+	delay(5);
+	drive(30); // go back
+	delay(5);
 
 	//Skills ?
 	// moveLift(-2250); // move the lift down
