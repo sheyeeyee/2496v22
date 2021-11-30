@@ -71,7 +71,7 @@ void park_lift(){
 		//target is in inches
 		target*=28.65; // the conversion for 36:1 4 inch wheels
 		// RF.set_zero_position(0);
-		double kP = 0.5;
+		double kP = 0.6;
 		double kI = 0.01;
 		double kD = 0.0;
 		int integral = 0;
@@ -699,9 +699,9 @@ void autonomous() {
 	// drive(-75);
 
 	//GLOBAL SAFE
-	driveLiftDown(91, -2000);
-	delay(5);
-	turnLift(-165, 700);
+	driveLiftDown(95, -2000);
+	delay(300);
+	turnLift(-173, 700);
 	delay(5);
 	drive(80);
 
