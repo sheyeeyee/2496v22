@@ -450,8 +450,8 @@ void moveMogo(int target){
 		//target is in inches
 		dTarget*=28.65; // the conversion for 36:1 4 inch wheels
 		// RF.set_zero_position(0);
-		double kP = 0.1;
-		double kI = 0.0025;
+		double kP = 0.4;
+		double kI = 0.01;
 		double kD = 0.01;
 		int integral = 0;
 		int derivative = 0;
@@ -461,9 +461,9 @@ void moveMogo(int target){
 		int prev_error = 0;
 		error = lTarget - current_pos;
 		//----------
-		double dkP = 0.6;
-		double dkI = 0.01;
-		double dkD = 0.0;
+		double dkP = 0.2;
+		double dkI = 0.0;
+		double dkD = 0.3;
 		int dintegral = 0;
 		int dderivative = 0;
 		int derror;
@@ -700,7 +700,7 @@ void autonomous() {
 
 	//GLOBAL SAFE
 	driveLiftDown(95, -2000);
-	delay(300);
+	delay(5);
 	turnLift(-173, 700);
 	delay(5);
 	drive(80);
@@ -735,27 +735,31 @@ void autonomous() {
 	//RIGHT Global but more imu
 	//SETUP IS KEY
 	//
-	// driveLiftDown(93, 2000); //Drive to neutral and set lift down
+	// driveLiftDown(90, -2000); //Drive to neutral and set lift down
 	// delay(5);
 	// moveMogo(1200);// Lift the Neutral
 	// delay(5);
-	// drive(-73); // go backwards
+	// drive(-35); // go backwards
 	// delay(5);
-	// imuTurn(126); // turn right
+	// imuTurn(-90); // turn right
 	// delay(5);
 	// drive(30); // go forward a little
 	// delay(15);
-	// moveLift(-700); // drop the mobile goal
+	// moveLift(-900); // drop the mobile goal
 	// delay(5);
-	// drive(-30); // Go back
+	// drive(-25); // Go back
 	// delay(5);
-	// imuTurn(-163); // turn to face the tall goal
+	// imuTurn(180); // turn to face the tall goal
 	// delay(5);
-	// drive(95); // drive to pick up
+	// drive(40); // drive to pick up
 	// delay(15);
-	// moveMogo(1400); // pick up
+	// liftMobileGoal(); // pick up
 	// delay(5);
-	// drive(-84); // go back
+	// imuTurn(-180);
+	// delay(5);
+	// moveLift(-1800);
+	// delay(5);
+	// drive(30); // go back
 	// delay(5);
 
 	//Skills ?
