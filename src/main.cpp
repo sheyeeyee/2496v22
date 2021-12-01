@@ -599,12 +599,12 @@ void moveMogo(int target){
 	}
 
 	void currAuton(){
-
-		driveLiftDown(95, -1850);
+		driveLiftDown(95, -2000);
 		delay(5);
-		turnLift(-165, 500);
+		turnLift(-173, 500);
 		delay(5);
 		drive(80);
+
 	}
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -701,7 +701,7 @@ void autonomous() {
 	//GLOBAL SAFE
 	// driveLiftDown(95, -2000);
 	// delay(5);
-	// turnLift(-173, 700);
+	// turnLift(-173, 500);
 	// delay(5);
 	// drive(80);
 
@@ -737,7 +737,7 @@ void autonomous() {
 	//
 	driveLiftDown(95, -2000); //Drive to neutral and set lift down
 	delay(5);
-	moveMogo(900);// Lift the Neutral
+	moveMogo(700);// Lift the Neutral
 	delay(5);
 	drive(-40); // go backwards
 	delay(5);
