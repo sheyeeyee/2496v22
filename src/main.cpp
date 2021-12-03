@@ -733,20 +733,20 @@ void autonomous() {
 				// drive(-100);
 
 //anti-pneumatic
-			driveLiftDown(96, -1000); //Drive to neutral and set lift down
+			driveLiftDown(85, -1500); //Drive to neutral and set lift down
 			delay(5);
-			imuTurn(90);
-			delay(5);
-			imuTurn(-90);
+			imuTurn(90); //tip
 			delay(5);
 			drive(-40);
 			delay(5);
-			imuTurn(45);
+			imuTurn(55);
 			delay(5);
 			drive(55);
 			delay(5);
 			imuTurn(45);
 			delay(5);
+			drive(-40);
+
 			imuTurn(-45);
 			delay(5);
 			drive(15);
