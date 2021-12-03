@@ -735,27 +735,28 @@ void autonomous() {
 //anti-pneumatic
 			driveLiftDown(85, -1500); //Drive to neutral and set lift down
 			delay(5);
-			imuTurn(90); //tip
+			imuTurn(90); //tip mogo
 			delay(5);
-			drive(-40);
+			drive(-40);//drive back
 			delay(5);
-			imuTurn(55);
+			imuTurn(55);//turn towards central
 			delay(5);
-			drive(55);
+			drive(55);//drive to central
 			delay(5);
-			imuTurn(45);
+			imuTurn(45);//tip central
 			delay(5);
-			drive(-40);
+			drive(-40);//back up
 
-			imuTurn(-45);
-			delay(5);
-			drive(15);
-			delay(5);
-			moveLift(-1000);
-			delay(5);
-			drive(15);
-			delay(5);
-			moveMogo(750);
+//not sure what i was thinking
+			// imuTurn(-45);
+			// delay(5);
+			// drive(15);
+			// delay(5);
+			// moveLift(-1000);
+			// delay(5);
+			// drive(15);
+			// delay(5);
+			// moveMogo(750);
 
 
 
