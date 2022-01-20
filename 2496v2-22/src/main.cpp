@@ -56,38 +56,38 @@ void competition_initialize() {
 	con.clear();
 
 	while(true) {
-
-		if(button.get_value() == 0) {
-			if(selected) {
-				currAuton ++;
-				if(currAuton == 5) {
-					currAuton = 1;
-				}
-				selected = false;
-			}
-			selected = false;
-		}
-		else selected = true;
-
-		if(localTime%50 == 0) {
-			// con.clear();
-			switch(currAuton) {
-				case (1):
-					con.print(0, 0, "Selected: AWP Left");
-					break;
-				case(2):
-					con.print(0, 0, "Selected: AWP Right");
-					break;
-				case(3):
-					con.print(0, 0, "Selected: Right Side");
-					break;
-				case(4):
-					con.print(0, 0, "Selected: Left Side");
-					break;
-			}
-			// con.print(0, 0, "Selected: %d", currAuton);
-		}
-		localTime ++;
+		// 
+		// if(button.get_value() == 0) {
+		// 	if(selected) {
+		// 		currAuton ++;
+		// 		if(currAuton == 5) {
+		// 			currAuton = 1;
+		// 		}
+		// 		selected = false;
+		// 	}
+		// 	selected = false;
+		// }
+		// else selected = true;
+		//
+		// if(localTime%50 == 0) {
+		// 	// con.clear();
+		// 	switch(currAuton) {
+		// 		case (1):
+		// 			con.print(0, 0, "Selected: AWP Left");
+		// 			break;
+		// 		case(2):
+		// 			con.print(0, 0, "Selected: AWP Right");
+		// 			break;
+		// 		case(3):
+		// 			con.print(0, 0, "Selected: Right Side");
+		// 			break;
+		// 		case(4):
+		// 			con.print(0, 0, "Selected: Left Side");
+		// 			break;
+		// 	}
+		// 	// con.print(0, 0, "Selected: %d", currAuton);
+		// }
+		// localTime ++;
 	}
 }
 
@@ -103,19 +103,22 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
+	con.clear();
+	imu.reset();
+	while(imu.is_calibrating()) delay(50);
 	grabNeutral();
-	if(currAuton == 1) {
-		// grabNeutral();
-	}
-	else if(currAuton == 2) {
-
-	}
-	else if(currAuton == 3) {
-
-	}
-	else if(currAuton == 4) {
-
-	}
+	// if(currAuton == 1) {
+	// 	// grabNeutral();
+	// }
+	// else if(currAuton == 2) {
+	//
+	// }
+	// else if(currAuton == 3) {
+	//
+	// }
+	// else if(currAuton == 4) {
+	//
+	// }
 }
 
 /**
@@ -147,7 +150,7 @@ void opcontrol() {
 		int power = con.get_analog(ANALOG_RIGHT_X); // right = left?
 		int turn = con.get_analog(ANALOG_LEFT_Y);
 
-		int left = power + turn;
+		int left = (power + turn)/1.25;
 		int right = power - turn;
 
 		LF.move(left);

@@ -16,7 +16,7 @@ using namespace glb;
 
  void drive(int target) {
    reset_chassis();
-   con.clear();
+   // con.clear();
    int localTime = 0;
    imu.set_heading(180);
 	 target *= 28.65;
@@ -48,8 +48,8 @@ using namespace glb;
      int powerDiff = akP * (180 - heading);
      if(localTime%50 == 0) {
        con.print(0, 0, "Heading: %d", heading);
-       con.print(1, 0, "Power Diff: %d", powerDiff);
-       con.print(2, 0, "Power: %d", power);
+       // con.print(1, 0, "Power Diff: %d", powerDiff);
+       // con.print(2, 0, "Power: %d", power);
      }
      LF.move(power + powerDiff); LM.move(power + powerDiff); LB.move(power + powerDiff); RF.move(power - powerDiff); RM.move(power - powerDiff); RB.move(power - powerDiff);
      localTime += 5;
