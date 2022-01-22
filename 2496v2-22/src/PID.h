@@ -79,7 +79,7 @@ using namespace glb;
    		imu.set_heading(10);
    	}
    	float kP = 0.7;
-   	float kI = 0.053;
+   	float kI = 0.043;
    	float kD = 0.0;
    	double target = imu.get_heading() + degrees;
    	double error = target - imu.get_heading(); // -90

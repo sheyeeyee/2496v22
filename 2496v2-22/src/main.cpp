@@ -144,6 +144,8 @@ void opcontrol() {
 	bool first = true;
 	bool pistonValue = true;
 	int currentINTAKEpos = INTAKE.get_position();
+	bool putUp = true;
+	bool isInPos = false;
 	con.clear();
 	//the piston starting actuated or unactuated is all decided by whereever the tubes are
 	while (true) {
@@ -154,11 +156,7 @@ void opcontrol() {
 		int left = power + turn;
 		int right = power - turn;
 
-		if(localTime%150 == 0) {
 
-			if(pistonValue) con.print(0, 0, "Lift Pos: %d", INTAKE.get_position());
-			// else con.print(0, 0, "false");
-		}
 		LF.move(left);
 		LM.move(left);
 		LB.move(left);
@@ -166,9 +164,13 @@ void opcontrol() {
 		RM.move(right);
 		RB.move(right);
 //r1 up, r2 down, l1 air,
+		if(localTime%50 == 0) {
 
+			if(pistonValue) con.print(0, 0,  "%f", INTAKE.get_position());
+			// else con.print(0, 0, "false");
+		}
 		//air
-		if(con.get_digital(E_CONTROLLER_DIGITAL_X)) {
+		if(con.get_digital(E_CONTROLLER_DIGITAL_L2)) {
 			if(first == true) {
 				if(pistonValue == true) {
 					piston.set_value(false);
@@ -195,17 +197,41 @@ void opcontrol() {
 			LIFT.move_velocity(0);
 		}
 
-		if(con.get_digital(E_CONTROLLER_DIGITAL_L1)) {
-			INTAKE.move(-100);
-		}
-		else if (con.get_digital(E_CONTROLLER_DIGITAL_L2)) {
-			INTAKE.move(100);
-		}
-		else {
-			INTAKE.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-			INTAKE.move_velocity(0);
-		}
-		localTime += 5;
+		//intake
+	 	if(con.get_digital(E_CONTROLLER_DIGITAL_L1)) {
+			if(putUp == true) {
+				if(isInPos == true) {
+					INTAKE.move_absolute(15, -100);
+					isInPos = false;
+					// INTAKE.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+					// INTAKE.move_velocity(0);
+				}
+				else {
+					INTAKE.move_absolute(2000, 100);
+					isInPos = true;
+					// INTAKE.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+					// INTAKE.move_velocity(0);
+				}
+				putUp = false;
+				}
+			}
+			else putUp = true;
+
+		// else {
+		// 	putUp = true;
+		// 	if(con.get_digital(E_CONTROLLER_DIGITAL_X)) {
+		// 		INTAKE.move(-100);
+		// 	}
+		// 	else if (con.get_digital(E_CONTROLLER_DIGITAL_A)) {
+		// 		INTAKE.move(100);
+		// 	}
+		// 	else {
+		// 		INTAKE.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+		// 		INTAKE.move_velocity(0);
+		// 	}
+		// }
+		localTime = localTime + 5;
+
 		delay(5);
 	}
 }
