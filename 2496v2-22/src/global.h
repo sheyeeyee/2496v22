@@ -19,9 +19,9 @@ namespace glb {
   Motor LF (P_LF, E_MOTOR_GEARSET_06, true);
   Motor LM (P_LM, E_MOTOR_GEARSET_06);
   Motor LB (P_LB, E_MOTOR_GEARSET_06, true);
-  Motor RF (P_RF, E_MOTOR_GEARSET_06, true);
-  Motor RM (P_RM, E_MOTOR_GEARSET_06);
-  Motor RB (P_RB, E_MOTOR_GEARSET_06, true);
+  Motor RF (P_RF, E_MOTOR_GEARSET_06);
+  Motor RM (P_RM, E_MOTOR_GEARSET_06, true);
+  Motor RB (P_RB, E_MOTOR_GEARSET_06);
   Motor LIFT (P_LIFT, E_MOTOR_GEARSET_36);
   Motor INTAKE (P_INTAKE, E_MOTOR_GEARSET_36);
 

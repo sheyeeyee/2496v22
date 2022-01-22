@@ -1,10 +1,18 @@
 #include "main.h"
 #include "global.h"
-
+#include <cmath>
 #ifndef _PID_
 #define _PID_
 using namespace glb;
 
+  void stop_motors(){
+    RF.move(0);
+    RM.move(0);
+    RB.move(0);
+    LF.move(0);
+    LM.move(0);
+    LB.move(0);
+  }
  void reset_chassis() {
    RF.tare_position();
    RM.tare_position();
@@ -17,10 +25,11 @@ using namespace glb;
  void drive(int target) {
    reset_chassis();
    // con.clear();
+
    int localTime = 0;
    imu.set_heading(180);
 	 target *= 28.65;
- 	 double heading = imu.get_heading();
+ 	 int heading = imu.get_heading();
    float kP = 0.4;
    float kI = 0.01;
    float kD = 0;
@@ -58,9 +67,41 @@ using namespace glb;
    LF.move(0); LM.move(0); LB.move(0); RF.move(0); RM.move(0); RB.move(0);
  }
 
- void turn(int degrees) {
+   void imuTurn(double degrees)
+   {
+   	int localTime = 0;
+   	if(degrees < 0)
+   	{
+   		imu.set_heading(350);
+   	}
+   	else
+   	{
+   		imu.set_heading(10);
+   	}
+   	float kP = 0.7;
+   	float kI = 0.053;
+   	float kD = 0.0;
+   	double target = imu.get_heading() + degrees;
+   	double error = target - imu.get_heading(); // -90
+   	double lastError = error;
+   	int power = 0;
+   	double integral = 0.0;
+   	double derivative = 0.0;
 
- }
+   	while(abs(error) > 0.5)	{
+   		error = target - imu.get_heading();
+   		integral += error;
+   		if(abs(integral) >= 600){
+   			integral = 0;
+   		}
+   		derivative = error - lastError;
+   		power = error * kP + integral * kI + derivative *kD;
+   		lastError = error;
+   		LF.move(power); LM.move(power); LB.move(power); RF.move(-power); RM.move(-power); RB.move(-power);
+   		delay(5);
+   	}
+   	stop_motors();
+   }
 
  void toggleClamp() {
  		static bool autonPiston = false;

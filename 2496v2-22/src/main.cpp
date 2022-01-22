@@ -50,13 +50,13 @@ void disabled() {}
 int currAuton = 1;
 void competition_initialize() {
 
-	bool selected = true;
-	int localTime = 0;
-	int totalAutons = 4;
-	con.clear();
-
-	while(true) {
-		// 
+	// bool selected = true;
+	// int localTime = 0;
+	// int totalAutons = 4;
+	// con.clear();
+	//
+	// while(true) {
+		//
 		// if(button.get_value() == 0) {
 		// 	if(selected) {
 		// 		currAuton ++;
@@ -88,7 +88,7 @@ void competition_initialize() {
 		// 	// con.print(0, 0, "Selected: %d", currAuton);
 		// }
 		// localTime ++;
-	}
+	// }
 }
 
 /**
@@ -103,10 +103,12 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-	con.clear();
+
 	imu.reset();
 	while(imu.is_calibrating()) delay(50);
-	grabNeutral();
+	con.clear();
+	// grabNeutral();
+	imuTurn(90);
 	// if(currAuton == 1) {
 	// 	// grabNeutral();
 	// }
@@ -135,24 +137,28 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	con.clear();
+	// con.clear();
+	imu.reset();
+	while(imu.is_calibrating()) delay(50);
 	int localTime = 0;
 	bool first = true;
 	bool pistonValue = true;
-
+	int currentINTAKEpos = INTAKE.get_position();
+	con.clear();
 	//the piston starting actuated or unactuated is all decided by whereever the tubes are
 	while (true) {
-		if(localTime%150 == 0) {
 
-			if(pistonValue) con.print(0, 0, "true");
-			else con.print(0, 0, "false");
-		}
-		int power = con.get_analog(ANALOG_RIGHT_X); // right = left?
-		int turn = con.get_analog(ANALOG_LEFT_Y);
+		int power = con.get_analog(ANALOG_LEFT_Y);
+		int turn = con.get_analog(ANALOG_RIGHT_X);
 
-		int left = (power + turn)/1.25;
+		int left = power + turn;
 		int right = power - turn;
 
+		if(localTime%150 == 0) {
+
+			if(pistonValue) con.print(0, 0, "Lift Pos: %d", INTAKE.get_position());
+			// else con.print(0, 0, "false");
+		}
 		LF.move(left);
 		LM.move(left);
 		LB.move(left);
@@ -196,7 +202,7 @@ void opcontrol() {
 			INTAKE.move(100);
 		}
 		else {
-			INTAKE.set_brake_mode(E_MOTOR_BRAKE_COAST);
+			INTAKE.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 			INTAKE.move_velocity(0);
 		}
 		localTime += 5;
