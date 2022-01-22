@@ -14,7 +14,7 @@ namespace glb {
   #define P_INTAKE 11
   #define P_LPISTON 'H'
   #define P_SELECTOR 'B'
-  #define P_IMU 20
+  #define P_IMU 13
 
   Motor LF (P_LF, E_MOTOR_GEARSET_06, true);
   Motor LM (P_LM, E_MOTOR_GEARSET_06);

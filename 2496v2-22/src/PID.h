@@ -4,6 +4,7 @@
 #ifndef _PID_
 #define _PID_
 using namespace glb;
+using namespace std;
 
   void stop_motors(){
     RF.move(0);
@@ -22,49 +23,50 @@ using namespace glb;
    LB.tare_position();
  }
 
- void drive(int target) {
+ void drive(int target){
+   // reset_encoders();
    reset_chassis();
-   // con.clear();
-
-   int localTime = 0;
-   imu.set_heading(180);
-	 target *= 28.65;
- 	 int heading = imu.get_heading();
-   float kP = 0.4;
-   float kI = 0.01;
-   float kD = 0;
-   float akP = 1;
+   //target is in inches
+   target*=28.65; // the conversion for 36:1 4 inch wheels
+   // RF.set_zero_position(0);
+   double kP = 0.6;
+   double kI = 0.01;
+   double kD = 0.0;
    int integral = 0;
    int derivative = 0;
-   int prev_error = 0;
-   int currPos = (RF.get_position() + RM.get_position() + RB.get_position() + LF.get_position() + LM.get_position() + LB.get_position()) / 6;
-   int error = target - currPos;
-
-   while (abs(error) > 1) {
-     heading = imu.get_heading();
-     currPos = (RF.get_position() + RM.get_position() + RB.get_position() + LF.get_position() + LM.get_position() + LB.get_position()) / 6;
-     error = target - currPos;
+   int error;
+   int prev_error;
+   int power;
+   int powerAdj = 0;
+   int current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
+   error = target - current_pos;
+   while(abs(error) >= 15){
+     current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
+     error = target - current_pos;
      integral += error;
-     if(integral > 1500) {
-       integral = 1500;
-     }//Gerald was here
-     if(error > 2000) {
+     if(error == 0){
        integral = 0;
      }
+     if(integral > 3000){
+       integral = 0;
+     }
+
      derivative = error - prev_error;
      prev_error = error;
-     int power = kP * error + integral * kI + derivative * kD;
-     int powerDiff = akP * (180 - heading);
-     if(localTime%50 == 0) {
-       con.print(0, 0, "Heading: %d", heading);
-       // con.print(1, 0, "Power Diff: %d", powerDiff);
-       // con.print(2, 0, "Power: %d", power);
+     power = kP*error + integral*kI + derivative*kD;
+     if(power < 0){
+       power = min(power, -127);
      }
-     LF.move(power + powerDiff); LM.move(power + powerDiff); LB.move(power + powerDiff); RF.move(power - powerDiff); RM.move(power - powerDiff); RB.move(power - powerDiff);
-     localTime += 5;
-     delay(5);
+     else{
+       if(power > 0){
+         power = min(power, 127);
+       }
+     }
+     powerAdj = power / 20;
+     LF.move(power-powerAdj); LM.move(power-powerAdj); LB.move(power-powerAdj); RF.move(power); RM.move(power); RB.move(power);
+     delay(10);
    }
-   LF.move(0); LM.move(0); LB.move(0); RF.move(0); RM.move(0); RB.move(0);
+   stop_motors();
  }
 
    void imuTurn(double degrees)
@@ -105,15 +107,22 @@ using namespace glb;
 
  void toggleClamp() {
  		static bool autonPiston = false;
-
+    if(autonPiston) {
+      piston.set_value(false);
+      autonPiston = false;
+    }
+    else {
+      piston.set_value(true);
+      autonPiston = false;
+    }
  }
 
  void twoBarDown() {
-
+   INTAKE.move_absolute(2000, 100);
  }
 
  void twoBarUp() {
-
+   INTAKE.move_absolute(15, 100);
  }
 
  void liftUp() {
@@ -124,7 +133,33 @@ using namespace glb;
 
  }
 
- void grabNeutral() {
-   drive(100);
+ void grabNeutralLeft() {
+   drive(110);
+   toggleClamp();
+   delay(5);
+   drive(-40);
+   delay(5);
+   imuTurn(-90);
+   toggleClamp();
  }
+
+ void halfLeftAwp() {
+   INTAKE.move_absolute(1250, 100);;
+   delay(1000);
+   twoBarUp();
+   imuTurn(95);
+   delay(5);
+   drive(90);
+   delay(5);
+   toggleClamp();
+   delay(400);
+   drive(-50);
+ }
+
+ void halfRightAwp() {
+   drive(-20);
+   INTAKE.move_absolute(1250, 100);
+ }
+
+
  #endif

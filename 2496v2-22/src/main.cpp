@@ -108,9 +108,13 @@ void autonomous() {
 	while(imu.is_calibrating()) delay(50);
 	con.clear();
 	// grabNeutral();
-	imuTurn(90);
+	halfLeftAwp();
+	// grabNeutral();
+	// imuTurn(90);
 	// if(currAuton == 1) {
 	// 	// grabNeutral();
+	// 	drive(50);
+	//
 	// }
 	// else if(currAuton == 2) {
 	//
