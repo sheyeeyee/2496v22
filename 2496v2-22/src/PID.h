@@ -130,7 +130,7 @@ using namespace std;
  }
 
  void liftDown() {
-
+   LIFT.move_absolute(0, 100);
  }
 
  void grabNeutralLeft() {
@@ -157,8 +157,31 @@ using namespace std;
  }
 
  void halfRightAwp() {
-   drive(-20);
+   drive(-10);
    INTAKE.move_absolute(1250, 100);
+   delay(1000);
+   twoBarUp();
+   delay(5);
+   drive(10);
+   delay(5);
+   imuTurn(-90);
+   delay(5);
+   drive(-15);
+   delay(5);
+   imuTurn(-90);
+   delay(5);
+   drive(36);
+   delay(5);
+   imuTurn(-50);
+   delay(5);
+   liftDown();
+   delay(5);
+   drive(90);
+   delay(5);
+   toggleClamp();
+   delay(500);
+   drive(-110);
+
  }
 
 
