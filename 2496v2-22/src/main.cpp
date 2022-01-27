@@ -47,48 +47,52 @@ void disabled() {}
  * starts.
  */
 
-int currAuton = 1;
+int currAuton = 0;
 void competition_initialize() {
+	imu.reset();
+	while(imu.is_calibrating()) delay(5);
+	bool selected = true;
+	int localTime = 0;
+	int totalAutons = 5;
+	con.clear();
 
-	// bool selected = true;
-	// int localTime = 0;
-	// int totalAutons = 4;
-	// con.clear();
-	//
-	// while(true) {
-		//
-		// if(button.get_value() == 0) {
-		// 	if(selected) {
-		// 		currAuton ++;
-		// 		if(currAuton == 5) {
-		// 			currAuton = 1;
-		// 		}
-		// 		selected = false;
-		// 	}
-		// 	selected = false;
-		// }
-		// else selected = true;
-		//
-		// if(localTime%50 == 0) {
-		// 	// con.clear();
-		// 	switch(currAuton) {
-		// 		case (1):
-		// 			con.print(0, 0, "Selected: AWP Left");
-		// 			break;
-		// 		case(2):
-		// 			con.print(0, 0, "Selected: AWP Right");
-		// 			break;
-		// 		case(3):
-		// 			con.print(0, 0, "Selected: Right Side");
-		// 			break;
-		// 		case(4):
-		// 			con.print(0, 0, "Selected: Left Side");
-		// 			break;
-		// 	}
-		// 	// con.print(0, 0, "Selected: %d", currAuton);
-		// }
-		// localTime ++;
-	// }
+	while(true) {
+
+		if(button.get_value() == 0) {
+			if(selected) {
+				currAuton ++;
+				if(currAuton == totalAutons+1) {
+					currAuton = 1;
+				}
+				selected = false;
+			}
+			selected = false;
+		}
+		else selected = true;
+
+		if(localTime%50 == 0) {
+			// con.clear();
+			switch(currAuton) {
+				case (1):
+					con.print(0, 0, "Selected: %d AWP Left", currAuton);
+					break;
+				case(2):
+					con.print(0, 0, "Selected: %d AWP Right", currAuton);
+					break;
+				case(3):
+					con.print(0, 0, "Selected: %d Neutral", currAuton);
+					break;
+				case(4):
+					con.print(0, 0, "Selected: %d Center", currAuton);
+					break;
+				case(5):
+					con.print(0, 0, "Selected: %d None", currAuton);
+					break;
+			}
+			// con.print(0, 0, "Selected: %d", currAuton);
+		}
+		localTime ++;
+	}
 }
 
 /**
@@ -104,28 +108,29 @@ void competition_initialize() {
  */
 void autonomous() {
 
-	imu.reset();
-	while(imu.is_calibrating()) delay(50);
-	con.clear();
+	// imu.reset();
+	// while(imu.is_calibrating()) delay(50);
+	// con.clear();
 	// grabNeutral();
 	// halfLeftAwp();
-	halfRightAwp();
+	// halfRightAwp();
 	// grabNeutral();
 	// imuTurn(90);wasdwasd
-	// if(currAuton == 1) {
-	// 	// grabNeutral();
-	// 	drive(50);
-	//
-	// }
-	// else if(currAuton == 2) {
-	//
-	// }
-	// else if(currAuton == 3) {
-	//
-	// }
-	// else if(currAuton == 4) {
-	//
-	// }
+	if(currAuton == 1) {
+		halfLeftAwp();
+	}
+	if(currAuton == 2) {
+		halfRightAwp();
+	}
+	if(currAuton == 3) {
+		grabNeutralLeft();
+	}
+	if(currAuton == 4) {
+
+	}
+	if(currAuton == 5) {
+
+	}
 }
 
 /**
@@ -169,9 +174,9 @@ void opcontrol() {
 		RM.move(right);
 		RB.move(right);
 //r1 up, r2 down, l1 air,
-		if(localTime%50 == 0) {
+		if(localTime%150 == 0) {
 
-			if(pistonValue) con.print(0, 0,  "%f", INTAKE.get_position());
+			con.print(0, 0,  "%f", LIFT.get_position());
 			// else con.print(0, 0, "false");
 		}
 		//air

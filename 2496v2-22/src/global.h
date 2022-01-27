@@ -12,7 +12,7 @@ namespace glb {
   #define P_RB 12
   #define P_LIFT 10
   #define P_INTAKE 11
-  #define P_LPISTON 'H'
+  #define P_LPISTON 'A'
   #define P_SELECTOR 'B'
   #define P_IMU 13
 

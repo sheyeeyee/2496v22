@@ -6,6 +6,21 @@
 using namespace glb;
 using namespace std;
 
+  void park(){
+      LF.move_velocity(0);
+      LM.move_velocity(0);
+      LB.move_velocity(0);
+      RF.move_velocity(0);
+      RM.move_velocity(0);
+      RB.move_velocity(0);
+      RF.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+      RM.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+      RB.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+      LF.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+      LM.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+      LB.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+    }
+
   void stop_motors(){
     RF.move(0);
     RM.move(0);
@@ -21,6 +36,11 @@ using namespace std;
    LF.tare_position();
    LM.tare_position();
    LB.tare_position();
+ }
+
+ void holdLift() {
+   LIFT.move_velocity(0);
+   LIFT.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
  }
 
  void drive(int target){
@@ -126,8 +146,12 @@ using namespace std;
  }
 
  void liftUp() {
-
+   LIFT.move_absolute(2800, 100);
  }
+
+void liftMedUp() {
+  LIFT.move_absolute(1400, 100);
+}
 
  void liftDown() {
    LIFT.move_absolute(0, 100);
@@ -157,8 +181,11 @@ using namespace std;
  }
 
  void halfRightAwp() {
-   drive(-10);
+   drive(-4);
+   delay(300);
    INTAKE.move_absolute(1250, 100);
+   delay(500);
+   drive(-6);
    delay(1000);
    twoBarUp();
    delay(5);
@@ -184,5 +211,51 @@ using namespace std;
 
  }
 
+ void autoBalance(){
+ 		float kP = 2.35;
+ 		float kD = 0.0;
+ 		float kI = 0.0;
+ 		int power;
+ 		float error;
+ 		float pError;
+ 		int integral;
+
+ 		int derivative;
+ 		int localTime= 0;
+ 		con.clear();
+ 		while(abs(imu.get_pitch()) >= 1.5){
+ 			if(con.get_digital(E_CONTROLLER_DIGITAL_X)){
+ 				break;
+ 			}
+ 			error = 1.5 - imu.get_pitch();
+ 			if(abs(error) <= 15 && error > 8){
+ 				integral += error;
+ 			}
+ 			else {
+ 				integral = 0;
+ 			}
+ 			// else{
+ 			// 	integral = 0;
+ 			// }
+ 			if(abs(integral) >= 350){
+ 				integral = 0;
+ 			}
+ 			derivative = pError - error;
+ 			// power = kP*error + kI*integral + kD*derivative;
+ 			power = imu.get_pitch() * kP;
+ 			LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
+ 			pError = error;
+
+ 			if(localTime % 50 == 0) {
+ 				con.print(0,0, "Pitch: %.2f", imu.get_pitch());
+ 			}
+ 			if(abs(imu.get_pitch()) <= 20.5){
+ 				park();
+ 			}
+ 			delay(5);
+ 			localTime += 5;
+
+ 		}
+ 	}
 
  #endif
