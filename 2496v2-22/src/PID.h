@@ -157,14 +157,28 @@ void liftMedUp() {
    LIFT.move_absolute(0, 100);
  }
 
- void grabNeutralLeft() {
-   drive(110);
+ void grabNeutral() {
+   drive(90);
    toggleClamp();
    delay(5);
-   drive(-40);
+   drive(-80);
    delay(5);
-   imuTurn(-90);
+   // imuTurn(-90);
+   // toggleClamp();
+ }
+
+ void grabCenter() {
+   drive(36);
+   delay(5);
+   imuTurn(-50);
+   delay(5);
+   liftDown();
+   delay(5);
+   drive(90);
+   delay(5);
    toggleClamp();
+   delay(500);
+   drive(-110);
  }
 
  void halfLeftAwp() {
@@ -181,33 +195,33 @@ void liftMedUp() {
  }
 
  void halfRightAwp() {
-   drive(-4);
+   drive(-10);
    delay(300);
    INTAKE.move_absolute(1250, 100);
    delay(500);
-   drive(-6);
+   drive(-4);
    delay(1000);
    twoBarUp();
    delay(5);
-   drive(10);
+   drive(15);
    delay(5);
-   imuTurn(-90);
-   delay(5);
-   drive(-15);
-   delay(5);
-   imuTurn(-90);
-   delay(5);
-   drive(36);
-   delay(5);
-   imuTurn(-50);
+   imuTurn(90);
    delay(5);
    liftDown();
    delay(5);
-   drive(90);
-   delay(5);
+   drive(120);
    toggleClamp();
-   delay(500);
-   drive(-110);
+   drive(-120);
+   // delay(5);
+   // imuTurn(-50);
+   // delay(5);
+   // liftDown();
+   // delay(5);
+   // drive(90);
+   // delay(5);
+   // toggleClamp();
+   // delay(500);
+   // drive(-110);
 
  }
 

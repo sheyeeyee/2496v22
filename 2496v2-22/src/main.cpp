@@ -117,16 +117,17 @@ void autonomous() {
 	// grabNeutral();
 	// imuTurn(90);wasdwasd
 	if(currAuton == 1) {
+		// imuTurn(90);
 		halfLeftAwp();
 	}
 	if(currAuton == 2) {
 		halfRightAwp();
 	}
 	if(currAuton == 3) {
-		grabNeutralLeft();
+		grabNeutral();
 	}
 	if(currAuton == 4) {
-
+		grabCenter();
 	}
 	if(currAuton == 5) {
 
