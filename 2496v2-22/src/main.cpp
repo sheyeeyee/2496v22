@@ -149,15 +149,15 @@ void autonomous() {
  */
 void opcontrol() {
 	// con.clear();
-	imu.reset();
-	while(imu.is_calibrating()) delay(50);
+	// imu.reset();
+	// while(imu.is_calibrating()) delay(50);
 	int localTime = 0;
 	bool first = true;
 	bool pistonValue = true;
 	int currentINTAKEpos = INTAKE.get_position();
 	bool putUp = true;
 	bool isInPos = false;
-	con.clear();
+	// con.clear();
 	//the piston starting actuated or unactuated is all decided by whereever the tubes are
 	while (true) {
 
@@ -218,7 +218,7 @@ void opcontrol() {
 					// INTAKE.move_velocity(0);
 				}
 				else {
-					INTAKE.move_absolute(2000, 100);
+					INTAKE.move_absolute(2075, 100);
 					isInPos = true;
 					// INTAKE.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 					// INTAKE.move_velocity(0);
