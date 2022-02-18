@@ -5,16 +5,16 @@ using namespace pros;
 namespace glb {
 
   #define P_LF 17
-  #define P_LM 8
-  #define P_LB 9
+  #define P_LM 9
+  #define P_LB 10
   #define P_RF 19
   #define P_RM 18
   #define P_RB 12
-  #define P_LIFT 10
-  #define P_INTAKE 11
+  #define P_LIFT 11
+  #define P_INTAKE 8
   #define P_LPISTON 'A'
   #define P_SELECTOR 'B'
-  #define P_IMU 13
+  #define P_IMU 21
 
   Motor LF (P_LF, E_MOTOR_GEARSET_06, true);
   Motor LM (P_LM, E_MOTOR_GEARSET_06);

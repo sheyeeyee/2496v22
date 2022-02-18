@@ -33,7 +33,7 @@ void initialize() {
 /**
  * Runs while the robot is in the disabled state of Field Management System or
  * the VEX Competition Switch, following either autonomous or opcontrol. When
- * the robot is enabled, this task will exit.
+ * the robot is enabled, this task will exit.d
  */
 void disabled() {}
 
@@ -218,7 +218,7 @@ void opcontrol() {
 					// INTAKE.move_velocity(0);
 				}
 				else {
-					INTAKE.move_absolute(2075, 100);
+					INTAKE.move_absolute(1875, 100);
 					isInPos = true;
 					// INTAKE.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 					// INTAKE.move_velocity(0);
