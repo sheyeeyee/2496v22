@@ -1,5 +1,5 @@
 #include "main.h"
-#include "PID.h"
+#include "PID.h" //header file for organization ig
 #include <cmath> //for maths in case we need it?
 using namespace pros;
 using namespace std;
@@ -7,6 +7,7 @@ using namespace std;
 //CONSTRUCTORS
 	//chassis
 		//left drive
+
 		Motor LF (16, E_MOTOR_GEARSET_18, true);
 		Motor LM (15, E_MOTOR_GEARSET_18, true);
 		Motor LB (10, E_MOTOR_GEARSET_18, true);
@@ -23,8 +24,10 @@ using namespace std;
 		//potentiometer for PID
 		// ADIAnalogIn lift_pot('A');
 
+
 	//controller
 	Controller con (CONTROLLER_MASTER);
+
 
 
 //chassis PID
@@ -530,7 +533,6 @@ void moveMogo(int target){
 	}
 
 
-
 	void turnLift(double degrees, int target)
 	{
 		if(degrees < 0)
@@ -643,7 +645,6 @@ void competition_initialize() {
  //For left turns do -10 from wanted values
 void autonomous() {
 	lcd::initialize();
-
 	// imu.reset();
 	// while(imu.is_calibrating()) delay(100);
 	// 	delay(100);
@@ -829,7 +830,9 @@ void autonomous() {
 	// imuTurn(-5);
 	// delay(5);
 	// while(1 == 1) autoBalance();
+
 }
+
 
 
 /**
@@ -861,13 +864,16 @@ void opcontrol() {
 		// cout << RF.get_position() << endl;
 		// cout << "Heading Value: " << imu.get_heading() << endl;
 		// cout << "Pitch: " << imu.get_pitch() << endl;
+
 		//chassis (arcade drive)
 			/**Set the integers for moving right and left so you can place them in the
-					function.**/
+					function.
+					-SWJ**/
 			int power = con.get_analog(ANALOG_LEFT_Y);
 				/**The power integer is set on the left joystick, ANALOG_LEFT, and has a
 							Y at the end bc that is the vertical axis and the left joystick is
-							for going forwards and backwards.**/
+							for going forwards and backwards.
+							-SWJ**/
 		 	int turn = con.get_analog(ANALOG_RIGHT_X);
 				/**The turn integer is set to the right joystick, ANALOG_RIGHT, and has
 							an X at the end bc that is the horizontal axis and the right
@@ -880,6 +886,7 @@ void opcontrol() {
 			// if it is turning, then left side will turn slower than before theoretically, but
 			// turn faster for the right side as well, making it even?
 				//tbh still tryna figure out how this sum difference thing works
+
 
 				//put the left and right integers down here
 				LF.move(left);
@@ -913,6 +920,7 @@ void opcontrol() {
 						lift_right.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 						lift_right.move_velocity(0);
 				}
+
 				if(con.get_digital(E_CONTROLLER_DIGITAL_A)){
 					// cout << "Pressed A" << endl;
 					liftMobileGoal();
@@ -923,9 +931,7 @@ void opcontrol() {
 				if(con.get_digital(E_CONTROLLER_DIGITAL_UP)){
 						currAuton();
 				}
-
 				localTime+=5;
- //OK
 				delay(5);
 			}
 	}
