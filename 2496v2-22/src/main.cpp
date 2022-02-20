@@ -35,8 +35,9 @@ void initialize() {
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.d
  */
-void disabled() {}
-
+void disabled() {
+	imu.reset();
+}
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
  * Management System or the VEX Competition Switch. This is intended for
@@ -49,8 +50,8 @@ void disabled() {}
 
 int currAuton = 0;
 void competition_initialize() {
-	imu.reset();
-	while(imu.is_calibrating()) delay(5);
+	// imu.reset();
+	// while(imu.is_calibrating()) delay(5);
 	bool selected = true;
 	int localTime = 0;
 	int totalAutons = 5;
@@ -107,9 +108,10 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-
 	// imu.reset();
-	// while(imu.is_calibrating()) delay(50);
+//	while(imu.is_calibrating()) delay(15);
+// INTAKE.move_absolute(15, 100);
+//imuTurn(90);
 	// con.clear();
 	// grabNeutral();
 	// halfLeftAwp();
@@ -117,7 +119,6 @@ void autonomous() {
 	// grabNeutral();
 	// imuTurn(90);wasdwasd
 	if(currAuton == 1) {
-		// imuTurn(90);
 		halfLeftAwp();
 	}
 	if(currAuton == 2) {
@@ -130,7 +131,7 @@ void autonomous() {
 		grabCenter();
 	}
 	if(currAuton == 5) {
-
+		//soloAwpLeft();
 	}
 }
 
@@ -227,6 +228,11 @@ void opcontrol() {
 				}
 			}
 			else putUp = true;
+
+		//auton test
+		if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
+			imuTurn(90);
+		}
 
 		// else {
 		// 	putUp = true;

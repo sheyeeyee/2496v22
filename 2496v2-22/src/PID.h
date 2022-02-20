@@ -100,6 +100,7 @@ using namespace std;
    	{
    		imu.set_heading(10);
    	}
+
    	float kP = 0.7;
    	float kI = 0.043;
    	float kD = 0.0;
@@ -133,7 +134,7 @@ using namespace std;
     }
     else {
       piston.set_value(true);
-      autonPiston = false;
+      autonPiston = true;
     }
  }
 
@@ -182,7 +183,7 @@ void liftMedUp() {
  }
 
  void halfLeftAwp() {
-   INTAKE.move_absolute(1250, 100);;
+   INTAKE.move_absolute(1250, 100);
    delay(1000);
    twoBarUp();
    imuTurn(95);
@@ -222,6 +223,58 @@ void liftMedUp() {
    // toggleClamp();
    // delay(500);
    // drive(-110);
+
+ }
+
+ void soloAwpLeft(){
+   INTAKE.move_absolute(1250, 100);
+   delay(5);
+   INTAKE.move_absolute(15, 100);
+   delay(5);
+   imuTurn(-90);
+   delay(10);
+   drive(-25);
+   delay(5);
+   imuTurn(-90);
+   delay(5);
+   LIFT.move_absolute(800, 100);
+   delay(5);
+   holdLift();
+   delay(5);
+   drive(170);
+   delay(5);
+   toggleClamp();
+   delay(5);
+   drive(15);
+   delay(5);
+   drive(-20);
+
+ }
+
+ void soloAwpRight(){
+    drive(-20);
+    delay(5);
+    INTAKE.move_absolute(1500, 100);
+    delay(5);
+    INTAKE.move_absolute(15,100);
+    delay(5);
+    imuTurn(90);
+    delay(50);
+    drive(160);
+    delay(5);
+    imuTurn(-90);
+    delay(5);
+    LIFT.move_absolute(1000, 100);
+    delay(5);
+    drive(25);
+    delay(5);
+    toggleClamp();
+    delay(5);
+    drive(-5);
+    delay(5);
+    imuTurn(180);
+    delay(5);
+
 
  }
 
