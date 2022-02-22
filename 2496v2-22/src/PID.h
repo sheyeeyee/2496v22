@@ -213,6 +213,8 @@ void liftMedUp() {
    LIFT.move_absolute(0, 100);
  }
 
+
+//AUTONS
  void grabNeutral() {
    drive(90);
    toggleClamp();
@@ -241,7 +243,7 @@ void liftMedUp() {
    INTAKE.move_absolute(1250, 100);
    delay(1000);
    twoBarUp();
-   //imuTurn no work)
+   //imuTurn no work
    imuTurn(95);
    delay(5);
    drive(90);
@@ -284,43 +286,72 @@ void liftMedUp() {
  }
 
  void soloAwpLeft(){
+   //drop ring in FIRST
    INTAKE.move_absolute(800, 40);
    delay(800);
    INTAKE.move_absolute(15, 100);
    delay(5);
+   
+   //drive away from goal to avoid hitting it
    straightDrive(5);
    delay(3.0);
+  
+   //turn towards center of field
    imuTurn(-90);
    delay(5);
+  
+   //drive towards center
    straightDrive(-10);
    delay(5);
+   
+   //turn towards other goal
    imuTurn(-90);
    delay(5);
+ 
+   //drive to SECOND goal
    straightDrive(115);
    delay(5);
+  
+   //lift up so it's above goal and can drop ring
    LIFT.move_absolute(1500, 100);
    delay(600);
    holdLift();
    delay(5);
+   
+   //turn to accurately face goal
    imuTurn(-12);
    delay(5);
+  
+   //towards goal
    straightDrive(25);
    //160 distance (110 + 50) + mogo shove (15)
    delay(500);
-   toggleClamp(); //drop ring
-   delay(5);
-   // drive(10);
-   // delay(5);
-   imuTurn(10);
-   delay(4);
-   straightDrive(-10);
-   delay(15);
-   LIFT.move_absolute(15, 100);
-   delay(5);
-   straightDrive(15);
-   delay(5);
+   
+   //drop ring
    toggleClamp();
    delay(5);
+   
+   //back to position to grab goal
+   straightDrive(-10);
+   delay(15);
+   
+   //lift down to grab goal
+   LIFT.move_absolute(15, 100);
+   delay(5);
+   
+   //go forward to goal
+   straightDrive(15);
+   delay(5);
+   
+   //grab goal
+   toggleClamp();
+   delay(5);
+   
+   //turn away from platform to avoid hitting alliance robot
+   imuTurn(10);
+   delay(4);
+   
+   //clear line
    straightDrive(-20);
 
  }
