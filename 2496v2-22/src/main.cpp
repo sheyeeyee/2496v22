@@ -108,6 +108,8 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
+	soloAwpLeft();
+	//soloAwpLeft();
 	// imu.reset();
 //	while(imu.is_calibrating()) delay(15);
 // INTAKE.move_absolute(15, 100);
@@ -118,21 +120,21 @@ void autonomous() {
 	// halfRightAwp();
 	// grabNeutral();
 	// imuTurn(90);wasdwasd
-	if(currAuton == 1) {
-		halfLeftAwp();
-	}
-	if(currAuton == 2) {
-		halfRightAwp();
-	}
-	if(currAuton == 3) {
-		grabNeutral();
-	}
-	if(currAuton == 4) {
-		grabCenter();
-	}
-	if(currAuton == 5) {
-		//soloAwpLeft();
-	}
+	// if(currAuton == 1) {
+	// 	halfLeftAwp();
+	// }
+	// if(currAuton == 2) {
+	// 	halfRightAwp();
+	// }
+	// if(currAuton == 3) {
+	// 	grabNeutral();
+	// }
+	// if(currAuton == 4) {
+	// 	grabCenter();
+	// }
+	// if(currAuton == 5) {
+	// 	soloAwpLeft();
+	// }
 }
 
 /**

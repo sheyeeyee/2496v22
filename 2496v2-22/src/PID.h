@@ -28,6 +28,12 @@ using namespace std;
     LF.move(0);
     LM.move(0);
     LB.move(0);
+    // RF.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+    // RM.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+    // RB.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+    // LF.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+    // LM.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+    // LB.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
   }
  void reset_chassis() {
    RF.tare_position();
@@ -82,12 +88,60 @@ using namespace std;
          power = min(power, 127);
        }
      }
-     powerAdj = power / 20;
+     powerAdj = power / 9.5;
      LF.move(power-powerAdj); LM.move(power-powerAdj); LB.move(power-powerAdj); RF.move(power); RM.move(power); RB.move(power);
      delay(10);
    }
    stop_motors();
  }
+
+ void straightDrive(int target) {
+   reset_chassis();
+   target *= 28.65;
+   double kP = 0.6;
+   double kI = 0.01;
+   double kD = 0.0;
+   int integral = 0;
+   int derivative = 0;
+   int error;
+   int prev_error;
+   double power;
+   int powerAdj = 5;
+   double powerAdjConst = 11;
+   int current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
+   imu.set_heading(90);
+   while(abs(error) >= 15) {
+     current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
+     error = target - current_pos;
+     integral += error;
+     if(error == 0){
+       integral = 0;
+     }
+     if(integral > 3000){
+       integral = 0;
+     }
+
+     derivative = error - prev_error;
+     prev_error = error;
+     power = kP*error + integral*kI + derivative*kD;
+     if(power < 0){
+       if(power < -127) {
+         power = -127;
+       }
+     }
+     else{
+       if(power > 0){
+         if(power > 127) {
+           power = 127;
+         }
+       }
+     }
+     powerAdj = (imu.get_heading()-90) * powerAdjConst;
+     LF.move(power- powerAdj); LM.move(power-powerAdj); LB.move(power-powerAdj); RF.move(power+powerAdj); RM.move(power+powerAdj); RB.move(power+powerAdj);
+     delay(10);
+   }
+   stop_motors();
+  }
 
    void imuTurn(double degrees)
    {
@@ -122,6 +176,7 @@ using namespace std;
    		lastError = error;
    		LF.move(power); LM.move(power); LB.move(power); RF.move(-power); RM.move(-power); RB.move(-power);
    		delay(5);
+      con.print(0, 0, "turn", power);
    	}
    	stop_motors();
    }
@@ -186,6 +241,7 @@ void liftMedUp() {
    INTAKE.move_absolute(1250, 100);
    delay(1000);
    twoBarUp();
+   //imuTurn no work)
    imuTurn(95);
    delay(5);
    drive(90);
@@ -205,6 +261,7 @@ void liftMedUp() {
    twoBarUp();
    delay(5);
    drive(15);
+   //taking out turn bc imuTurn no work
    delay(5);
    imuTurn(90);
    delay(5);
@@ -227,32 +284,49 @@ void liftMedUp() {
  }
 
  void soloAwpLeft(){
-   INTAKE.move_absolute(1250, 100);
-   delay(5);
+   INTAKE.move_absolute(800, 40);
+   delay(800);
    INTAKE.move_absolute(15, 100);
    delay(5);
-   imuTurn(-90);
-   delay(10);
-   drive(-25);
-   delay(5);
+   straightDrive(5);
+   delay(3.0);
    imuTurn(-90);
    delay(5);
-   LIFT.move_absolute(800, 100);
+   straightDrive(-10);
    delay(5);
+   imuTurn(-90);
+   delay(5);
+   straightDrive(115);
+   delay(5);
+   LIFT.move_absolute(1500, 100);
+   delay(600);
    holdLift();
    delay(5);
-   drive(170);
+   imuTurn(-12);
+   delay(5);
+   straightDrive(25);
+   //160 distance (110 + 50) + mogo shove (15)
+   delay(500);
+   toggleClamp(); //drop ring
+   delay(5);
+   // drive(10);
+   // delay(5);
+   imuTurn(10);
+   delay(4);
+   straightDrive(-10);
+   delay(15);
+   LIFT.move_absolute(15, 100);
+   delay(5);
+   straightDrive(15);
    delay(5);
    toggleClamp();
    delay(5);
-   drive(15);
-   delay(5);
-   drive(-20);
+   straightDrive(-20);
 
  }
 
  void soloAwpRight(){
-    drive(-20);
+    straightDrive(-20);
     delay(5);
     INTAKE.move_absolute(1500, 100);
     delay(5);
@@ -260,13 +334,13 @@ void liftMedUp() {
     delay(5);
     imuTurn(90);
     delay(50);
-    drive(160);
+    straightDrive(160);
     delay(5);
     imuTurn(-90);
     delay(5);
     LIFT.move_absolute(1000, 100);
     delay(5);
-    drive(25);
+    straightDrive(25);
     delay(5);
     toggleClamp();
     delay(5);
