@@ -353,16 +353,27 @@ void liftMedUp() {
    
    //clear line
    straightDrive(-20);
+   
+   //drop mogo
+   toggleClamp();
+   delay(5);
 
  }
 
  void soloAwpRight(){
+    //drive towards FIRST goal
     straightDrive(-20);
     delay(5);
-    INTAKE.move_absolute(1500, 100);
+    
+    //drop ring
+    INTAKE.move_absolute(800, 40);
+    delay(800);
+    INTAKE.move_absolute(15, 100);
     delay(5);
-    INTAKE.move_absolute(15,100);
-    delay(5);
+    
+    //need to add a part to clear line
+   
+    //turn towards second goal
     imuTurn(90);
     delay(50);
     straightDrive(160);
