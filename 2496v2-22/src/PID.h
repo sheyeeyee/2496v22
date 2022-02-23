@@ -82,12 +82,61 @@ using namespace std;
          power = min(power, 127);
        }
      }
-     powerAdj = power / 20;
+     powerAdj = 0;
      LF.move(power-powerAdj); LM.move(power-powerAdj); LB.move(power-powerAdj); RF.move(power); RM.move(power); RB.move(power);
      delay(10);
    }
    stop_motors();
  }
+
+ void straightDrive(int target) {
+    reset_chassis();
+    target *= 28.65;
+    double kP = 0.6;
+    double kI = 0.01;
+    double kD = 0.0;
+    int integral = 0;
+    int derivative = 0;
+    int error;
+    int prev_error;
+    double power;
+    int powerAdj = 5;
+    double powerAdjConst = 11;
+    int current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
+    imu.set_heading(90);
+    while(abs(error) >= 15) {
+      current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
+      error = target - current_pos;
+      integral += error;
+      if(error == 0){
+        integral = 0;
+      }
+      if(integral > 3000){
+        integral = 0;
+      }
+
+      derivative = error - prev_error;
+      prev_error = error;
+      power = kP*error + integral*kI + derivative*kD;
+      if(power < 0){
+        if(power < -127) {
+          power = -127;
+        }
+      }
+      else{
+        if(power > 0){
+          if(power > 127) {
+            power = 127;
+          }
+        }
+      }
+      powerAdj = (imu.get_heading()-90) * powerAdjConst;
+      LF.move(power- powerAdj); LM.move(power-powerAdj); LB.move(power-powerAdj); RF.move(power+powerAdj); RM.move(power+powerAdj); RB.move(power+powerAdj);
+      delay(10);
+    }
+    stop_motors();
+   }
+
 
    void imuTurn(double degrees)
    {
@@ -133,7 +182,7 @@ using namespace std;
     }
     else {
       piston.set_value(true);
-      autonPiston = false;
+      autonPiston = true;
     }
  }
 
@@ -154,10 +203,11 @@ void liftMedUp() {
 }
 
  void liftDown() {
-   LIFT.move_absolute(0, 100);
+   LIFT.move_absolute(20, 100);
  }
 
  void grabNeutral() {
+   toggleClamp();
    drive(90);
    toggleClamp();
    delay(5);
@@ -167,7 +217,84 @@ void liftMedUp() {
    // toggleClamp();
  }
 
+ void soloAwpLeft(){
+   //drop ring in FIRST
+   INTAKE.move_absolute(800, 40);
+   delay(800);
+   INTAKE.move_absolute(15, 100);
+   delay(5);
+
+   //drive away from goal to avoid hitting it
+   straightDrive(5);
+   delay(3.0);
+
+   //turn towards center of field
+   imuTurn(-90);
+   delay(5);
+
+   //drive towards center
+   straightDrive(-10);
+   delay(5);
+
+   //turn towards other goal
+   imuTurn(-90);
+   delay(5);
+
+   //drive to SECOND goal
+   straightDrive(115);
+   delay(5);
+
+   //lift up so it's above goal and can drop ring
+   LIFT.move_absolute(1500, 100);
+   delay(600);
+   holdLift();
+   delay(5);
+
+   //turn to accurately face goal
+   imuTurn(-12);
+   delay(5);
+
+   //towards goal
+   straightDrive(25);
+   //160 distance (110 + 50) + mogo shove (15)
+   delay(500);
+
+   //drop ring
+   toggleClamp();
+   delay(5);
+
+   //back to position to grab goal
+   straightDrive(-10);
+   delay(15);
+
+   //lift down to grab goal
+   LIFT.move_absolute(15, 100);
+   delay(5);
+
+   //go forward to goal
+   straightDrive(15);
+   delay(5);
+
+   //grab goal
+   toggleClamp();
+   delay(5);
+
+   //turn away from platform to avoid hitting alliance robot
+   imuTurn(10);
+   delay(4);
+
+   //clear line
+   straightDrive(-20);
+
+   //drop mogo
+   toggleClamp();
+   delay(5);
+
+ }
+
+
  void grabCenter() {
+   toggleClamp();
    drive(36);
    delay(5);
    imuTurn(-50);
@@ -177,6 +304,7 @@ void liftMedUp() {
    drive(90);
    delay(5);
    toggleClamp();
+   holdLift();
    delay(500);
    drive(-110);
  }
@@ -186,6 +314,7 @@ void liftMedUp() {
    delay(1000);
    twoBarUp();
    imuTurn(95);
+   toggleClamp();
    delay(5);
    drive(90);
    delay(5);
@@ -196,7 +325,7 @@ void liftMedUp() {
 
  void halfRightAwp() {
    drive(-10);
-   delay(300);
+   delay(700);
    INTAKE.move_absolute(1250, 100);
    delay(500);
    drive(-4);
@@ -206,6 +335,7 @@ void liftMedUp() {
    drive(15);
    delay(5);
    imuTurn(90);
+   toggleClamp();
    delay(5);
    liftDown();
    delay(5);
@@ -222,7 +352,29 @@ void liftMedUp() {
    // toggleClamp();
    // delay(500);
    // drive(-110);
+ }
 
+ void soloLeftAwp() {
+   INTAKE.move_absolute(1250, 100);
+   delay(5);
+   INTAKE.move_absolute(15, 100);
+   delay(5);
+   imuTurn(-90);
+   delay(10);
+   drive(-25);
+   delay(5);
+   imuTurn(-90);
+   delay(5);
+   drive(120);
+   delay(5);
+   LIFT.move_absolute(800, 100);
+   holdLift();
+   drive(50);
+   delay(5);
+   toggleClamp();
+   drive(15);
+   delay(5);
+   drive(-20);
  }
 
  void autoBalance(){

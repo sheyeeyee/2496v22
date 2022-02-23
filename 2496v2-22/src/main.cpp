@@ -7,6 +7,7 @@ using namespace pros;
 using namespace std;
 using namespace glb;
 
+//wasdawsd
 /**
  * A callback function for LLEMU's center button.
  *
@@ -49,8 +50,8 @@ void disabled() {}
 
 int currAuton = 0;
 void competition_initialize() {
-	imu.reset();
-	while(imu.is_calibrating()) delay(5);
+	// imu.reset();
+	// while(imu.is_calibrating()) delay(5);
 	bool selected = true;
 	int localTime = 0;
 	int totalAutons = 5;
@@ -107,31 +108,30 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-
+	straightDrive(100);
+	// INTAKE.move_absolute(1100, 100);
+	// soloLeftAwp();
+	// imuTurn(90);
 	// imu.reset();
 	// while(imu.is_calibrating()) delay(50);
 	// con.clear();
-	// grabNeutral();
-	// halfLeftAwp();
-	// halfRightAwp();
-	// grabNeutral();
-	// imuTurn(90);wasdwasd
-	if(currAuton == 1) {
-		// imuTurn(90);
-		halfLeftAwp();
-	}
-	if(currAuton == 2) {
-		halfRightAwp();
-	}
-	if(currAuton == 3) {
-		grabNeutral();
-	}
-	if(currAuton == 4) {
-		grabCenter();
-	}
-	if(currAuton == 5) {
-
-	}
+	// con.print(0, 0, "look at the field lol");
+	// if(currAuton == 1) {
+	// 	// imuTurn(90);
+	// 	halfLeftAwp();
+	// }
+	// if(currAuton == 2) {
+	// 	halfRightAwp();
+	// }
+	// if(currAuton == 3) {
+	// 	grabNeutral();
+	// }
+	// if(currAuton == 4) {
+	// 	grabCenter();
+	// }
+	// if(currAuton == 5) {
+	//
+	// }
 }
 
 /**
