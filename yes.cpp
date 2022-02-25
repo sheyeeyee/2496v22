@@ -606,23 +606,10 @@ void competition_initialize() {
 void autonomous() {
 	lcd::initialize();
 
-		imu.reset();
-		delay(100);
-		while(imu.is_calibrating()) stop_motors();
+	// 	imu.reset();
+	// 	delay(100);
+	// 	while(imu.is_calibrating()) stop_motors();
 	// con.set_text(1,1,"sup gamer");
-
-	// driveLiftDown(95, -1880);
-	// delay(5);
-	// imuTurn(45);
-	// delay(5);
-	// drive(40);
-	// delay(5);
-	// moveMogo(1050);
-	// delay(5);
-	// drive(-10);
-	// delay(5);
-	// imuTurn(35);
-	// delay(5);
 
   //GLOBAL SAFE
 	/*
@@ -637,27 +624,27 @@ void autonomous() {
 
 			// // Left with imu
 			// 	//bring this back it kinda worked for red?
-				// driveLiftDown(104, -1850);
-				// delay(5);
-				// moveMogo(1050);
-				// delay(5);
-				// drive(-60);
-				// delay(5);
-				// imuTurn(-120);
-				// delay(5);
-				// drive(10);
-				// delay(5);
-				// moveLift(-280);
-				// delay(10);
-				// drive(-15);
-				// delay(5);
-				// imuTurn(180);
-				// delay(5);
-				// drive(88);
-				// delay(7);
-				// moveMogo(1250);
-				// delay(5);
-				// drive(-100);
+				driveLiftDown(104, -1850);
+				delay(5);
+				moveMogo(1050);
+				delay(5);
+				drive(-60);
+				delay(5);
+				imuTurn(-120);
+				delay(5);
+				drive(10);
+				delay(5);
+				moveLift(-280);
+				delay(10);
+				drive(-15);
+				delay(5);
+				imuTurn(180);
+				delay(5);
+				drive(88);
+				delay(7);
+				moveMogo(1250);
+				delay(5);
+				drive(-100);
 
 			// Left with imu
 				//
