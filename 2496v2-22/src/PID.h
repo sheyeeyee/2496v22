@@ -326,9 +326,9 @@ void liftMedUp() {
  }
 
  void soloAwpRight(){
-    straightDrive(-20);
+    straightDrive(-15);
     delay(5);
-    INTAKE.move_absolute(1500, 100);
+    INTAKE.move_absolute(800, 40);
     delay(5);
     INTAKE.move_absolute(15,100);
     delay(5);

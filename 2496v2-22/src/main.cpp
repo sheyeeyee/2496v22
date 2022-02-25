@@ -108,7 +108,7 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-	soloAwpLeft();
+	straightDrive(10);
 	//soloAwpLeft();
 	// imu.reset();
 //	while(imu.is_calibrating()) delay(15);
