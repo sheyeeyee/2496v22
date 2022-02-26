@@ -292,24 +292,26 @@ void liftMedUp() {
    delay(5);
 
    //towards goal
-   straightDrive(23);
+   straightDrive(25);
    //160 distance (110 + 50) + mogo shove (15)
    delay(10);
 
    //drop ring
    toggleClamp();
-   delay(800);
-
+   delay(500);
    //back to position to grab goal
-   straightDrive(-20);
-   delay(20);
+   straightDrive(-27);
+   delay(5);
 
    //lift down to grab goal
-   LIFT.move_absolute(18, 100);
+   // LIFT.set_brake_mode(E_MOTOR_BRAKE_COAST);
+   LIFT.move_absolute(15, 100);
    delay(1000);
 
    //go forward to goal
-   straightDrive(30);
+   imuTurn(5);
+   delay(5);
+   straightDrive(28);
    delay(5);
 
    //grab goal
@@ -317,14 +319,17 @@ void liftMedUp() {
    delay(300);
 
    //turn away from platform to avoid hitting alliance robot
-   LIFT.move_absolute(500, 100);
+   // LIFT.move_absolute(500, 100);
 
-   delay(300);
-   imuTurn(10);
+   // delay(300);
+   // holdLift();
+   // imuTurn(10);
    // delay(4);
 
    //clear line
    straightDrive(-50);
+   // imuTurn(10);
+   // straightDrive(-40);
    delay(5);
    // //drop mogo
    toggleClamp();
