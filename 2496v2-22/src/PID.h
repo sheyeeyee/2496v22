@@ -138,41 +138,78 @@ using namespace std;
    }
 
 
+   // void imuTurn(double degrees)
+   // {
+   // 	int localTime = 0;
+   // 	if(degrees < 0)
+   // 	{
+   // 		imu.set_heading(350);
+   // 	}
+   // 	else
+   // 	{
+   // 		imu.set_heading(10);
+   // 	}
+   // 	float kP = 0.7;
+   // 	float kI = 0.043;
+   // 	float kD = 0.0;
+   // 	double target = imu.get_heading() + degrees;
+   // 	double error = target - imu.get_heading(); // -90
+   // 	double lastError = error;
+   // 	int power = 0;
+   // 	double integral = 0.0;
+   // 	double derivative = 0.0;
+   //
+   // 	while(abs(error) > 0.5)	{
+   // 		error = target - imu.get_heading();
+   // 		integral += error;
+   // 		if(abs(integral) >= 600){
+   // 			integral = 0;
+   // 		}
+   // 		derivative = error - lastError;
+   // 		power = error * kP + integral * kI + derivative *kD;
+   // 		lastError = error;
+   // 		LF.move(power); LM.move(power); LB.move(power); RF.move(-power); RM.move(-power); RB.move(-power);
+   // 		delay(5);
+   // 	}
+   // 	stop_motors();
+   // }
+
    void imuTurn(double degrees)
    {
-   	int localTime = 0;
-   	if(degrees < 0)
-   	{
-   		imu.set_heading(350);
-   	}
-   	else
-   	{
-   		imu.set_heading(10);
-   	}
-   	float kP = 0.7;
-   	float kI = 0.043;
-   	float kD = 0.0;
-   	double target = imu.get_heading() + degrees;
-   	double error = target - imu.get_heading(); // -90
-   	double lastError = error;
-   	int power = 0;
-   	double integral = 0.0;
-   	double derivative = 0.0;
+    int localTime = 0;
+    if(degrees < 0)
+    {
+      imu.set_heading(350);
+    }
+    else
+    {
+      imu.set_heading(10);
+    }
+    float kP = 0.7;
+    float kI = 0.055;
+    float kD = 0.0;
+    double target = imu.get_heading() + degrees;
+    double error = target - imu.get_heading(); // -90
+    double lastError = error;
+    int power = 0;
+    double integral = 0.0;
+    double derivative = 0.0;
 
-   	while(abs(error) > 0.5)	{
-   		error = target - imu.get_heading();
-   		integral += error;
-   		if(abs(integral) >= 600){
-   			integral = 0;
-   		}
-   		derivative = error - lastError;
-   		power = error * kP + integral * kI + derivative *kD;
-   		lastError = error;
-   		LF.move(power); LM.move(power); LB.move(power); RF.move(-power); RM.move(-power); RB.move(-power);
-   		delay(5);
-   	}
-   	stop_motors();
+    while(abs(error) > 0.5)	{
+      error = target - imu.get_heading();
+      integral += error;
+      if(abs(integral) >= 600){
+        integral = 0;
+      }
+      derivative = error - lastError;
+      power = error * kP + integral * kI + derivative *kD;
+      lastError = error;
+      LF.move(power); LM.move(power); LB.move(power); RF.move(-power); RM.move(-power); RB.move(-power);
+      delay(5);
+    }
+    stop_motors();
    }
+
 
  void toggleClamp() {
  		static bool autonPiston = false;
@@ -255,7 +292,7 @@ void liftMedUp() {
    delay(5);
 
    //towards goal
-   straightDrive(27);
+   straightDrive(23);
    //160 distance (110 + 50) + mogo shove (15)
    delay(10);
 
@@ -284,7 +321,7 @@ void liftMedUp() {
    // delay(4);
 
    //clear line
-   straightDrive(-40);
+   straightDrive(-50);
 
    // //drop mogo
    // toggleClamp();
@@ -324,24 +361,26 @@ void liftMedUp() {
  }
 
  void halfRightAwp() {
-   drive(-10);
+   straightDrive(-20);
    delay(700);
    INTAKE.move_absolute(1250, 100);
    delay(500);
-   drive(-4);
+   straightDrive(-22);
    delay(1000);
    twoBarUp();
    delay(5);
-   drive(15);
+   straightDrive(10);
    delay(5);
    imuTurn(90);
    toggleClamp();
    delay(5);
    liftDown();
    delay(5);
-   drive(120);
+   straightDrive(60);
+   // delay(5);
+   straightDrive(60);
    toggleClamp();
-   drive(-120);
+   straightDrive(-120);
    // delay(5);
    // imuTurn(-50);
    // delay(5);

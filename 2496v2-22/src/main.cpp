@@ -50,8 +50,8 @@ void disabled() {}
 
 int currAuton = 0;
 void competition_initialize() {
-	// imu.reset();
-	// while(imu.is_calibrating()) delay(5);
+	imu.reset();
+	while(imu.is_calibrating()) delay(5);
 	bool selected = true;
 	int localTime = 0;
 	int totalAutons = 5;
@@ -108,7 +108,9 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-	soloAwpLeft();
+	halfRightAwp();
+	// soloAwpLeft();
+
 	// INTAKE.move_absolute(1100, 100);
 	// soloLeftAwp();
 	// imuTurn(90);
