@@ -108,7 +108,7 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-	halfRightAwp();
+	soloAwpLeft();
 	// soloAwpLeft();
 
 	// INTAKE.move_absolute(1100, 100);

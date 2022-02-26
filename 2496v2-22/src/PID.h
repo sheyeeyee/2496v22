@@ -256,7 +256,7 @@ void liftMedUp() {
 
  void soloAwpLeft(){
    //drop ring in FIRST
-   INTAKE.move_absolute(800, 40);
+   INTAKE.move_absolute(1250, 40);
    delay(800);
    INTAKE.move_absolute(15, 100);
    delay(5);
@@ -274,7 +274,7 @@ void liftMedUp() {
    delay(5);
 
    //turn towards other goal
-   imuTurn(90);
+   imuTurn(89);
    delay(5);
 
    //drive to SECOND goal
@@ -288,7 +288,7 @@ void liftMedUp() {
    delay(5);
 
    //turn to accurately face goal
-   imuTurn(-7);
+   imuTurn(-5);
    delay(5);
 
    //towards goal
@@ -306,25 +306,28 @@ void liftMedUp() {
 
    //lift down to grab goal
    LIFT.move_absolute(18, 100);
-   delay(400);
+   delay(1000);
 
    //go forward to goal
-   straightDrive(33);
-   delay(20);
+   straightDrive(30);
+   delay(5);
 
    //grab goal
    toggleClamp();
-   delay(5);
+   delay(300);
 
    //turn away from platform to avoid hitting alliance robot
-   // imuTurn(10);
+   LIFT.move_absolute(500, 100);
+
+   delay(300);
+   imuTurn(10);
    // delay(4);
 
    //clear line
    straightDrive(-50);
-
+   delay(5);
    // //drop mogo
-   // toggleClamp();
+   toggleClamp();
    // delay(5);
 
  }
