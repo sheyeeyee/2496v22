@@ -229,15 +229,15 @@ void liftMedUp() {
    delay(3.0);
 
    //turn towards center of field
-   imuTurn(-90);
+   imuTurn(90);
    delay(5);
 
    //drive towards center
-   straightDrive(-10);
+   straightDrive(20);
    delay(5);
 
    //turn towards other goal
-   imuTurn(-90);
+   imuTurn(90);
    delay(5);
 
    //drive to SECOND goal
@@ -245,50 +245,50 @@ void liftMedUp() {
    delay(5);
 
    //lift up so it's above goal and can drop ring
-   LIFT.move_absolute(1500, 100);
+   LIFT.move_absolute(1600, 100);
    delay(600);
    holdLift();
    delay(5);
 
    //turn to accurately face goal
-   imuTurn(-12);
+   imuTurn(-7);
    delay(5);
 
    //towards goal
-   straightDrive(25);
+   straightDrive(27);
    //160 distance (110 + 50) + mogo shove (15)
-   delay(500);
+   delay(10);
 
    //drop ring
    toggleClamp();
-   delay(5);
+   delay(800);
 
    //back to position to grab goal
-   straightDrive(-10);
-   delay(15);
+   straightDrive(-20);
+   delay(20);
 
    //lift down to grab goal
-   LIFT.move_absolute(15, 100);
-   delay(5);
+   LIFT.move_absolute(18, 100);
+   delay(400);
 
    //go forward to goal
-   straightDrive(15);
-   delay(5);
+   straightDrive(33);
+   delay(20);
 
    //grab goal
    toggleClamp();
    delay(5);
 
    //turn away from platform to avoid hitting alliance robot
-   imuTurn(10);
-   delay(4);
+   // imuTurn(10);
+   // delay(4);
 
    //clear line
-   straightDrive(-20);
+   straightDrive(-40);
 
-   //drop mogo
-   toggleClamp();
-   delay(5);
+   // //drop mogo
+   // toggleClamp();
+   // delay(5);
 
  }
 
@@ -352,29 +352,6 @@ void liftMedUp() {
    // toggleClamp();
    // delay(500);
    // drive(-110);
- }
-
- void soloLeftAwp() {
-   INTAKE.move_absolute(1250, 100);
-   delay(5);
-   INTAKE.move_absolute(15, 100);
-   delay(5);
-   imuTurn(-90);
-   delay(10);
-   drive(-25);
-   delay(5);
-   imuTurn(-90);
-   delay(5);
-   drive(120);
-   delay(5);
-   LIFT.move_absolute(800, 100);
-   holdLift();
-   drive(50);
-   delay(5);
-   toggleClamp();
-   drive(15);
-   delay(5);
-   drive(-20);
  }
 
  void autoBalance(){

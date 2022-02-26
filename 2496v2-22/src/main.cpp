@@ -108,7 +108,7 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-	straightDrive(100);
+	soloAwpLeft();
 	// INTAKE.move_absolute(1100, 100);
 	// soloLeftAwp();
 	// imuTurn(90);
