@@ -252,6 +252,7 @@ void liftMedUp() {
    delay(5);
    // imuTurn(-90);
    // toggleClamp();
+   //poggy woggy
  }
 
  void soloAwpLeft(){
@@ -288,7 +289,7 @@ void liftMedUp() {
    delay(5);
 
    //turn to accurately face goal
-   imuTurn(-5);
+   imuTurn(-2);
    delay(5);
 
    //towards goal
@@ -309,8 +310,8 @@ void liftMedUp() {
    delay(1000);
 
    //go forward to goal
-   imuTurn(5);
-   delay(5);
+   // imuTurn(5);
+   // delay(5);
    straightDrive(28);
    delay(5);
 
