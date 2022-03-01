@@ -380,7 +380,7 @@ void liftMedUp() {
    delay(5);
    straightDrive(10);
    delay(5);
-   imuTurn(90);
+   imuTurn(94);
    toggleClamp();
    delay(5);
    liftDown();
