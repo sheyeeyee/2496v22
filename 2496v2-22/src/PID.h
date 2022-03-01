@@ -362,11 +362,11 @@ void liftMedUp() {
    imuTurn(95);
    toggleClamp();
    delay(5);
-   drive(90);
+   straightDrive(90);
    delay(5);
    toggleClamp();
    delay(400);
-   drive(-50);
+   straightDrive(-50);
  }
 
  void halfRightAwp() {
