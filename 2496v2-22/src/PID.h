@@ -370,11 +370,11 @@ void liftMedUp() {
  }
 
  void halfRightAwp() {
-   straightDrive(-20);
+   straightDrive(-10);
    delay(700);
-   INTAKE.move_absolute(1250, 100);
+   INTAKE.move_absolute(1000, 50);
    delay(500);
-   straightDrive(-22);
+   straightDrive(-11);
    delay(1000);
    twoBarUp();
    delay(5);
@@ -389,7 +389,7 @@ void liftMedUp() {
    // delay(5);
    straightDrive(60);
    toggleClamp();
-   straightDrive(-120);
+   straightDrive(-105);
    // delay(5);
    // imuTurn(-50);
    // delay(5);
