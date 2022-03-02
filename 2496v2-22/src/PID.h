@@ -289,11 +289,11 @@ void liftMedUp() {
    delay(5);
 
    //turn to accurately face goal
-   imuTurn(-4);
+   imuTurn(-2);
    delay(5);
 
    //towards goal
-   straightDrive(25);
+   straightDrive(23);
    //160 distance (110 + 50) + mogo shove (15)
    delay(10);
 
@@ -301,7 +301,7 @@ void liftMedUp() {
    toggleClamp();
    delay(500);
    //back to position to grab goal
-   straightDrive(-25);
+   straightDrive(-10);
    delay(5);
 
    //lift down to grab goal
@@ -312,7 +312,7 @@ void liftMedUp() {
    //go forward to goal
    // imuTurn(5);
    // delay(5);
-   straightDrive(30);
+   straightDrive(40);
    delay(5);
 
    //grab goal
@@ -328,7 +328,7 @@ void liftMedUp() {
    // delay(4);
 
    //clear line
-   straightDrive(-50);
+   straightDrive(-40);
    // imuTurn(10);
    // straightDrive(-40);
    delay(5);
