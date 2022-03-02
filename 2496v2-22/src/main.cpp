@@ -114,27 +114,28 @@ void autonomous() {
 	// halfLeftAwp();
 	// soloAwpLeft();
 
+
 	con.clear();
 	con.print(0, 0, "look at the field lol");
-	if(currAuton == 1) {
-		// imuTurn(90);
-		halfLeftAwp();
-	}
-	if(currAuton == 2) {
-		halfRightAwp();
-	}
-	if(currAuton == 3) {
-		grabNeutral();
-	}
-	if(currAuton == 4) {
-		grabCenter();
-	}
-	if(currAuton == 5) {
-		soloAwpLeft();
-	}
-	if(currAuton == 6) {
-		
-	}
+	// if(currAuton == 1) {
+	// 	// imuTurn(90);
+	// 	halfLeftAwp();
+	// }
+	// if(currAuton == 2) {
+	// 	halfRightAwp();
+	// }
+	// if(currAuton == 3) {
+	// 	grabNeutral();
+	// }
+	// if(currAuton == 4) {
+	// 	grabCenter();
+	// }
+	// if(currAuton == 5) {
+	// 	soloAwpLeft();
+	// }
+	// if(currAuton == 6) {
+	//
+	// }
 }
 
 /**

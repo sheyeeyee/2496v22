@@ -245,10 +245,10 @@ void liftMedUp() {
 
  void grabNeutral() {
    toggleClamp();
-   straightDrive(95);
+   drive(90);
    toggleClamp();
    delay(5);
-   straightDrive(-80);
+   drive(-80);
    delay(5);
    // imuTurn(-90);
    // toggleClamp();
@@ -289,11 +289,12 @@ void liftMedUp() {
    delay(5);
 
    //turn to accurately face goal
-   imuTurn(-2);
+   int random =
+   imuTurn(-3);
    delay(5);
 
    //towards goal
-   straightDrive(23);
+   straightDrive(25);
    //160 distance (110 + 50) + mogo shove (15)
    delay(10);
 
@@ -301,7 +302,7 @@ void liftMedUp() {
    toggleClamp();
    delay(500);
    //back to position to grab goal
-   straightDrive(-10);
+   straightDrive(-27);
    delay(5);
 
    //lift down to grab goal
@@ -312,7 +313,7 @@ void liftMedUp() {
    //go forward to goal
    // imuTurn(5);
    // delay(5);
-   straightDrive(40);
+   straightDrive(28);
    delay(5);
 
    //grab goal
@@ -328,7 +329,7 @@ void liftMedUp() {
    // delay(4);
 
    //clear line
-   straightDrive(-40);
+   straightDrive(-50);
    // imuTurn(10);
    // straightDrive(-40);
    delay(5);
@@ -356,31 +357,31 @@ void liftMedUp() {
  }
 
  void halfLeftAwp() {
-   INTAKE.move_absolute(1250, 60);
+   INTAKE.move_absolute(1250, 100);;
    delay(1000);
    twoBarUp();
-   imuTurn(100);
+   imuTurn(95);
    toggleClamp();
    delay(5);
-   straightDrive(90);
+   drive(90);
    delay(5);
    toggleClamp();
    delay(400);
-   straightDrive(-70);
+   drive(-50);
  }
 
  void halfRightAwp() {
-   straightDrive(-10);
+   straightDrive(-20);
    delay(700);
-   INTAKE.move_absolute(1000, 50);
+   INTAKE.move_absolute(1250, 100);
    delay(500);
-   straightDrive(-11);
+   straightDrive(-22);
    delay(1000);
    twoBarUp();
    delay(5);
    straightDrive(10);
    delay(5);
-   imuTurn(94);
+   imuTurn(90);
    toggleClamp();
    delay(5);
    liftDown();
@@ -389,7 +390,7 @@ void liftMedUp() {
    // delay(5);
    straightDrive(60);
    toggleClamp();
-   straightDrive(-105);
+   straightDrive(-120);
    // delay(5);
    // imuTurn(-50);
    // delay(5);
@@ -399,60 +400,9 @@ void liftMedUp() {
    // delay(5);
    // toggleClamp();
    // delay(500);
-   // drive(-110);
+   // drive(-110);}
  }
+}
 
- void progSkog() {
-   INTAKE.move_absolute(2050, 100);
-   delay(1000);
-   straightDrive(-20);
- }
-
- void autoBalance(){
- 		float kP = 2.35;
- 		float kD = 0.0;
- 		float kI = 0.0;
- 		int power;
- 		float error;
- 		float pError;
- 		int integral;
-
- 		int derivative;
- 		int localTime= 0;
- 		con.clear();
- 		while(abs(imu.get_pitch()) >= 1.5){
- 			if(con.get_digital(E_CONTROLLER_DIGITAL_X)){
- 				break;
- 			}
- 			error = 1.5 - imu.get_pitch();
- 			if(abs(error) <= 15 && error > 8){
- 				integral += error;
- 			}
- 			else {
- 				integral = 0;
- 			}
- 			// else{
- 			// 	integral = 0;
- 			// }
- 			if(abs(integral) >= 350){
- 				integral = 0;
- 			}
- 			derivative = pError - error;
- 			// power = kP*error + kI*integral + kD*derivative;
- 			power = imu.get_pitch() * kP;
- 			LF.move(power); LM.move(power); LB.move(power); RF.move(power); RM.move(power); RB.move(power);
- 			pError = error;
-
- 			if(localTime % 50 == 0) {
- 				con.print(0,0, "Pitch: %.2f", imu.get_pitch());
- 			}
- 			if(abs(imu.get_pitch()) <= 20.5){
- 				park();
- 			}
- 			delay(5);
- 			localTime += 5;
-
- 		}
- 	}
 
  #endif
