@@ -289,7 +289,7 @@ void liftMedUp() {
    delay(5);
 
    //turn to accurately face goal
-   imuTurn(-2);
+   imuTurn(-4);
    delay(5);
 
    //towards goal
@@ -301,7 +301,7 @@ void liftMedUp() {
    toggleClamp();
    delay(500);
    //back to position to grab goal
-   straightDrive(-27);
+   straightDrive(-25);
    delay(5);
 
    //lift down to grab goal
@@ -312,7 +312,7 @@ void liftMedUp() {
    //go forward to goal
    // imuTurn(5);
    // delay(5);
-   straightDrive(28);
+   straightDrive(30);
    delay(5);
 
    //grab goal
@@ -356,7 +356,7 @@ void liftMedUp() {
  }
 
  void halfLeftAwp() {
-   INTAKE.move_absolute(1250, 60);;
+   INTAKE.move_absolute(1250, 60);
    delay(1000);
    twoBarUp();
    imuTurn(100);
@@ -400,6 +400,12 @@ void liftMedUp() {
    // toggleClamp();
    // delay(500);
    // drive(-110);
+ }
+
+ void progSkog() {
+   INTAKE.move_absolute(2050, 100);
+   delay(1000);
+   straightDrive(-20);
  }
 
  void autoBalance(){
