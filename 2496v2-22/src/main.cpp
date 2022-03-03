@@ -110,12 +110,17 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
+	imu.reset();
 	// halfRightAwp();
 	// halfLeftAwp();
 	// soloAwpLeft();
+	// while(true) {
+	while(1==1){
+	autoBalance();
+}
+// }
 
-
-	con.clear();
+	// con.clear();
 	con.print(0, 0, "look at the field lol");
 	// if(currAuton == 1) {
 	// 	// imuTurn(90);
