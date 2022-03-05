@@ -111,13 +111,14 @@ void competition_initialize() {
  */
 void autonomous() {
 	imu.reset();
+	while(imu.is_calibrating()) delay(5);
 	// halfRightAwp();
-	// halfLeftAwp();
+	halfLeftAwp();
 	// soloAwpLeft();
 	// while(true) {
-	while(1==1){
-	autoBalance();
-}
+// 	while(1==1){
+// 	autoBalance();
+// }
 // }
 
 	// con.clear();
@@ -227,7 +228,7 @@ void opcontrol() {
 					// INTAKE.move_velocity(0);
 				}
 				else {
-					INTAKE.move_absolute(1875, 100);
+					INTAKE.move_absolute(2000, 100);
 					isInPos = true;
 					// INTAKE.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 					// INTAKE.move_velocity(0);
