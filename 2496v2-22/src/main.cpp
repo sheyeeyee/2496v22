@@ -116,9 +116,9 @@ void autonomous() {
 	con.clear();
 	con.print(0, 0, "look at the field lol");
 	// progSkog();
-	straightDrive(15);
-	
-	autoBalance();
+	straightDrive(20);
+
+	while(true) autoBalance();
 	// LIFT.move_absolute(150, 100);
 	// imuTurn(90);
 	// if(currAuton == 1) {

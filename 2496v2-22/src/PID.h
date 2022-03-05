@@ -450,8 +450,8 @@ void autoBalance(){
   int derivative; //establish derivative
   float prevError;
   float error = -imu.get_pitch();
-  float kP = 2.8; //values to be changed during testing
-  float kI = 0.01;
+  float kP = 2.5; //values to be changed during testing
+  float kI = 0.05;
   float kD = 0.0;
   int powerAdjConst = 12; //power adjustment constant
   double powerAdj; //establish power adjustment now because it's not in the while loop
@@ -465,9 +465,9 @@ void autoBalance(){
     power = error*kP + integral*kI + derivative*kD; //calculate the power by adding all
     powerAdj = (imu.get_heading()-90) * powerAdjConst; //adjust for straightness
     // powerAdj = 0;
-    if(abs(integral) >= 1000) {
-      if(integral > 0) integral = 1000;
-      else integral = -1000;
+    if(abs(integral) >= 800) {
+      if(integral > 0) integral = 800;
+      else integral = -800;
     }
     // if(abs(error) <= 4) {
     //   integral = 0;
@@ -476,6 +476,7 @@ void autoBalance(){
     LF.move(power-powerAdj); LM.move(power-powerAdj); LB.move(power-powerAdj); RF.move(power+powerAdj); RM.move(power+powerAdj); RB.move(power+powerAdj);
     delay(5); //the interval at which it refreshes/recalculates the error, integral, and derivative
   }
+  park();
 }
 
 
