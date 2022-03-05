@@ -115,8 +115,12 @@ void autonomous() {
 
 	con.clear();
 	con.print(0, 0, "look at the field lol");
-	LIFT.move_absolute(150, 100);
-	imuTurn(90);
+	// progSkog();
+	straightDrive(15);
+	
+	autoBalance();
+	// LIFT.move_absolute(150, 100);
+	// imuTurn(90);
 	// if(currAuton == 1) {
 	// 	// imuTurn(90);
 	// 	halfLeftAwp();
