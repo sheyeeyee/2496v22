@@ -245,10 +245,10 @@ void liftMedUp() {
 
  void grabNeutral() {
    toggleClamp();
-   drive(90);
+   straightDrive(95);
    toggleClamp();
    delay(5);
-   drive(-80);
+   straightDrive(-80);
    delay(5);
    // imuTurn(-90);
    // toggleClamp();
@@ -289,11 +289,11 @@ void liftMedUp() {
    delay(5);
 
    //turn to accurately face goal
-   imuTurn(-3);
+   imuTurn(-2);
    delay(5);
 
    //towards goal
-   straightDrive(25);
+   straightDrive(23);
    //160 distance (110 + 50) + mogo shove (15)
    delay(10);
 
@@ -301,7 +301,7 @@ void liftMedUp() {
    toggleClamp();
    delay(500);
    //back to position to grab goal
-   straightDrive(-27);
+   straightDrive(-10);
    delay(5);
 
    //lift down to grab goal
@@ -312,7 +312,7 @@ void liftMedUp() {
    //go forward to goal
    // imuTurn(5);
    // delay(5);
-   straightDrive(28);
+   straightDrive(40);
    delay(5);
 
    //grab goal
@@ -328,7 +328,7 @@ void liftMedUp() {
    // delay(4);
 
    //clear line
-   straightDrive(-50);
+   straightDrive(-40);
    // imuTurn(10);
    // straightDrive(-40);
    delay(5);
@@ -356,50 +356,39 @@ void liftMedUp() {
  }
 
  void halfLeftAwp() {
-   INTAKE.move_absolute(1250, 100);;
+   INTAKE.move_absolute(1250, 60);
    delay(1000);
    twoBarUp();
-   imuTurn(95);
+   imuTurn(100);
    toggleClamp();
    delay(5);
-   drive(90);
+   straightDrive(90);
    delay(5);
    toggleClamp();
    delay(400);
-   drive(-50);
+   straightDrive(-70);
  }
 
  void halfRightAwp() {
-   straightDrive(-20);
+   straightDrive(-10);
    delay(700);
-   INTAKE.move_absolute(1250, 100);
+   INTAKE.move_absolute(1000, 50);
    delay(500);
-   straightDrive(-22);
+   straightDrive(-11);
    delay(1000);
    twoBarUp();
    delay(5);
    straightDrive(10);
    delay(5);
-   imuTurn(90);
+   imuTurn(94);
    toggleClamp();
    delay(5);
    liftDown();
    delay(5);
    straightDrive(60);
-   // delay(5);
-   straightDrive(60);
    toggleClamp();
-   straightDrive(-120);
-   // delay(5);
-   // imuTurn(-50);
-   // delay(5);
-   // liftDown();
-   // delay(5);
-   // drive(90);
-   // delay(5);
-   // toggleClamp();
-   // delay(500);
-   // drive(-110);}
+   straightDrive(-105);
+
  }
 
 void autoBalance(){
