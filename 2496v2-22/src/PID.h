@@ -391,6 +391,57 @@ void liftMedUp() {
 
  }
 
+ void progSkog() {
+   // move the two bar down anad pick up the alliance
+   LIFT.move_absolute(2000, 100);
+   delay(5);
+   straightDrive(-30);
+   delay(5);
+   LIFT.move_absolute(15, 100);
+
+   // get into a position to grab the neutral
+   delay(5);
+   imuTurn(90);
+   delay(5);
+   straightDrive(25);
+   delay(5);
+   imuTurn(-90);
+
+   //Go grab neutral and get to other side
+
+   LIFT.move_absolute(2000, 100);
+   delay(5);
+   straightDrive(-40);
+   delay(5);
+   LIFT.move_absolute(15, 100);
+   delay(5);
+   straightDrive(-40);
+   delay(5);
+   imuTurn(90);
+
+   //drop neutral and grab red mogo on platform
+   straightDrive(-15);
+   delay(5);
+   LIFT.move_absolute(2000, 100);
+   delay(5);
+   straightDrive(20);
+   delay(5);
+   LIFT.move_absolute(15, 100);
+   delay(5);
+   straightDrive(-10);
+   delay(5);
+   imuTurn(90);
+   delay(5);
+   straightDrive(15);
+   delay(5);
+   imuTurn(-90);
+   delay(5);
+   LIFT.move_absolute(15, 100);
+   delay(5);
+   straightDrive(25);
+   delay(5);
+ }
+
 void autoBalance(){
   double target = 0; //target is 0 degrees
   //float error; //wait can error just be equal to negative degree?
