@@ -342,18 +342,18 @@ void liftMedUp() {
 
  void grabCenter() {
    toggleClamp();
-   drive(36);
+   straightDrive(36);
    delay(5);
    imuTurn(-50);
    delay(5);
    liftDown();
    delay(5);
-   drive(90);
+   straightDrive(90);
    delay(5);
    toggleClamp();
    holdLift();
    delay(500);
-   drive(-110);
+   straightDrive(-90);
  }
 
  void halfLeftAwp() {
