@@ -245,8 +245,9 @@ void liftMedUp() {
 
  void grabNeutral() {
    toggleClamp();
-   straightDrive(95);
+   straightDrive(80);
    toggleClamp();
+   holdLift();
    delay(5);
    straightDrive(-80);
    delay(5);
@@ -456,6 +457,7 @@ void autoBalance(){
   int powerAdjConst = 12; //power adjustment constant
   double powerAdj; //establish power adjustment now because it's not in the while loop
   imu.set_heading(90);
+
   while(abs(error) > 3) { //as long as the absolute value of the current pitch value is greater than 1.5
     error = -imu.get_pitch();
     integral = integral + error;
