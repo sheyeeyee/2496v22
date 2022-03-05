@@ -409,22 +409,22 @@ void autoBalance(){
   int integral = 0; //establish integral
   int derivative; //establish derivative
   float prevError;
-  int error = -imu.get_pitch();
-  float kP = 2.5; //values to be changed during testing
+  float error = -imu.get_pitch();
+  float kP = 2.8; //values to be changed during testing
   float kI = 0.01;
-  float kD = 0;
+  float kD = 0.1;
   int powerAdjConst = 11; //power adjustment constant
   double powerAdj; //establish power adjustment now because it's not in the while loop
   imu.set_heading(90);
   while(abs(error) > 3) { //as long as the absolute value of the current pitch value is greater than 1.5
-    float error = -imu.get_pitch();
+    error = -imu.get_pitch();
     integral = integral + error;
     derivative = error - prevError; //derivative is equal to how much you've traveled since the last time it checked
-    float prevError = error; //current error is now what it was right before3
+    prevError = error; //current error is now what it was right before3
 
     power = error*kP + integral*kI + derivative*kD; //calculate the power by adding all
     powerAdj = (imu.get_heading()-90) * powerAdjConst; //adjust for straightness
-
+    // powerAdj = 0;
     if(abs(integral) > 1000) {
       integral = 0;
     }
@@ -433,7 +433,7 @@ void autoBalance(){
     }
 
     LF.move(power-powerAdj); LM.move(power-powerAdj); LB.move(power-powerAdj); RF.move(power+powerAdj); RM.move(power+powerAdj); RB.move(power+powerAdj);
-    delay(10); //the interval at which it refreshes/recalculates the error, integral, and derivative
+    delay(5); //the interval at which it refreshes/recalculates the error, integral, and derivative
   }
 }
 
