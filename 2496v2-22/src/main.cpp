@@ -54,7 +54,7 @@ void competition_initialize() {
 	while(imu.is_calibrating()) delay(5);
 	bool selected = true;
 	int localTime = 0;
-	int totalAutons = 6;
+	int totalAutons = 7;
 	con.clear();
 
 	while(true) {
@@ -90,6 +90,8 @@ void competition_initialize() {
 					con.print(0, 0, "Selected: %d Solo", currAuton);
 					break;
 				case(6):
+					con.print(0, 0, "Selected: %d BothR", currAuton);
+				case(7):
 					con.print(0, 0, "Selected: %d None", currAuton);
 			}
 			// con.print(0, 0, "Selected: %d", currAuton);
@@ -115,25 +117,28 @@ void autonomous() {
 
 	con.clear();
 	con.print(0, 0, "look at the field lol");
-	grabBothRight();
-	// if(currAuton == 1) {
-	// 	halfLeftAwp();
-	// }
-	// if(currAuton == 2) {
-	// 	halfRightAwp();
-	// }
-	// if(currAuton == 3) {
-	// 	grabNeutral();
-	// }
-	// if(currAuton == 4) {
-	// 	grabCenter();
-	// }
-	// if(currAuton == 5) {
-	// 	soloAwpLeft();
-	// }
-	// if(currAuton == 6) {
-	//
-	// }
+	// grabBothRight();
+	if(currAuton == 1) {
+		halfLeftAwp();
+	}
+	if(currAuton == 2) {
+		halfRightAwp();
+	}
+	if(currAuton == 3) {
+		grabNeutral();
+	}
+	if(currAuton == 4) {
+		grabCenter();
+	}
+	if(currAuton == 5) {
+		soloAwpLeft();
+	}
+	if(currAuton == 6) {
+		grabBothRight();
+	}
+	if(currAuton == 7) {
+
+	}
 }
 
 /**
