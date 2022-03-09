@@ -168,8 +168,8 @@ void opcontrol() {
 	//the piston starting actuated or unactuated is all decided by whereever the tubes are
 	while (true) {
 
-		int power = con.get_analog(ANALOG_LEFT_Y);
-		int turn = con.get_analog(ANALOG_RIGHT_X);
+		int power = con.get_analog(ANALOG_RIGHT_Y);
+		int turn = con.get_analog(ANALOG_LEFT_X);
 
 		int left = power + turn;
 		int right = power - turn;

@@ -40,7 +40,7 @@ using namespace std;
 
  void holdLift() {
    LIFT.move_velocity(0);
-   LIFT.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+   LIFT.set_brake_mode(E_MOTOR_BRAKE_HOLD);
  }
 
  void drive(int target){
