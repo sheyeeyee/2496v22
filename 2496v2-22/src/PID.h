@@ -32,7 +32,7 @@ using namespace std;
  void reset_chassis() {
    RF.tare_position();
    RM.tare_position();
-   RB.tare_position();
+   RB.tare_position();  
    LF.tare_position();
    LM.tare_position();
    LB.tare_position();
