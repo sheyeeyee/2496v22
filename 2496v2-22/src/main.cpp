@@ -118,9 +118,11 @@ void autonomous() {
 	con.clear();
 	con.print(0, 0, "look at the field lol");
 	// grabBothRight();
-	if(currAuton == 1) {
-		halfLeftAwp();
-	}
+	// grabNeutral();
+	progSkog();
+	// if(currAuton == 1) {
+	// 	halfLeftAwp();
+	// }
 	if(currAuton == 2) {
 		halfRightAwp();
 	}
