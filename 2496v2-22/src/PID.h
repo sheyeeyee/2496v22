@@ -427,15 +427,15 @@ void liftMedUp() {
    // move the two bar down anad pick up the alliance
    INTAKE.move_absolute(2000, 100);
    delay(1000);
-   straightDrive(-25);
-   delay(7);
+   straightDrive(-20);
+   delay(1000);
    INTAKE.move_absolute(15, 100);
 
    // get into a position to grab the neutral
    delay(1000);
    imuTurn(90);
    delay(5);
-   straightDrive(22);
+   straightDrive(25);
    delay(5);
    imuTurn(-90);
 
@@ -443,11 +443,11 @@ void liftMedUp() {
 
    INTAKE.move_absolute(2000, 100);
    delay(1000);
-   straightDrive(-40);
-   delay(5);
-   INTAKE.move_absolute(15, 100);
+   straightDrive(-35);
    delay(1000);
-   straightDrive(-25);
+   INTAKE.move_absolute(1000, 100);
+   delay(1000);
+   straightDrive(-40);
    delay(1000);
    imuTurn(90);
 
@@ -458,26 +458,30 @@ void liftMedUp() {
    delay(1000);
    straightDrive(20);
    delay(400);
+   toggleClamp();
    INTAKE.move_absolute(15, 100);
+   straightDrive(40);
    delay(5);
-   straightDrive(-10);
+   straightDrive(50);
+   delay(5);
+   toggleClamp();
+   delay(5);
+   straightDrive(-25);
    delay(5);
    imuTurn(90);
    delay(5);
-   straightDrive(15);
-   delay(5);
-   imuTurn(-90);
-   delay(5);
-   straightDrive(5);
-   delay(5);
-   toggleClamp();
-   LIFT.move_absolute(15, 100);
-   delay(5);
-   straightDrive(25);
-   delay(5);
-   toggleClamp();
- }
+   INTAKE.move_absolute(2000, 100);
+   delay(1000);
+   straightDrive(-40);
+   INTAKE.move_absolute(1200, 100);
 
+  //ig it knocks over the thing lol
+  straightDrive(40);
+  delay(5);
+  imuTurn(-90);
+  delay(5);
+  straightDrive(60);
+}
 void autoBalance(){
   double target = 0; //target is 0 degrees
   //float error; //wait can error just be equal to negative degree?

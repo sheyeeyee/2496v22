@@ -119,7 +119,8 @@ void autonomous() {
 	con.print(0, 0, "look at the field lol");
 	// grabBothRight();
 	// grabNeutral();
-	progSkog();
+	// progSkog();
+	// soloAwpLeft();
 	// if(currAuton == 1) {
 	// 	halfLeftAwp();
 	// }
