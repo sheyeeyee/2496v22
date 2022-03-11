@@ -117,13 +117,10 @@ void autonomous() {
 
 	con.clear();
 	con.print(0, 0, "look at the field lol");
-	// grabBothRight();
-	// grabNeutral();
-	// progSkog();
-	// soloAwpLeft();
-	// if(currAuton == 1) {
-	// 	halfLeftAwp();
-	// }
+
+	if(currAuton == 1) {
+		halfLeftAwp();
+	}
 	if(currAuton == 2) {
 		halfRightAwp();
 	}
@@ -167,6 +164,7 @@ void opcontrol() {
 	int currentINTAKEpos = INTAKE.get_position();
 	bool putUp = true;
 	bool isInPos = false;
+	LIFT.set_brake_mode(E_MOTOR_BRAKE_COAST);
 	// con.clear();
 	//the piston starting actuated or unactuated is all decided by whereever the tubes are
 	while (true) {
@@ -185,11 +183,11 @@ void opcontrol() {
 		RM.move(right);
 		RB.move(right);
 //r1 up, r2 down, l1 air,
-		if(localTime%150 == 0) {
-
-			con.print(0, 0,  "%f", LIFT.get_position());
-			// else con.print(0, 0, "false");
-		}
+		// if(localTime%150 == 0) {
+		//
+		// 	con.print(0, 0,  "%f", LIFT.get_position());
+		// 	// else con.print(0, 0, "false");
+		// }
 		//air
 		if(con.get_digital(E_CONTROLLER_DIGITAL_L2)) {
 			if(first == true) {
