@@ -236,6 +236,9 @@ void opcontrol() {
 			}
 			else putUp = true;
 
+		if(con.get_digital(E_CONTROLLER_DIGITAL_B)) {
+			LIFT.set_brake_mode(E_MOTOR_BRAKE_COAST);
+		}
 		// else {
 		// 	putUp = true;
 		// 	if(con.get_digital(E_CONTROLLER_DIGITAL_X)) {

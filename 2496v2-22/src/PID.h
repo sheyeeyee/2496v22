@@ -258,7 +258,7 @@ void liftMedUp() {
 
  void soloAwpLeft(){
    //drop ring in FIRST
-   INTAKE.move_absolute(1250, 40);
+   INTAKE.move_absolute(1250, 80);
    delay(800);
    INTAKE.move_absolute(15, 100);
    delay(5);
@@ -347,7 +347,7 @@ void liftMedUp() {
    delay(5);
    straightDrive(-50);
    delay(5);
-   LIFT.move_absolute(200, 100);
+   LIFT.move_absolute(600, 100);
    delay(5);
    imuTurn(-90);
    delay(5);
@@ -358,7 +358,7 @@ void liftMedUp() {
    LIFT.move_absolute(250, 100);
    straightDrive(-20);
    delay(5);
-   imuTurn(38);
+   imuTurn(35);
    delay(5);
    LIFT.move_absolute(25, 100);
    delay(5);
@@ -405,19 +405,19 @@ void liftMedUp() {
    straightDrive(-10);
    delay(700);
    INTAKE.move_absolute(1000, 50);
-   delay(500);
+   delay(700);
    straightDrive(-11);
    delay(1000);
    twoBarUp();
    delay(5);
    straightDrive(10);
    delay(5);
-   imuTurn(94);
+   imuTurn(90);
    toggleClamp();
    delay(5);
    liftDown();
    delay(5);
-   straightDrive(60);
+   straightDrive(105);
    toggleClamp();
    straightDrive(-105);
 
