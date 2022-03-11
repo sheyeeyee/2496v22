@@ -183,11 +183,11 @@ void opcontrol() {
 		RM.move(right);
 		RB.move(right);
 //r1 up, r2 down, l1 air,
-		// if(localTime%150 == 0) {
+		if(localTime%150 == 0) {
 		//
-		// 	con.print(0, 0,  "%f", LIFT.get_position());
+			con.print(0, 0,  "%lF", LIFT.get_temperature());
 		// 	// else con.print(0, 0, "false");
-		// }
+		}
 		//air
 		if(con.get_digital(E_CONTROLLER_DIGITAL_L2)) {
 			if(first == true) {
@@ -235,6 +235,7 @@ void opcontrol() {
 				}
 			}
 			else putUp = true;
+
 
 		if(con.get_digital(E_CONTROLLER_DIGITAL_B)) {
 			LIFT.set_brake_mode(E_MOTOR_BRAKE_COAST);
