@@ -214,6 +214,7 @@ void opcontrol() {
 		else {
 			LIFT.set_brake_mode(E_MOTOR_BRAKE_COAST);
 			LIFT.move_velocity(0);
+			LIFT.move(0);
 		}
 
 		//intake
@@ -239,6 +240,7 @@ void opcontrol() {
 
 		if(con.get_digital(E_CONTROLLER_DIGITAL_B)) {
 			LIFT.set_brake_mode(E_MOTOR_BRAKE_COAST);
+			LIFT.move(0);
 		}
 		// else {
 		// 	putUp = true;
