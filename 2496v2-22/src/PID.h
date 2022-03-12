@@ -291,7 +291,7 @@ void liftMedUp() {
    delay(5);
 
    //turn to accurately face goal
-   imuTurn(-2);
+   imuTurn(-4);
    delay(5);
 
    //towards goal
@@ -301,7 +301,7 @@ void liftMedUp() {
 
    //drop ring
    toggleClamp();
-   delay(500);
+   delay(1000);
    //back to position to grab goal
    straightDrive(-10);
    delay(5);
