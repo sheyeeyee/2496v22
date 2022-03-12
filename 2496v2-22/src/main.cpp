@@ -117,7 +117,7 @@ void autonomous() {
 
 	con.clear();
 	con.print(0, 0, "look at the field lol");
-
+	// LIFT.move_absolute(40, 2);
 	if(currAuton == 1) {
 		halfLeftAwp();
 	}
