@@ -9,7 +9,7 @@ namespace glb {
   #define P_LB 10
   #define P_RF 19
   #define P_RM 18
-  #define P_RB 12
+  #define P_RB 20
   #define P_LIFT 11
   #define P_INTAKE 8
   #define P_LPISTON 'A'
