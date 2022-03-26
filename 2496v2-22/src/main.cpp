@@ -189,13 +189,11 @@ void opcontrol() {
 //r1 up, r2 down, l1 air,
 
 		if(localTime%150 == 0) {
-			con.print(0, 0, "Distance: %d mm", DISTANCE.get());
 			// con.print(1, 0, "Distance_Confidence: %f", DISTANCE.get_confidence());
 			// con.print(0, 0,  "%lF", LIFT.get_temperature());
 		// 	// else con.print(0, 0, "false");
 			// delay(20);
 		}
-		int distance = DISTANCE.get();
 
 		//air
 		if(con.get_digital(E_CONTROLLER_DIGITAL_L2)) {
