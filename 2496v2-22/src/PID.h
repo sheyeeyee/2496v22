@@ -245,7 +245,7 @@ void liftMedUp() {
 
  void grabNeutral() {
    toggleClamp();
-   LIFT.move_absolute(30, 100);
+   LIFT.move_absolute(40, 100);
    straightDrive(80);
    toggleClamp();
    holdLift();
@@ -295,7 +295,7 @@ void liftMedUp() {
    delay(5);
 
    //towards goal
-   straightDrive(20);
+   straightDrive(18);
    //160 distance (110 + 50) + mogo shove (15)
    delay(10);
 
@@ -308,7 +308,7 @@ void liftMedUp() {
 
    //lift down to grab goal
    // LIFT.set_brake_mode(E_MOTOR_BRAKE_COAST);
-   LIFT.move_absolute(15, 100);
+   LIFT.move_absolute(35, 100);
    delay(1000);
 
    //go forward to goal
@@ -342,7 +342,7 @@ void liftMedUp() {
 
  void grabBothRight() {
    toggleClamp();
-   LIFT.move_absolute(25, 100);
+   LIFT.move_absolute(40, 100);
    straightDrive(79);
    toggleClamp();
    holdLift();
@@ -362,7 +362,7 @@ void liftMedUp() {
    delay(5);
    imuTurn(37);
    delay(5);
-   LIFT.move_absolute(25, 100);
+   LIFT.move_absolute(40, 100);
    delay(5);
    straightDrive(83);
    delay(5);
@@ -379,7 +379,7 @@ void liftMedUp() {
    delay(5);
    imuTurn(-50);
    delay(5);
-   LIFT.move_absolute(25, 100);
+   LIFT.move_absolute(40, 100);
    delay(5);
    straightDrive(85);
    delay(5);
@@ -394,6 +394,7 @@ void liftMedUp() {
    delay(1000);
    twoBarUp();
    imuTurn(104);
+   LIFT.move_absolute(40, 100);
    toggleClamp();
    delay(5);
    straightDrive(82);
@@ -415,6 +416,7 @@ void liftMedUp() {
    straightDrive(5);
    delay(5);
    imuTurn(90);
+   LIFT.move_absolute(40, 100);
    toggleClamp();
    delay(5);
    liftDown();
@@ -425,65 +427,7 @@ void liftMedUp() {
 
  }
 
- void progSkog() {
-   // move the two bar down anad pick up the alliance
-   INTAKE.move_absolute(2000, 100);
-   delay(1000);
-   straightDrive(-20);
-   delay(1000);
-   INTAKE.move_absolute(15, 100);
 
-   // get into a position to grab the neutral
-   delay(1000);
-   imuTurn(90);
-   delay(5);
-   straightDrive(25);
-   delay(5);
-   imuTurn(-90);
-
-   //Go grab neutral and get to other side
-
-   INTAKE.move_absolute(2000, 100);
-   delay(1000);
-   straightDrive(-35);
-   delay(1000);
-   INTAKE.move_absolute(1000, 100);
-   delay(1000);
-   straightDrive(-40);
-   delay(1000);
-   imuTurn(90);
-
-   //drop neutral and grab red mogo on platform
-   straightDrive(-15);
-   delay(5);
-   INTAKE.move_absolute(2000, 100);
-   delay(1000);
-   straightDrive(20);
-   delay(400);
-   toggleClamp();
-   INTAKE.move_absolute(15, 100);
-   straightDrive(40);
-   delay(5);
-   straightDrive(50);
-   delay(5);
-   toggleClamp();
-   delay(5);
-   straightDrive(-25);
-   delay(5);
-   imuTurn(90);
-   delay(5);
-   INTAKE.move_absolute(2000, 100);
-   delay(1000);
-   straightDrive(-40);
-   INTAKE.move_absolute(1200, 100);
-
-  //ig it knocks over the thing lol
-  straightDrive(40);
-  delay(5);
-  imuTurn(-90);
-  delay(5);
-  straightDrive(60);
-}
 void autoBalance(){
   double target = 0; //target is 0 degrees
   //float error; //wait can error just be equal to negative degree?
@@ -492,8 +436,8 @@ void autoBalance(){
   int derivative; //establish derivative
   float prevError;
   float error = -imu.get_pitch();
-  float kP = 2.5; //values to be changed during testing
-  float kI = 0.05;
+  float kP = 2.0; //values to be changed during testing
+  float kI = 0.01;
   float kD = 0.0;
   int powerAdjConst = 12; //power adjustment constant
   double powerAdj; //establish power adjustment now because it's not in the while loop
@@ -522,5 +466,43 @@ void autoBalance(){
   park();
 }
 
+void progSkog() {
+  // move the two bar down anad pick up the alliance
+  INTAKE.move_absolute(2000, 100);
+  delay(1000);
+  straightDrive(-25);
+  delay(1000);
+  INTAKE.move_absolute(20, 100);
+
+  // get into a position to grab the neutral
+  delay(1000);
+  imuTurn(90);
+  delay(5);
+  straightDrive(28);
+  delay(5);
+  imuTurn(-90);
+
+  //Go grab neutral and get to other side
+
+  INTAKE.move_absolute(2000, 100);
+  delay(1000);
+  straightDrive(-35);
+  delay(1000);
+  INTAKE.move_absolute(1000, 100);
+  delay(1000);
+  imuTurn(15);
+  straightDrive(-22);
+  delay(1000);
+  imuTurn(75);
+  delay(1000);
+  straightDrive(-10);
+  delay(5);
+  INTAKE.move_absolute(2000, 100);
+  delay(2000);
+
+  //drive and clmap blue
+  straightDrive(150);
+  toggleClamp();
+}
 
  #endif

@@ -117,7 +117,11 @@ void autonomous() {
 
 	con.clear();
 	con.print(0, 0, "look at the field lol");
-	// LIFT.move_absolute(40, 2);
+	// LIFT.move_absolute(25, 100);
+	// straightDrive(20);
+	// holdLift();
+	// while(true) autoBalance();
+	// progSkog();
 	if(currAuton == 1) {
 		halfLeftAwp();
 	}
@@ -155,7 +159,7 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	// con.clear();
+	con.clear();
 	// imu.reset();
 	// while(imu.is_calibrating()) delay(50);
 	int localTime = 0;
@@ -183,11 +187,16 @@ void opcontrol() {
 		RM.move(right);
 		RB.move(right);
 //r1 up, r2 down, l1 air,
+
 		if(localTime%150 == 0) {
-		//
-			con.print(0, 0,  "%lF", LIFT.get_temperature());
+			con.print(0, 0, "Distance: %d mm", DISTANCE.get());
+			// con.print(1, 0, "Distance_Confidence: %f", DISTANCE.get_confidence());
+			// con.print(0, 0,  "%lF", LIFT.get_temperature());
 		// 	// else con.print(0, 0, "false");
+			// delay(20);
 		}
+		int distance = DISTANCE.get();
+
 		//air
 		if(con.get_digital(E_CONTROLLER_DIGITAL_L2)) {
 			if(first == true) {
@@ -238,10 +247,7 @@ void opcontrol() {
 			else putUp = true;
 
 
-		if(con.get_digital(E_CONTROLLER_DIGITAL_B)) {
-			LIFT.set_brake_mode(E_MOTOR_BRAKE_COAST);
-			LIFT.move(0);
-		}
+
 		// else {
 		// 	putUp = true;
 		// 	if(con.get_digital(E_CONTROLLER_DIGITAL_X)) {

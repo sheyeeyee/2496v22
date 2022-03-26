@@ -25,11 +25,11 @@ namespace glb {
   Motor LIFT (P_LIFT, E_MOTOR_GEARSET_36);
   Motor INTAKE (P_INTAKE, E_MOTOR_GEARSET_36);
 
+
   ADIDigitalOut piston (P_LPISTON);
   ADIDigitalIn button (P_SELECTOR);
 
   Controller con (CONTROLLER_MASTER);
-
   Imu imu (P_IMU);
 
 }
