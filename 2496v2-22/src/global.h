@@ -15,6 +15,7 @@ namespace glb {
   #define P_LPISTON 'A'
   #define P_SELECTOR 'B'
   #define P_IMU 21
+  #define P_DIST 16
 
   Motor LF (P_LF, E_MOTOR_GEARSET_06, true);
   Motor LM (P_LM, E_MOTOR_GEARSET_06);
@@ -28,6 +29,9 @@ namespace glb {
 
   ADIDigitalOut piston (P_LPISTON);
   ADIDigitalIn button (P_SELECTOR);
+  Distance dist (P_DIST);
+
+
 
   Controller con (CONTROLLER_MASTER);
   Imu imu (P_IMU);

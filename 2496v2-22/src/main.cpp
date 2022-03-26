@@ -163,6 +163,8 @@ void opcontrol() {
 	// imu.reset();
 	// while(imu.is_calibrating()) delay(50);
 	int localTime = 0;
+	bool clampTog = true;
+	bool autoClamp = true;
 	bool first = true;
 	bool pistonValue = true;
 	int currentINTAKEpos = INTAKE.get_position();
@@ -170,6 +172,7 @@ void opcontrol() {
 	bool isInPos = false;
 	LIFT.set_brake_mode(E_MOTOR_BRAKE_COAST);
 	// con.clear();
+	con.clear();
 	//the piston starting actuated or unactuated is all decided by whereever the tubes are
 	while (true) {
 
@@ -189,6 +192,7 @@ void opcontrol() {
 //r1 up, r2 down, l1 air,
 
 		if(localTime%150 == 0) {
+			con.print(0, 0, "Distance: %f", dist.get());
 			// con.print(1, 0, "Distance_Confidence: %f", DISTANCE.get_confidence());
 			// con.print(0, 0,  "%lF", LIFT.get_temperature());
 		// 	// else con.print(0, 0, "false");
@@ -210,6 +214,30 @@ void opcontrol() {
 			}
 		}
 		else first = true;
+
+		//distance sensor
+		if(con.get_digital(E_CONTROLLER_DIGITAL_B)){
+			if(clampTog == true){
+				autoClamp = autoClamp == true ? false : true;
+				}
+				clampTog = false;
+			}
+			else{
+				clampTog = true;
+			}
+
+
+		if(autoClamp == true){
+			if(dist.get() <= 30){
+				piston.set_value(false);
+				pistonValue = false;
+				autoClamp = false;
+			}
+			else{
+				piston.set_value(true);
+				pistonValue = true;
+			}
+		}
 
 		//Lift
 		if(con.get_digital(E_CONTROLLER_DIGITAL_R1)) {

@@ -137,7 +137,54 @@ using namespace std;
     stop_motors();
    }
 
+ void straightDriveDist(int target) {
+    reset_chassis();
+    target *= 28.65;
+    double kP = 0.6;
+    double kI = 0.01;
+    double kD = 0.0;
+    int integral = 0;
+    int derivative = 0;
+    int error;
+    int prev_error;
+    double power;
+    int powerAdj = 5;
+    double powerAdjConst = 11;
+    int current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
+    imu.set_heading(90);
+    while(abs(error) >= 15 && dist.get() > 30) {
+        current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
+        error = target - current_pos;
+        integral += error;
+        if(error == 0){
+          integral = 0;
+        }
+        if(integral > 3000){
+          integral = 0;
+        }
 
+        derivative = error - prev_error;
+        prev_error = error;
+        power = kP*error + integral*kI + derivative*kD;
+        if(power < 0){
+          if(power < -127) {
+            power = -127;
+          }
+        }
+        else{
+          if(power > 0){
+            if(power > 127) {
+              power = 127;
+            }
+          }
+        }
+        powerAdj = (imu.get_heading()-90) * powerAdjConst;
+        LF.move(power- powerAdj); LM.move(power-powerAdj); LB.move(power-powerAdj); RF.move(power+powerAdj); RM.move(power+powerAdj); RB.move(power+powerAdj);
+        delay(10);
+      }
+
+    stop_motors();
+   }
 
 
    void imuTurn(double degrees)
@@ -189,6 +236,7 @@ using namespace std;
     }
  }
 
+
  void twoBarDown() {
    INTAKE.move_absolute(2000, 100);
  }
@@ -218,7 +266,7 @@ void liftMedUp() {
    delay(5);
    straightDrive(-80);
    delay(5);
-   
+
  }
 
  void soloAwpLeft(){
