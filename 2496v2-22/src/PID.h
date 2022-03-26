@@ -138,41 +138,7 @@ using namespace std;
    }
 
 
-   // void imuTurn(double degrees)
-   // {
-   // 	int localTime = 0;
-   // 	if(degrees < 0)
-   // 	{
-   // 		imu.set_heading(350);
-   // 	}
-   // 	else
-   // 	{
-   // 		imu.set_heading(10);
-   // 	}
-   // 	float kP = 0.7;
-   // 	float kI = 0.043;
-   // 	float kD = 0.0;
-   // 	double target = imu.get_heading() + degrees;
-   // 	double error = target - imu.get_heading(); // -90
-   // 	double lastError = error;
-   // 	int power = 0;
-   // 	double integral = 0.0;
-   // 	double derivative = 0.0;
-   //
-   // 	while(abs(error) > 0.5)	{
-   // 		error = target - imu.get_heading();
-   // 		integral += error;
-   // 		if(abs(integral) >= 600){
-   // 			integral = 0;
-   // 		}
-   // 		derivative = error - lastError;
-   // 		power = error * kP + integral * kI + derivative *kD;
-   // 		lastError = error;
-   // 		LF.move(power); LM.move(power); LB.move(power); RF.move(-power); RM.move(-power); RB.move(-power);
-   // 		delay(5);
-   // 	}
-   // 	stop_motors();
-   // }
+
 
    void imuTurn(double degrees)
    {
@@ -252,9 +218,7 @@ void liftMedUp() {
    delay(5);
    straightDrive(-80);
    delay(5);
-   // imuTurn(-90);
-   // toggleClamp();
-   //poggy woggy
+   
  }
 
  void soloAwpLeft(){
