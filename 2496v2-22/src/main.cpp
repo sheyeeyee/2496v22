@@ -230,7 +230,7 @@ void opcontrol() {
 		if(autoClamp == true){
 			if(dist.get() <= 30){
 				piston.set_value(false);
-				con.rumble(".-.");
+				con.rumble("-");
 				pistonValue = false;
 				autoClamp = false;
 			}
