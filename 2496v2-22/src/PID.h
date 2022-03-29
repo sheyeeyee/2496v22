@@ -448,10 +448,10 @@ void autoBalance(){
   int derivative; //establish derivative
   float prevError;
   float error = -imu.get_pitch();
-  float kP = 2.0; //values to be changed during testing
-  float kI = 0.01;
+  float kP = 2.4; //values to be changed during testing
+  float kI = 0.017;
   float kD = 0.0;
-  int powerAdjConst = 12; //power adjustment constant
+  int powerAdjConst = 11; //power adjustment constant
   double powerAdj; //establish power adjustment now because it's not in the while loop
   imu.set_heading(90);
 

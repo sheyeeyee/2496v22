@@ -120,11 +120,12 @@ void autonomous() {
 	// LIFT.move_absolute(25, 100);
 	// straightDrive(20);
 	// holdLift();
-	// while(true) autoBalance();
+	straightDrive(30);
+	while(true) autoBalance();
 	// progSkog();
-	if(currAuton == 1) {
-		halfLeftAwp();
-	}
+	// if(currAuton == 1) {
+	// 	halfLeftAwp();
+	// }
 	if(currAuton == 2) {
 		halfRightAwp();
 	}
@@ -192,7 +193,9 @@ void opcontrol() {
 //r1 up, r2 down, l1 air,
 
 		if(localTime%150 == 0) {
-			con.print(0, 0, "Distance: %f", dist.get());
+			con.print(0, 0, "%lF", LM.get_temperature());
+			delay(50);
+			con.print(1, 0, "%lF", RM.get_temperature());
 			// con.print(1, 0, "Distance_Confidence: %f", DISTANCE.get_confidence());
 			// con.print(0, 0,  "%lF", LIFT.get_temperature());
 		// 	// else con.print(0, 0, "false");

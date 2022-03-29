@@ -305,8 +305,8 @@
         "upload_options": {
             "compress_bin": true,
             "description": "ghosts",
-            "remote_name": "2496v2-22 sherk with distance ",
-            "slot": 1
+            "remote_name": "2496v2-22 autobalance time",
+            "slot": 2
         }
     }
 }
