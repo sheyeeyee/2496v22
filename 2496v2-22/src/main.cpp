@@ -129,7 +129,7 @@ void autonomous() {
 		halfRightAwp();
 	}
 	if(currAuton == 3) {
-		grabNeutral();
+		grabNeutral();//gerald was here
 	}
 	if(currAuton == 4) {
 		grabCenter();
