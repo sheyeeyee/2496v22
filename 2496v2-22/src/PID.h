@@ -201,7 +201,7 @@ using namespace std;
       double powerAdjConst = 11;
       int current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
       imu.set_heading(90);
-      con.print(0, 0, imu.get_heading()); //print angle of robot? because i want to see the angle changes
+      // con.print(0, 0, imu.get_heading()); //print angle of robot? because i want to see the angle changes
       while(abs(error) >= 15) {
         current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
         error = target - current_pos;
@@ -496,9 +496,9 @@ void autoBalance(){
   int derivative; //establish derivative
   float prevError;
   float error = -imu.get_pitch();
-  float kP = 2.4; //values to be changed during testing
-  float kI = 0.017;
-  float kD = 0.0;
+  float kP = 2.5; //values to be changed during testing
+  float kI = 0.018;
+  float kD = 0.1;
   int powerAdjConst = 11; //power adjustment constant
   double powerAdj; //establish power adjustment now because it's not in the while loop
   imu.set_heading(90);
@@ -523,6 +523,7 @@ void autoBalance(){
     LF.move(power-powerAdj); LM.move(power-powerAdj); LB.move(power-powerAdj); RF.move(power+powerAdj); RM.move(power+powerAdj); RB.move(power+powerAdj);
     delay(5); //the interval at which it refreshes/recalculates the error, integral, and derivative
   }
+  straightDrive(-5);
   park();
 }
 

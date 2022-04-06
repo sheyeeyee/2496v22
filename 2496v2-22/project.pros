@@ -305,8 +305,8 @@
         "upload_options": {
             "compress_bin": true,
             "description": "ghosts",
-            "remote_name": "2496v2-22 test",
-            "slot": 2
+            "remote_name": "2496v2-22 normal autobalance",
+            "slot": 1
         }
     }
 }

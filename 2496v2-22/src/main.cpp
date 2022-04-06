@@ -120,7 +120,9 @@ void autonomous() {
 	// LIFT.move_absolute(25, 100);
 	// straightDrive(40);
 	holdLift();
-	straightBalance(85);
+	straightDrive(40);
+	// straightBalance(85);
+	autoBalance();
 	// progSkog();
 	// if(currAuton == 1) {
 	// 	halfLeftAwp();
