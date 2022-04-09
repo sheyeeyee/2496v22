@@ -123,11 +123,8 @@ void autonomous() {
 	// straightDrive(40);
 	// INTAKE.move_absolute(-1000, 100);
 	// delay(1000);
-	// straightDrive(40);
-	// straightBalance(85);
-	// autoBalance();
-	// progSkog();
-	halfLeftAwp();
+	
+	soloAwpLeft();
 	// if(currAuton == 1) {
 	// 	halfLeftAwp();
 	// }

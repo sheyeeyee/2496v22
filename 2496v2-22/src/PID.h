@@ -319,8 +319,8 @@ void liftMedUp() {
 
  void soloAwpLeft(){
    //drop ring in FIRST
-   INTAKE.move_absolute(1250, 80);
-   delay(800);
+   INTAKE.move_absolute(1300, 80);
+   delay(1000);
    INTAKE.move_absolute(15, 100);
    delay(5);
 
