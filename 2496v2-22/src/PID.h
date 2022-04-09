@@ -567,4 +567,32 @@ void progSkog() {
   toggleClamp();
 }
 
+void dosSemana(){
+  //plat alliance global
+  straightDriveDist();
+  delay(10);
+  Lift.move_absolute(40, 100);
+  delay(10);
+  straightDrive(-10);
+  delay(10);
+  imuTurn(-90);
+  delay(10);
+  straightDrive(20);
+  delay(10);
+  imuTurn(-90);
+  delay(10);
+  straightDrive(-100);
+  delay(10);
+  Intake.move_absolute(2000, 100);
+  delay(10);
+  straightDrive(-30);
+  Intake.move_absolute(1000, 100);
+
+
+
+
+
+
+}
+
  #endif
