@@ -137,7 +137,7 @@ using namespace std;
     stop_motors();
    }
 
- void straightDriveDist(int target) {
+ void straightDriveDist(int target, int normalName) {
     reset_chassis();
     target *= 28.65;
     double kP = 0.6;
@@ -152,7 +152,7 @@ using namespace std;
     double powerAdjConst = 11;
     int current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
     imu.set_heading(90);
-    while(abs(error) >= 15 && dist.get() > 30) {
+    while(abs(error) >= 15 && dist.get() > normalName) {
         current_pos = (LF.get_position() + LM.get_position() + LB.get_position())/3;
         error = target - current_pos;
         integral += error;
@@ -308,7 +308,7 @@ void liftMedUp() {
  void grabNeutral() {
    toggleClamp();
    LIFT.move_absolute(40, 100);
-   straightDriveDist(120);
+   straightDriveDist(120, 30);
    toggleClamp();
    holdLift();
    delay(5);
@@ -403,7 +403,7 @@ void liftMedUp() {
  void grabBothRight() {
    toggleClamp();
    LIFT.move_absolute(40, 100);
-   straightDriveDist(100);
+   straightDriveDist(100, 30);
    toggleClamp();
    holdLift();
    delay(5);
@@ -441,7 +441,7 @@ void liftMedUp() {
    delay(5);
    LIFT.move_absolute(40, 100);
    delay(5);
-   straightDriveDist(85);
+   straightDriveDist(85, 30);
    delay(5);
    toggleClamp();
    holdLift();
@@ -458,7 +458,7 @@ void liftMedUp() {
    toggleClamp();
    delay(5);
    holdLift();
-   straightDriveDist(100);
+   straightDriveDist(100, 30);
    delay(5);
    toggleClamp();
    delay(400);
@@ -482,7 +482,7 @@ void liftMedUp() {
    delay(5);
    liftDown();
    delay(5);
-   straightDriveDist(105);
+   straightDriveDist(105, 30);
    toggleClamp();
    straightDrive(-105);
 
@@ -568,25 +568,41 @@ void progSkog() {
 }
 
 void dosSemana(){
+  toggleClamp();
   //plat alliance global
-  straightDriveDist();
-  delay(10);
-  Lift.move_absolute(40, 100);
-  delay(10);
-  straightDrive(-10);
-  delay(10);
-  imuTurn(-90);
-  delay(10);
-  straightDrive(20);
-  delay(10);
-  imuTurn(-90);
-  delay(10);
-  straightDrive(-100);
-  delay(10);
-  Intake.move_absolute(2000, 100);
-  delay(10);
-  straightDrive(-30);
-  Intake.move_absolute(1000, 100);
+  straightDriveDist(25, 0);
+  delay(500);
+  toggleClamp();
+  delay(500);
+  //lift up to prevent goal from dragging
+  straightDrive(-20); //back up
+  delay(1000);
+  LIFT.move_absolute(70, 100);
+  delay(500);
+  holdLift();
+
+  imuTurn(-90); //left turn
+  delay(1000);
+  straightDrive(20);//back out of corner
+  delay(1000);
+  imuTurn(-90);//left turn again to have the fork facing other alliance goal
+  delay(100);
+  straightDrive(-100);//drive across field to second alliance
+  delay(100);
+  INTAKE.move_absolute(2000, 100);//move fork down
+  delay(100);
+  straightDrive(-45);//back up into global
+  delay(100);
+  // INTAKE.move_absolute(1000, 100);//fork goal
+  // delay(100);
+  // imuTurn(-100); //right turn but to face neutral goal?
+  // delay(100);
+  // straightDrive(-90);//drive into neutral goal
+  // delay(100);
+
+
+
+
 
 
 
