@@ -570,28 +570,30 @@ void progSkog() {
 void dosSemana(){
   toggleClamp();
   //plat alliance global
-  straightDriveDist(25, 0);
+  straightDriveDist(25, 30);
   delay(500);
   toggleClamp();
   delay(500);
   //lift up to prevent goal from dragging
-  straightDrive(-20); //back up
+  straightDrive(-10); //back up
   delay(1000);
-  LIFT.move_absolute(70, 100);
+  LIFT.move_absolute(250, 100);
   delay(500);
   holdLift();
 
   imuTurn(-90); //left turn
   delay(1000);
-  straightDrive(20);//back out of corner
+  straightDrive(-3);
+  delay(100);
+  straightDrive(25);//back out of corner
   delay(1000);
   imuTurn(-90);//left turn again to have the fork facing other alliance goal
   delay(100);
-  straightDrive(-100);//drive across field to second alliance
+  straightDrive(-50);//drive across field to second alliance
   delay(100);
   INTAKE.move_absolute(2000, 100);//move fork down
-  delay(100);
-  straightDrive(-45);//back up into global
+  delay(500);
+  straightDrive(-50);//back up into global
   delay(100);
   // INTAKE.move_absolute(1000, 100);//fork goal
   // delay(100);
