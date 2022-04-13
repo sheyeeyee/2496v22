@@ -568,22 +568,23 @@ void progSkog() {
 }
 
 void dosSemana(){
+  //set up straight all the way against the wall
   toggleClamp();
   //plat alliance global
-  straightDriveDist(25, 30);
-  delay(500);
+  straightDriveDist(22, 0);//25 was too far?
+  delay(1000);
   toggleClamp();
-  delay(500);
+  delay(1000);
   //lift up to prevent goal from dragging
   straightDrive(-10); //back up
   delay(1000);
   LIFT.move_absolute(250, 100);
-  delay(500);
+  delay(1000);
   holdLift();
 
   imuTurn(-90); //left turn
   delay(1000);
-  straightDrive(-3);
+  straightDrive(-5);//wall reset
   delay(100);
   straightDrive(25);//back out of corner
   delay(1000);
@@ -591,16 +592,24 @@ void dosSemana(){
   delay(100);
   straightDrive(-50);//drive across field to second alliance
   delay(100);
+  imuTurn(-3);
+  delay(500);
   INTAKE.move_absolute(2000, 100);//move fork down
   delay(500);
-  straightDrive(-50);//back up into global
+  straightDrive(-55);//back up into goall
+  delay(500);
+  INTAKE.move_absolute(15, 100);//fork goal
+  delay(1000);
+  imuTurn(3);
+  delay(500);
+  straightDrive(-15);//wall reset
+  delay(1000);
+  straightDrive(27);
+  delay(1000);
+  imuTurn(-90); //dummy left turn but to face neutral goal?
+  delay(1000);
+  straightDrive(-90);//drive into neutral goal
   delay(100);
-  // INTAKE.move_absolute(1000, 100);//fork goal
-  // delay(100);
-  // imuTurn(-100); //right turn but to face neutral goal?
-  // delay(100);
-  // straightDrive(-90);//drive into neutral goal
-  // delay(100);
 
 
 

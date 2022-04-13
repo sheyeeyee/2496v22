@@ -125,9 +125,9 @@ void autonomous() {
 	// delay(1000);
 
 	// soloAwpLeft();
-	halfLeftAwp();
+	// halfLeftAwp();
 	// halfRightAwp();
-	// dosSemana();
+	dosSemana();
 	// if(currAuton == 1) {
 	// 	halfLeftAwp();
 	// }
