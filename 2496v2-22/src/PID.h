@@ -608,19 +608,41 @@ void dosSemana(){
   delay(1000);
   imuTurn(-90); //dummy left turn but to face neutral goal?
   delay(1000);
-  straightDrive(-110);//drive into neutral goal
+  straightDrive(-140);//drive into neutral goal
+  delay(500);
+  LIFT.move_absolute(700, 100);
+  delay(1000);
+  holdLift();
   delay(500);
   straightDrive(10);//drive out
   delay(500);
   imuTurn(90);//right turn toward wall
   delay(500);
-  straightDrive(-35);//wall reset
+  // straightDrive(-35);//wall reset
+  // delay(500);
+  straightDrive(150);
   delay(500);
-  straightDrive(130);
+  imuTurn(90);//right imuTurn
   delay(500);
-  imuTurn(-90);//left imuTurn
+  // straightDrive(-50);//wall rest next to plat
+  // delay(500);
+  straightDrive(-150);//second goal
   delay(500);
-  straightDrive(-50);
+  straightDrive(150);
+  delay(500);
+  imuTurn(90);
+  delay(500);
+  LIFT.move_absolute(1000, 100);
+  delay(1000);
+  holdLift();
+  delay(500);
+  straightDrive(10);
+  delay(500);
+  LIFT.move_absolute(200, 100);
+  delay(1000);
+  straightDrive(20);
+  delay(500);
+  autoBalance();
   delay(500);
 
 
