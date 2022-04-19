@@ -469,7 +469,7 @@ void liftMedUp() {
    straightDrive(-7);
    delay(5);
    INTAKE.move_absolute(1250, 55);
-   delay(1000);
+   delay(1500);
    straightDrive(-11);
    delay(1000);
    twoBarUp();
@@ -482,7 +482,7 @@ void liftMedUp() {
    delay(5);
    liftDown();
    delay(5);
-   straightDriveDist(105, 30);
+   straightDriveDist(125, 30);
    toggleClamp();
    straightDrive(-105);
 
@@ -596,39 +596,43 @@ void dosSemana(){
   delay(500);
   INTAKE.move_absolute(2000, 100);//move fork down
   delay(500);
-  straightDrive(-60);//back up into goall
+  straightDrive(-70);//back up into goal initial value of -60
   delay(500);
   INTAKE.move_absolute(15, 100);//fork goal
   delay(1000);
   imuTurn(5);
   delay(500);
-  straightDrive(-20);//wall reset
-  delay(1000);
+  // straightDrive(-20);//wall reset
+  // delay(1000);
   straightDrive(27);
   delay(1000);
   imuTurn(-90); //dummy left turn but to face neutral goal?
   delay(1000);
-  straightDrive(-140);//drive into neutral goal
+  straightDrive(-150);//drive into neutral goal
   delay(500);
   LIFT.move_absolute(700, 100);
   delay(1000);
   holdLift();
   delay(500);
-  straightDrive(10);//drive out
+  straightDrive(5);//drive out
   delay(500);
   imuTurn(90);//right turn toward wall
   delay(500);
-  // straightDrive(-35);//wall reset
+  straightDrive(-15);//wall reset split into two for slower speed?
+  delay(1000);//decelerate before wall reset part 2
+  straightDrive(-15);//wall reset pt 2
+  delay(500);
+  // straightDrive(-15);//wall reset part 2
   // delay(500);
   straightDrive(150);
   delay(500);
   imuTurn(90);//right imuTurn
   delay(500);
-  // straightDrive(-50);//wall rest next to plat
+  // straightDrive(-50);//wall reset next to plat
   // delay(500);
   straightDrive(-150);//second goal
   delay(500);
-  straightDrive(150);
+  straightDrive(150);//drive back
   delay(500);
   imuTurn(90);
   delay(500);
@@ -638,11 +642,11 @@ void dosSemana(){
   delay(500);
   straightDrive(10);
   delay(500);
-  LIFT.move_absolute(200, 100);
+  LIFT.move_absolute(200, 100);//push platform down
   delay(1000);
-  straightDrive(20);
+  straightDrive(20);//drive dur
   delay(500);
-  autoBalance();
+  autoBalance();//balance
   delay(500);
 
 
