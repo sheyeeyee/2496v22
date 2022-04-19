@@ -604,28 +604,28 @@ void dosSemana(){
   delay(500);
   // straightDrive(-20);//wall reset
   // delay(1000);
-  straightDrive(27);
+  straightDrive(15);//was 27 with wall reset
   delay(1000);
   imuTurn(-90); //dummy left turn but to face neutral goal?
   delay(1000);
-  straightDrive(-150);//drive into neutral goal
+  straightDrive(-110);//drive into neutral goal
   delay(500);
   LIFT.move_absolute(700, 100);
   delay(1000);
   holdLift();
   delay(500);
   straightDrive(5);//drive out
-  delay(500);
+  delay(1000);
   imuTurn(90);//right turn toward wall
-  delay(500);
+  delay(1000);
   straightDrive(-15);//wall reset split into two for slower speed?
   delay(1000);//decelerate before wall reset part 2
-  straightDrive(-15);//wall reset pt 2
-  delay(500);
+  // straightDrive(-15);//wall reset pt 2
+  // delay(500);
   // straightDrive(-15);//wall reset part 2
   // delay(500);
-  straightDrive(150);
-  delay(500);
+  straightDrive(120);
+  delay(1000);
   imuTurn(90);//right imuTurn
   delay(500);
   // straightDrive(-50);//wall reset next to plat
