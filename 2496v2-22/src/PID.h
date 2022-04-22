@@ -592,23 +592,23 @@ void dosSemana(){
   delay(100);
   straightDrive(-50);//drive across field to second alliance
   delay(100);
-  imuTurn(-5);
-  delay(500);
+  // imuTurn(-5);
+  // delay(500);
   INTAKE.move_absolute(2000, 100);//move fork down
   delay(500);
   straightDrive(-70);//back up into goal initial value of -60
   delay(500);
   INTAKE.move_absolute(15, 100);//fork goal
   delay(1000);
-  imuTurn(5);
-  delay(500);
-  // straightDrive(-20);//wall reset
-  // delay(1000);
-  straightDrive(15);//was 27 with wall reset
+  // imuTurn(5);
+  // delay(500);
+  straightDrive(-20);//wall reset
+  delay(1000);
+  straightDrive(27);//was 27 with wall reset
   delay(1000);
   imuTurn(-90); //dummy left turn but to face neutral goal?
   delay(1000);
-  straightDrive(-110);//drive into neutral goal
+  straightDrive(-140);//drive into neutral goal
   delay(500);
   LIFT.move_absolute(700, 100);
   delay(1000);
@@ -630,13 +630,13 @@ void dosSemana(){
   delay(500);
   // straightDrive(-50);//wall reset next to plat
   // delay(500);
-  straightDrive(-150);//second goal
+  straightDrive(-100);//second goal
   delay(500);
-  straightDrive(150);//drive back
+  straightDrive(110);//drive back
   delay(500);
   imuTurn(90);
   delay(500);
-  LIFT.move_absolute(1000, 100);
+  LIFT.move_absolute(3000, 100);
   delay(1000);
   holdLift();
   delay(500);
