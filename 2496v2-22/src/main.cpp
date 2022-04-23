@@ -128,10 +128,10 @@ void autonomous() {
 	// halfLeftAwp();
 	// halfRightAwp();
 	// grabNeutral();
-	dosSemana();
-	// if(currAuton == 1) {
-	// 	halfLeftAwp();
-	// }
+	// dosSemana();
+	if(currAuton == 1) {
+		halfLeftAwp();
+	}
 	if(currAuton == 2) {
 		halfRightAwp();
 	}
@@ -202,6 +202,8 @@ void opcontrol() {
 			con.print(0, 0, "%lF", LM.get_temperature());
 			delay(50);
 			con.print(1, 0, "%lF", RM.get_temperature());
+			delay(50);
+			// con.print(2, 0, "%d", dist.get());
 			// con.print(1, 0, "Distance_Confidence: %f", DISTANCE.get_confidence());
 			// con.print(0, 0,  "%lF", LIFT.get_temperature());
 		// 	// else con.print(0, 0, "false");

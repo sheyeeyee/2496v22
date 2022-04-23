@@ -308,10 +308,10 @@ void liftMedUp() {
  void grabNeutral() {
    toggleClamp();
    LIFT.move_absolute(40, 100);
-   straightDriveDist(120, 30);
+   straightDriveDist(120, 40);
    toggleClamp();
    holdLift();
-   delay(5);
+   delay(50);
    straightDrive(-80);
    delay(5);
 
@@ -319,8 +319,8 @@ void liftMedUp() {
 
  void soloAwpLeft(){
    //drop ring in FIRST
-   INTAKE.move_absolute(1300, 80);
-   delay(1000);
+   INTAKE.move_absolute(1250, 50);
+   delay(1400);
    INTAKE.move_absolute(15, 100);
    delay(5);
 
@@ -374,7 +374,7 @@ void liftMedUp() {
    //go forward to goal
    // imuTurn(5);
    // delay(5);
-   straightDrive(40);
+   straightDriveDist(60, 40);
    delay(5);
 
    //grab goal
@@ -450,7 +450,7 @@ void liftMedUp() {
  }
 
  void halfLeftAwp() {
-   INTAKE.move_absolute(1250, 90);
+   INTAKE.move_absolute(1400, 70);
    delay(1000);
    twoBarUp();
    imuTurn(104);
@@ -458,7 +458,7 @@ void liftMedUp() {
    toggleClamp();
    delay(5);
    holdLift();
-   straightDriveDist(100, 30);
+   straightDriveDist(100, 35);
    delay(5);
    toggleClamp();
    delay(400);
@@ -468,7 +468,7 @@ void liftMedUp() {
  void halfRightAwp() {
    straightDrive(-7);
    delay(5);
-   INTAKE.move_absolute(1250, 55);
+   INTAKE.move_absolute(1375, 55);
    delay(1500);
    straightDrive(-11);
    delay(1000);
