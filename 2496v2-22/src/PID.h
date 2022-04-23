@@ -357,7 +357,7 @@ void liftMedUp() {
    //towards goal
    straightDrive(18);
    //160 distance (110 + 50) + mogo shove (15)
-   delay(10);
+   delay(750);
 
    //drop ring
    toggleClamp();
@@ -402,25 +402,27 @@ void liftMedUp() {
 
  void grabBothRight() {
    toggleClamp();
-   LIFT.move_absolute(40, 100);
-   straightDriveDist(100, 30);
+   // LIFT.move_absolute(25, 100);
+   straightDriveDist(110, 40);
+
    toggleClamp();
    holdLift();
-   delay(5);
+   delay(200);
    straightDrive(-50);
    delay(5);
    LIFT.move_absolute(450, 100);
    delay(5);
    imuTurn(-90);
    delay(5);
-   straightDrive(20);
+   straightDrive(40);
    delay(5);
+   LIFT.move_absolute(20, 100);
+   delay(400);
    toggleClamp();
    delay(5);
-   LIFT.move_absolute(250, 100);
-   straightDrive(-20);
+   straightDrive(-48);
    delay(5);
-   imuTurn(37);
+   imuTurn(42);
    delay(5);
    LIFT.move_absolute(40, 100);
    delay(5);
@@ -428,8 +430,8 @@ void liftMedUp() {
    delay(5);
    toggleClamp();
    holdLift();
-   INTAKE.move_absolute(2000, 100);
-   delay(5);
+   // INTAKE.move_absolute(2000, 100);
+   delay(200);
    straightDrive(-80);
  }
 
