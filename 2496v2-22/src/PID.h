@@ -411,7 +411,7 @@ void liftMedUp() {
    straightDrive(-50);
    delay(5);
    LIFT.move_absolute(450, 100);
-   delay(5);
+   delay(5);  
    imuTurn(-90);
    delay(5);
    straightDrive(40);

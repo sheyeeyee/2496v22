@@ -129,9 +129,10 @@ void autonomous() {
 	// halfRightAwp();
 	// grabNeutral();
 	// dosSemana();
-	if(currAuton == 1) {
-		halfLeftAwp();
-	}
+	grabBothRight();
+	// if(currAuton == 1) {
+	// 	halfLeftAwp();
+	// }
 	if(currAuton == 2) {
 		halfRightAwp();
 	}
